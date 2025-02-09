@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "com.hk47bot.rotp_stfn.mixin",
+  "refmap": "mixins.rotp_ul.refmap.json",
+  "minVersion": "0.8",
+  "mixins": [
+    "NoClipMixin",
+    "AbstractBlockStateMixin"
+  ],
+  "client": [
+
+  ],
+  "injectors":{
+    "defaultRequire": 1
+  }
+}
