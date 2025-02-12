@@ -47,8 +47,8 @@ public class StickyFingersPlaceZipper extends StandEntityAction {
                             break;
                         case UP:
                         case DOWN:
-                            world.setBlockAndUpdate(targetedBlockPos.below(), InitBlocks.STICKY_FINGERS_ZIPPER.get().defaultBlockState().setValue(StickyFingersZipperBlock.DIRECTION, Direction.UP));
-                            world.setBlockAndUpdate(targetedBlockPos.above(), InitBlocks.STICKY_FINGERS_ZIPPER.get().defaultBlockState().setValue(StickyFingersZipperBlock.DIRECTION, Direction.DOWN));
+                            world.setBlockAndUpdate(targetedBlockPos.below(), InitBlocks.STICKY_FINGERS_ZIPPER.get().defaultBlockState().setValue(StickyFingersZipperBlock.DIRECTION, Direction.DOWN));
+                            world.setBlockAndUpdate(targetedBlockPos.above(), InitBlocks.STICKY_FINGERS_ZIPPER.get().defaultBlockState().setValue(StickyFingersZipperBlock.DIRECTION, Direction.UP));
                             break;
                     }
                 }

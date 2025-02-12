@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 
 import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock.DIRECTION;
 
@@ -22,6 +23,23 @@ public class ZipperUtil {
         }
         else if (direction == Direction.NORTH || direction == Direction.SOUTH) {
             entity.setDeltaMovement(entity.getDeltaMovement().multiply(0, 0, 1));
+        }
+    }
+
+    public static BlockPos getBlockInDirection(Direction direction, BlockPos pos){
+        switch (direction){
+            case UP:
+                return pos.above();
+            case DOWN:
+                return pos.below();
+            case SOUTH:
+                return pos.south();
+            case EAST:
+                return pos.east();
+            case WEST:
+                return pos.west();
+            default:
+                return pos.north();
         }
     }
 }
