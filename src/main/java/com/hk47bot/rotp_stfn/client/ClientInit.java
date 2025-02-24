@@ -9,6 +9,7 @@ import com.hk47bot.rotp_stfn.init.InitEntities;
 import com.hk47bot.rotp_stfn.init.InitStands;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
