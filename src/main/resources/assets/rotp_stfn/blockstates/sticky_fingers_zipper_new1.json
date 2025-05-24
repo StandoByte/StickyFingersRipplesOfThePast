@@ -1,0 +1,630 @@
+{
+  "multipart": [
+    {
+      "when": { "facing": "north", "type": 1, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 1, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 1, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 1, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 1, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 1, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 1, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 1, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 1, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 1, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 1, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 1, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 1, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_horizontal", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 1, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_horizontal", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 1, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_horizontal", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 1, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_horizontal", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 1, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_horizontal", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 1, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_horizontal", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 1, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open_horizontal", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 1, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open_horizontal", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 1, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open_horizontal", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 1, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open_horizontal", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 1, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open_horizontal", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 1, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/straight/sticky_fingers_zipper_straight_open_horizontal", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 2, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 2, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 2, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 2, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 2, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 2, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 2, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1_open", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 2, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1_open", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 2, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1_open", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 2, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1_open", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 2, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1_open", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 2, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner1_open", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 2, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 2, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 2, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 2, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 2, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 2, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 2, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2_open", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 2, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2_open", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 2, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2_open", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 2, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2_open", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 2, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2_open", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 2, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner2_open", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 2, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 2, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 2, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 2, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 2, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 2, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 2, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3_open", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 2, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3_open", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 2, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3_open", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 2, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3_open", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 2, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3_open", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 2, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner3_open", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 2, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 2, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 2, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 2, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 2, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 2, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 2, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4_open", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 2, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4_open", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 2, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4_open", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 2, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4_open", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 2, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4_open", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 2, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/corner/sticky_fingers_zipper_corner4_open", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 3, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 3, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 3, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 3, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 3, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 3, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 3, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1_open", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 3, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1_open", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 3, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1_open", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 3, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1_open", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 3, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1_open", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 3, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form1_open", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 3, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 3, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 3, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 3, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 3, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 3, "rotation": 2, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 3, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2_open", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 3, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2_open", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 3, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2_open", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 3, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2_open", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 3, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2_open", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 3, "rotation": 2, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form2_open", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 3, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 3, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 3, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 3, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 3, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 3, "rotation": 3, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 3, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3_open", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 3, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3_open", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 3, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3_open", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 3, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3_open", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 3, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3_open", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 3, "rotation": 3, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form3_open", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 3, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 3, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 3, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 3, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 3, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 3, "rotation": 4, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 3, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4_open", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 3, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4_open", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 3, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4_open", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 3, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4_open", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 3, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4_open", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 3, "rotation": 4, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/t_form/sticky_fingers_zipper_t_form4_open", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 4, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 4, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 4, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 4, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 4, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 4, "rotation": 1, "open": "false", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross", "x": 270 }
+    },
+    {
+      "when": { "facing": "north", "type": 4, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross_open", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "type": 4, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross_open", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "type": 4, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross_open", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "type": 4, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross_open", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "type": 4, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross_open", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "type": 4, "rotation": 1, "open": "true", "waterlogged" : "true|false" },
+      "apply": { "model": "rotp_stfn:block/zipper/cross/sticky_fingers_zipper_cross_open", "x": 270, "y": 180 }
+    },
+    {
+      "when": { "facing": "north", "right_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_up", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "right_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_up", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "right_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_up", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "right_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_up", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "right_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_up", "x": 90 }
+    },
+    {
+      "when": { "facing": "down", "right_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_up", "x": 270, "y": 180 }
+    },
+    {
+      "when": { "facing": "north", "left_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_up", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "left_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_up", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "left_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_up", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "left_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_up", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "left_up": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_up", "x": 90 }
+    },
+    {
+      "when": { "left_up": "true", "facing": "down" , "open" : "true"},
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_up", "x": 270, "y": 180 }
+    },
+    {
+      "when": { "facing": "north", "right_down": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_down", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "right_down": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_down", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "right_down": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_down", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "right_down": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_down", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "right_down": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_down", "x": 90 }
+    },
+    {
+      "when": { "right_down": "true", "facing": "down", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_right_down", "x": 270, "y": 180 }
+    },
+    {
+      "when": { "facing": "north", "left_down": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_down", "y": 180 }
+    },
+    {
+      "when": { "facing": "east", "left_down": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_down", "y": 270 }
+    },
+    {
+      "when": { "facing": "south", "left_down": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_down", "y": 0 }
+    },
+    {
+      "when": { "facing": "west", "left_down": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_down", "y": 90 }
+    },
+    {
+      "when": { "facing": "up", "left_down": "true", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_down", "x": 90 }
+    },
+    {
+      "when": { "left_down": "true", "facing": "down", "open" : "true" },
+      "apply": { "model": "rotp_stfn:block/zipper/mini_corner/sticky_fingers_zipper_mini_corner_left_down", "x": 270, "y": 180 }
+    }
+
+
+  ]
+}

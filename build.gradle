@@ -114,6 +114,7 @@ minecraft {
 }
 
 mixin {
+    add sourceSets.main, "mixins.rotp_stfn.refmap.json"
     config "mixins.rotp_stfn.json"
 }
 
@@ -124,6 +125,13 @@ repositories {
     maven {
         name "RotP Maven"
         url 'https://raw.githubusercontent.com/StandoByte/RotP-maven/main'
+    }
+    maven {
+        name "Curseforge Maven" // better weather
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
@@ -152,6 +160,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     implementation fg.deobf("standobyte.jojo:JJBA-RipplesOfThePast:${main_mod_version}")
+    implementation fg.deobf("curse.maven:redstone-pen-461710:4329194")
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

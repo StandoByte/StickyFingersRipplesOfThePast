@@ -2,7 +2,7 @@
   "required": true,
   "compatibilityLevel": "JAVA_8",
   "package": "com.hk47bot.rotp_stfn.mixin",
-  "refmap": "mixins.rotp_ul.refmap.json",
+  "refmap": "mixins.rotp_stfn.refmap.json",
   "minVersion": "0.8",
   "mixins": [
     "NoClipMixin",

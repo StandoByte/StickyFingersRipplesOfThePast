@@ -16,10 +16,7 @@ import com.github.standobyte.jojo.power.impl.stand.stats.StandStats;
 import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
 import com.github.standobyte.jojo.power.impl.stand.type.StandType;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
-import com.hk47bot.rotp_stfn.action.stand.StickyFingersExtendedPunch;
-import com.hk47bot.rotp_stfn.action.stand.StickyFingersGetInsideMob;
-import com.hk47bot.rotp_stfn.action.stand.StickyFingersPassThroughWalls;
-import com.hk47bot.rotp_stfn.action.stand.StickyFingersPlaceZipper;
+import com.hk47bot.rotp_stfn.action.stand.*;
 import com.hk47bot.rotp_stfn.entity.stand.stands.StickyFingersEntity;
 
 import net.minecraftforge.fml.RegistryObject;
@@ -62,7 +59,10 @@ public class InitStands {
             () -> new StickyFingersPassThroughWalls(new StandEntityAction.Builder().partsRequired(StandPart.ARMS)));
 
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_PLACE_ZIPPER = ACTIONS.register("sticky_fingers_place_zipper",
-            () -> new StickyFingersPlaceZipper(new StandEntityAction.Builder().partsRequired(StandPart.ARMS)));
+            () -> new StickyFingersPlaceZipper(new StandEntityAction.Builder().holdType()));
+
+    public static final RegistryObject<StandAction> STICKY_FINGERS_TOGGLE_ZIPPER = ACTIONS.register("sticky_fingers_toggle_zipper",
+            () -> new StickyFingersToggleZipper(new StandAction.Builder().shiftVariationOf(STICKY_FINGERS_PLACE_ZIPPER)));
 
 
     public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<StickyFingersEntity>> STAND_STICKY_FINGERS = 

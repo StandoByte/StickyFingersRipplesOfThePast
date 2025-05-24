@@ -30,7 +30,10 @@ public class StickyFingersExtendedPunch extends StandEntityAction {
         super.onTaskSet(world, standEntity, standPower, phase, task, ticks);
         if (!world.isClientSide()) {
             StickyFingersEntity stickyfingers = (StickyFingersEntity) standEntity;
-            ExtendedPunchEntity rightforearm = new ExtendedPunchEntity(world, standEntity);
+            ExtendedPunchEntity rightforearm = new ExtendedPunchEntity(world, standEntity, standPower);
+            if (standPower.getUser().isShiftKeyDown()) {
+                rightforearm.setBindEntities(true);
+            }
             standEntity.addProjectile(rightforearm);
             stickyfingers.setForeArm(false);
             stickyfingers.setShortForeArm(false);

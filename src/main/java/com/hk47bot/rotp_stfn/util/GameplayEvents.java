@@ -18,13 +18,13 @@ public class GameplayEvents {
     public static void onLivingTick(LivingEvent.LivingUpdateEvent event){
         LivingEntity entity = event.getEntityLiving();
         entity.getCapability(EntityZipperDataProvider.CAPABILITY).ifPresent(EntityZipperData::tick);
-        if (entity instanceof ServerPlayerEntity){
-            ServerPlayerEntity player = (ServerPlayerEntity) entity;
-            if (!event.getEntityLiving().level.isClientSide()){
-                if (IStandPower.getPlayerStandPower(player).getType() == InitStands.STAND_STICKY_FINGERS.getStandType() && player instanceof IPlayerPossess && player.isShiftKeyDown()) {
-                    ((IPlayerPossess)player).jojoPossessEntity(null, true, null);
-                }
-            }
-        }
+//        if (entity instanceof ServerPlayerEntity){
+//            ServerPlayerEntity player = (ServerPlayerEntity) entity;
+//            if (!event.getEntityLiving().level.isClientSide()){
+//                if (IStandPower.getPlayerStandPower(player).getType() == InitStands.STAND_STICKY_FINGERS.getStandType() && player instanceof IPlayerPossess && player.isShiftKeyDown()) {
+//                    ((IPlayerPossess)player).jojoPossessEntity(null, true, null);
+//                }
+//            }
+//        }
     }
 }

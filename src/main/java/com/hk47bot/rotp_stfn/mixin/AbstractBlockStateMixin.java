@@ -1,20 +1,28 @@
 package com.hk47bot.rotp_stfn.mixin;
 
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
+import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import net.minecraft.block.*;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.*;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AbstractBlock.AbstractBlockState.class)
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.hk47bot.rotp_stfn.util.ZipperUtil.hasZippersAround;
+
+@Mixin(value = AbstractBlock.AbstractBlockState.class)
 public abstract class AbstractBlockStateMixin {
 
     @Shadow
@@ -27,12 +35,34 @@ public abstract class AbstractBlockStateMixin {
 //        return entity.getY() > (double)pos.getY() + shape.max(Direction.Axis.Y) - (entity.isOnGround() ? 8.05/16.0 : 0.0015);
 //    }
 
+    @Inject(method = "updateNeighbourShapes(Lnet/minecraft/world/IWorld;Lnet/minecraft/util/math/BlockPos;II)V", at = @At("HEAD"), cancellable = true)
+    private void iHateFuckingFinal(IWorld world, BlockPos pos, int p_241482_3_, int p_241482_4_, CallbackInfo ci){
+        if (this.getBlock() instanceof StickyFingersZipperBlock2){
+            BlockState state = world.getBlockState(pos);
+            for (int i = -1; i < 2; i+=1) {
+                for (int j = -1; j < 2; j+=1) {
+                    for (int k = -1; k < 2; k+=1) {
+                        BlockPos neighbourPos = pos.offset(i, j, k);
+                        if (world.getBlockState(neighbourPos).getBlock() instanceof StickyFingersZipperBlock2
+                                && world.getBlockState(neighbourPos).getValue(StickyFingersZipperBlock2.INITIAL_FACING) == state.getValue(StickyFingersZipperBlock2.INITIAL_FACING)){
+                            BlockState blockstate = world.getBlockState(neighbourPos);
+                            BlockState blockstate1 = blockstate.updateShape(Direction.DOWN, this.asState(), world, neighbourPos, pos);
+                            Block.updateOrDestroy(blockstate, blockstate1, world, neighbourPos, p_241482_3_, p_241482_4_);
+                        }
+                    }
+                }
+            }
+            ci.cancel();
+        }
+    }
+
+
     @Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/shapes/ISelectionContext;)Lnet/minecraft/util/math/shapes/VoxelShape;", cancellable = true)
     private void phaseThroughBlocks(IBlockReader world, BlockPos pos, ISelectionContext context, CallbackInfoReturnable<VoxelShape> info) {
-        VoxelShape blockShape = getBlock().getCollisionShape(this.asState(), world, pos, context);
+        VoxelShape blockShape = getBlock().getShape(this.asState(), world, pos, context);
         if(!blockShape.isEmpty() && context instanceof EntitySelectionContext) {
 //            EntitySelectionContext esc = (EntitySelectionContext)context;
-            if (this.stickyFingersRipplesOfThePast$hasZippersAround(pos, world)){
+            if (hasZippersAround(pos, world)){
                 VoxelShape shape = VoxelShapes.empty();
 
                 BlockState upState = world.getBlockState(pos.above());
@@ -82,7 +112,7 @@ public abstract class AbstractBlockStateMixin {
     }
     @Inject(at = @At("HEAD"), method = "isSuffocating", cancellable = true)
     private void cancelSuffocation(IBlockReader world, BlockPos pos, CallbackInfoReturnable<Boolean> cir){
-        if (stickyFingersRipplesOfThePast$hasZippersAround(pos, world)){
+        if (hasZippersAround(pos, world)){
             cir.setReturnValue(false);
         }
         else {
@@ -92,7 +122,7 @@ public abstract class AbstractBlockStateMixin {
 
 //    @Inject(at = @At("HEAD"), method = "isViewBlocking", cancellable = true)
 //    private void cancelViewBlocking(IBlockReader world, BlockPos pos, CallbackInfoReturnable<Boolean> cir){
-//        if (stickyFingersRipplesOfThePast$hasZippersAround(pos, world)){
+//        if (hasZippersAround(pos, world)){
 //            cir.setReturnValue(false);
 //        }
 //        else {
@@ -100,22 +130,11 @@ public abstract class AbstractBlockStateMixin {
 //        }
 //    }
 
-
-    @Unique
-    private boolean stickyFingersRipplesOfThePast$hasZippersAround(BlockPos pos, IBlockReader world){
-        for (Direction direction : Direction.values()){
-            if (world.getBlockState(ZipperUtil.getBlockInDirection(direction, pos)).getBlock() instanceof StickyFingersZipperBlock
-                    && world.getBlockState(ZipperUtil.getBlockInDirection(direction, pos)).getValue(StickyFingersZipperBlock.DIRECTION) == direction){
-                return true;
-            }
-        }
-        return false;
-    }
 //    @Unique
 //    private List<Direction> getZipperDirectionsAround(BlockPos pos, IBlockReader world){
 //        List<Direction> directions = new ArrayList<>();
 //        for (Direction direction : Direction.values()){
-//            if (world.getBlockState(ZipperUtil.getBlockInDirection(direction, pos)).getBlock() instanceof StickyFingersZipperBlock){
+//            if (world.getBlockState(pos.relative(direction)).getBlock() instanceof StickyFingersZipperBlock){
 //                directions.add(direction);
 //            }
 //        }

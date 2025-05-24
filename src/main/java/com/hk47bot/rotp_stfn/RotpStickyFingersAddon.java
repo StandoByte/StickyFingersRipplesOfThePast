@@ -1,13 +1,9 @@
 package com.hk47bot.rotp_stfn;
 
 import com.hk47bot.rotp_stfn.capability.CapabilityHandler;
-import com.hk47bot.rotp_stfn.init.InitBlocks;
+import com.hk47bot.rotp_stfn.init.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.hk47bot.rotp_stfn.init.InitEntities;
-import com.hk47bot.rotp_stfn.init.InitSounds;
-import com.hk47bot.rotp_stfn.init.InitStands;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +23,7 @@ public class RotpStickyFingersAddon {
         InitSounds.SOUNDS.register(modEventBus);
         InitStands.ACTIONS.register(modEventBus);
         InitStands.STANDS.register(modEventBus);
+        InitTileEntities.TILE_ENTITIES.register(modEventBus);
         modEventBus.addListener(this::preInit);
     }
     private void preInit(FMLCommonSetupEvent event) {

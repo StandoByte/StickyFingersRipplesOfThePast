@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 
-@Mixin(PlayerEntity.class)
+@Mixin(value = PlayerEntity.class)
 public abstract class NoClipMixin extends Entity {
 
     @Shadow public abstract <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing);
