@@ -33,6 +33,7 @@ public class StickyFingersToggleZipper extends StandAction {
 
                     world.setBlockAndUpdate(StickyFingersZipperBlock2.getLinkedBlockPos(targetedState, targetedBlockPos, world),
                             linkedState.setValue(StickyFingersZipperBlock2.OPEN, !targetedState.getValue(StickyFingersZipperBlock2.OPEN)));
+
                 }
             }
         }

@@ -39,6 +39,10 @@ public class ZipperUtil {
                 return pos.north();
         }
     }
+
+    public static BlockPos getDiagonalNeighbor(Direction direction1, Direction direction2, BlockPos pos){
+        return pos.relative(direction1).relative(direction2);
+    }
     public static boolean hasZippersAround(BlockPos pos, IBlockReader world){
         for (Direction direction : Direction.values()){
             if (world.getBlockState(pos.relative(direction)).getBlock() instanceof StickyFingersZipperBlock2

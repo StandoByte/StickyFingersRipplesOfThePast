@@ -17,7 +17,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.hk47bot.rotp_stfn.client.render.renderer.StickyFingersZipperPortalRenderer.END_PORTAL_LOCATION;
+import static com.hk47bot.rotp_stfn.client.render.renderer.StickyFingersZipperBlockRenderer.END_PORTAL_LOCATION;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = RotpStickyFingersAddon.MOD_ID, value = Dist.CLIENT)
