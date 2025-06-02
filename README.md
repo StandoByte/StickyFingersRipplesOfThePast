@@ -1,4 +1,4 @@
-# ![Stone Free](https://cdn.discordapp.com/attachments/1060530098006143057/1139945342058643587/stone_free.png) Stone Free (Ripples of the Past addon)
+# Sticky Fingers (Ripples of the Past addon)
 An addon mod for [Ripples of the Past](https://github.com/StandoByte/Ripples-of-the-Past), a mod for Minecraft based on JoJo's Bizarre Adventure.
 
 ## Mod developer's (StandoByte) note
