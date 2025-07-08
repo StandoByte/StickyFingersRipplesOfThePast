@@ -2,6 +2,7 @@ package com.hk47bot.rotp_stfn;
 
 import com.hk47bot.rotp_stfn.capability.CapabilityHandler;
 import com.hk47bot.rotp_stfn.init.*;
+import com.hk47bot.rotp_stfn.network.AddonPackets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,10 +25,12 @@ public class RotpStickyFingersAddon {
         InitStands.ACTIONS.register(modEventBus);
         InitStands.STANDS.register(modEventBus);
         InitTileEntities.TILE_ENTITIES.register(modEventBus);
+        InitContainers.CONTAINERS.register(modEventBus);
         modEventBus.addListener(this::preInit);
     }
     private void preInit(FMLCommonSetupEvent event) {
         CapabilityHandler.commonSetupRegister();
+        AddonPackets.init();
     }
 
     public static Logger getLogger() {
