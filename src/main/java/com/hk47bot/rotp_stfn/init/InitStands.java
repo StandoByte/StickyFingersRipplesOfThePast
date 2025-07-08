@@ -55,8 +55,8 @@ public class InitStands {
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_GET_INTO_MOB = ACTIONS.register("sticky_fingers_get_into_mob",
             () -> new StickyFingersGetInsideMob(new StandEntityAction.Builder().partsRequired(StandPart.ARMS)));
 
-    public static final RegistryObject<StandEntityAction> STICKY_FINGERS_TEST = ACTIONS.register("test",
-            () -> new StickyFingersPassThroughWalls(new StandEntityAction.Builder().partsRequired(StandPart.ARMS)));
+    public static final RegistryObject<StandAction> STICKY_FINGERS_TEST = ACTIONS.register("test",
+            () -> new StickyFingersOpenPlayerStorage(new StandAction.Builder()));
 
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_PLACE_ZIPPER = ACTIONS.register("sticky_fingers_place_zipper",
             () -> new StickyFingersPlaceZipper(new StandEntityAction.Builder().holdType()));
