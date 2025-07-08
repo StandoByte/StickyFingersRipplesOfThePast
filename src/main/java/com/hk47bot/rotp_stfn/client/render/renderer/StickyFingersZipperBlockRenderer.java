@@ -75,202 +75,197 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         int texWidth = 32;
         int texHeight = 32;
         north = new ModelRenderer(texWidth, texHeight, 0, 0);
-        north.setPos(16.0F, 16, 0.0F);
-        north.texOffs(0, 0).addBox(-16.0F, -16.0F, 15.97F, 16.0F, 16.0F, 0.0F, 0.0F, false);
+        north.setPos(0.0F, 24.0F, 0.0F);
+        north.texOffs(0, 0).addBox(0.0F, -24.0F, 15.97F, 16.0F, 16.0F, 0.0F, 0.0F, false);
 
         corners2 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        corners2.setPos(-16.0F, 0.0F, 31.7F);
-        setRotationAngle(corners2, 0.0F, (float) Math.toRadians(180D), 0F);
+        corners2.setPos(8.0F, 0.0F, 8.0F);
         north.addChild(corners2);
 
 
         right_up2 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_up2.setPos(-14.5F, -14.5F, 15.8F);
+        right_up2.setPos(-6.5F, -22.5F, 7.8F);
         corners2.addChild(right_up2);
         setRotationAngle(right_up2, 0.0F, 0.0F, -1.5708F);
-        right_up2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, false);
+        right_up2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         left_up2 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_up2.setPos(-1.5F, -14.5F, 15.8F);
+        left_up2.setPos(6.5F, -22.5F, 7.8F);
         corners2.addChild(left_up2);
-        left_up2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, false);
+        left_up2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         left_down2 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_down2.setPos(-1.5F, -1.5F, 15.8F);
+        left_down2.setPos(6.5F, -9.5F, 7.8F);
         corners2.addChild(left_down2);
         setRotationAngle(left_down2, 0.0F, 0.0F, 1.5708F);
-        left_down2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, false);
+        left_down2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         right_down2 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_down2.setPos(-14.5F, -1.5F, 15.8F);
+        right_down2.setPos(-6.5F, -9.5F, 7.8F);
         corners2.addChild(right_down2);
         setRotationAngle(right_down2, 0.0F, 0.0F, -3.1416F);
-        right_down2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, false);
-
+        right_down2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         south = new ModelRenderer(texWidth, texHeight, 0, 0);
-        south.setPos(16.0F, 16, 0.0F);
-        south.texOffs(0, 0).addBox(-16.0F, -16.0F, 0.03F, 16.0F, 16.0F, 0.0F, 0.0F, false);
+        south.setPos(0.0F, 24.0F, 0.0F);
+        south.texOffs(0, 0).addBox(0.0F, -24.0F, 0.03F, 16.0F, 16.0F, 0.0F, 0.0F, false);
 
         corners = new ModelRenderer(texWidth, texHeight, 0, 0);
-        corners.setPos(-16.0F, 0.0F, 0.2F);
-        setRotationAngle(corners, 0.0F, (float) Math.toRadians(180D), 0F);
+        corners.setPos(8.0F, 0.0F, 8.0F);
         south.addChild(corners);
 
 
         right_up = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_up.setPos(-1.5F, -14.5F, 0.0F);
+        right_up.setPos(6.5F, -22.5F, -7.8F);
         corners.addChild(right_up);
         setRotationAngle(right_up, 0.0F, 0.0F, 1.5708F);
-        right_up.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, false);
+        right_up.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         left_up = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_up.setPos(-14.5F, -14.5F, 0.0F);
+        left_up.setPos(-6.5F, -22.5F, -7.8F);
         corners.addChild(left_up);
-        left_up.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, false);
+        left_up.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         left_down = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_down.setPos(-14.5F, -1.5F, 0.0F);
+        left_down.setPos(-6.5F, -9.5F, -7.8F);
         corners.addChild(left_down);
         setRotationAngle(left_down, 0.0F, 0.0F, -1.5708F);
-        left_down.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, false);
+        left_down.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         right_down = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_down.setPos(-1.5F, -1.5F, 0.0F);
+        right_down.setPos(6.5F, -9.5F, -7.8F);
         corners.addChild(right_down);
         setRotationAngle(right_down, 0.0F, 0.0F, -3.1416F);
-        right_down.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, false);
-
+        right_down.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         east = new ModelRenderer(texWidth, texHeight, 0, 0);
-        east.setPos(16.0F, 16, 0.0F);
-        east.texOffs(0, -16).addBox(-15.97F, -16.0F, 0.0F, 0.0F, 16.0F, 16.0F, 0.0F, false);
+        east.setPos(0.0F, 24.0F, 0.0F);
+        east.texOffs(0, -16).addBox(0.03F, -24.0F, 0.0F, 0.0F, 16.0F, 16.0F, 0.0F, false);
 
         corners3 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        corners3.setPos(-31.8F, 0.0F, 16.0F);
-        setRotationAngle(corners3, 0.0F, (float) Math.toRadians(180D), 0F);
+        corners3.setPos(8.0F, 0.0F, 8.0F);
         east.addChild(corners3);
 
 
         right_up3 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_up3.setPos(-15.9F, -14.5F, 1.4F);
+        right_up3.setPos(-7.7F, -22.5F, -6.6F);
         corners3.addChild(right_up3);
         setRotationAngle(right_up3, 1.5708F, 0.0F, 0.0F);
-        right_up3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, false);
+        right_up3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         left_up3 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_up3.setPos(-15.9F, -14.5F, 14.4F);
+        left_up3.setPos(-7.7F, -22.5F, 6.4F);
         corners3.addChild(left_up3);
-        left_up3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, false);
+        left_up3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         left_down3 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_down3.setPos(-15.9F, -1.5F, 14.4F);
+        left_down3.setPos(-7.7F, -9.5F, 6.4F);
         corners3.addChild(left_down3);
         setRotationAngle(left_down3, -1.5708F, 0.0F, 0.0F);
-        left_down3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, false);
+        left_down3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         right_down3 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_down3.setPos(-15.9F, -1.5F, 1.4F);
+        right_down3.setPos(-7.7F, -9.5F, -6.6F);
         corners3.addChild(right_down3);
         setRotationAngle(right_down3, 3.1416F, 0.0F, 0.0F);
-        right_down3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, false);
+        right_down3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         west = new ModelRenderer(texWidth, texHeight, 0, 0);
-        west.setPos(16.0F, 16, 0.0F);
-        west.texOffs(0, -16).addBox(-0.03F, -16.0F, 0.0F, 0.0F, 16.0F, 16.0F, 0.0F, false);
+        west.setPos(0.0F, 24.0F, 0.0F);
+        west.texOffs(0, -16).addBox(15.97F, -24.0F, 0.0F, 0.0F, 16.0F, 16.0F, 0.0F, false);
 
         corners4 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        corners4.setPos(-0.15F, 0F, 16.0F);
-        setRotationAngle(corners4, 0.0F, (float) Math.toRadians(180D), 0F);
+        corners4.setPos(8.0F, 0.0F, 8.0F);
         west.addChild(corners4);
 
 
         right_up4 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_up4.setPos(-0.1F, -14.5F, 14.4F);
+        right_up4.setPos(7.75F, -22.5F, 6.4F);
         corners4.addChild(right_up4);
         setRotationAngle(right_up4, -1.5708F, 0.0F, 0.0F);
-        right_up4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, false);
+        right_up4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         left_up4 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_up4.setPos(-0.1F, -14.5F, 1.4F);
+        left_up4.setPos(7.75F, -22.5F, -6.6F);
         corners4.addChild(left_up4);
-        left_up4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, false);
+        left_up4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         left_down4 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_down4.setPos(-0.1F, -1.5F, 1.4F);
+        left_down4.setPos(7.75F, -9.5F, -6.6F);
         corners4.addChild(left_down4);
         setRotationAngle(left_down4, 1.5708F, 0.0F, 0.0F);
-        left_down4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, false);
+        left_down4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         right_down4 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_down4.setPos(-0.1F, -1.5F, 14.4F);
+        right_down4.setPos(7.75F, -9.5F, 6.4F);
         corners4.addChild(right_down4);
         setRotationAngle(right_down4, 3.1416F, 0.0F, 0.0F);
-        right_down4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, false);
+        right_down4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         up = new ModelRenderer(texWidth, texHeight, 0, 0);
-        up.setPos(16.0F, 16, 0.0F);
-        up.texOffs(-16, 0).addBox(-16.0F, -15.97F, 0.0F, 16.0F, 0.0F, 16.0F, 0.0F, false);
+        up.setPos(0.0F, 24.0F, 0.0F);
+        up.texOffs(-16, 0).addBox(0.0F, -23.97F, 0.0F, 16.0F, 0.0F, 16.0F, 0.0F, false);
 
         corners5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        corners5.setPos(0.0F, 0.0F, 0F);
+        corners5.setPos(8.0F, 0.0F, 8.0F);
         up.addChild(corners5);
 
 
         right_up5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_up5.setPos(-14.5F, -15.9F, 1.4F);
+        right_up5.setPos(-6.5F, -23.9F, -6.6F);
         corners5.addChild(right_up5);
         setRotationAngle(right_up5, 0.0F, -1.5708F, 0.0F);
         right_up5.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         left_up5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_up5.setPos(-1.5F, -15.9F, 1.4F);
+        left_up5.setPos(6.5F, -23.9F, -6.6F);
         corners5.addChild(left_up5);
         setRotationAngle(left_up5, 0.0F, 3.1416F, 0.0F);
         left_up5.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         left_down5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_down5.setPos(-1.5F, -15.9F, 14.4F);
+        left_down5.setPos(6.5F, -23.9F, 6.4F);
         corners5.addChild(left_down5);
         setRotationAngle(left_down5, 0.0F, 1.5708F, 0.0F);
         left_down5.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         right_down5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_down5.setPos(-14.5F, -15.9F, 14.4F);
+        right_down5.setPos(-6.5F, -23.9F, 6.4F);
         corners5.addChild(right_down5);
         right_down5.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         down = new ModelRenderer(texWidth, texHeight, 0, 0);
-        down.setPos(16.0F, 16, 0.0F);
-        down.texOffs(-16, 0).addBox(-16.0F, -0.03F, 0.0F, 16.0F, 0.0F, 16.0F, 0.0F, false);
+        down.setPos(0.0F, 24.0F, 0.0F);
+        down.texOffs(-16, 0).addBox(0.0F, -8.03F, 0.0F, 16.0F, 0.0F, 16.0F, 0.0F, false);
 
         corners6 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        corners6.setPos(0.0F, 0.0F, 0F);
+        corners6.setPos(8.0F, 0.0F, 8.0F);
         down.addChild(corners6);
 
 
         right_up6 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_up6.setPos(-1.5F, -0.1F, 1.4F);
+        right_up6.setPos(6.5F, -8.1F, -6.6F);
         corners6.addChild(right_up6);
         setRotationAngle(right_up6, 0.0F, 3.1416F, 0.0F);
         right_up6.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         left_up6 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_up6.setPos(-14.5F, -0.1F, 1.4F);
+        left_up6.setPos(-6.5F, -8.1F, -6.6F);
         corners6.addChild(left_up6);
         setRotationAngle(left_up6, 0.0F, -1.5708F, 0.0F);
         left_up6.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         left_down6 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_down6.setPos(-14.5F, -0.1F, 14.4F);
+        left_down6.setPos(-6.5F, -8.1F, 6.4F);
         corners6.addChild(left_down6);
         left_down6.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         right_down6 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_down6.setPos(-1.5F, -0.1F, 14.4F);
+        right_down6.setPos(6.5F, -8.1F, 6.4F);
         corners6.addChild(right_down6);
         setRotationAngle(right_down6, 0.0F, 1.5708F, 0.0F);
         right_down6.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
+
     }
 
 
@@ -280,63 +275,63 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         ZipperFace face;
         if (zipper.shouldRenderFace(Direction.NORTH)){
             direction = Direction.NORTH;
-            north.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
             face = zipper.getFaceValue(direction);
             corners2.visible = zipper.getBlockState().getValue(OPEN);
             right_up2.visible = face.isLeftDown();
             right_down2.visible = face.isLeftUp();
             left_up2.visible = face.isRightDown();
             left_down2.visible = face.isRightUp();
+            north.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
         }
         if (zipper.shouldRenderFace(Direction.SOUTH)){
             direction = Direction.SOUTH;
-            south.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
             face = zipper.getFaceValue(direction);
             corners.visible = zipper.getBlockState().getValue(OPEN);
             right_up.visible = face.isLeftDown();
             right_down.visible = face.isLeftUp();
             left_up.visible = face.isRightDown();
             left_down.visible = face.isRightUp();
+            south.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
         }
         if (zipper.shouldRenderFace(Direction.EAST)){
             direction = Direction.EAST;
-            east.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
             face = zipper.getFaceValue(direction);
             corners3.visible = zipper.getBlockState().getValue(OPEN);
             right_up3.visible = face.isLeftDown();
             right_down3.visible = face.isLeftUp();
             left_up3.visible = face.isRightDown();
             left_down3.visible = face.isRightUp();
+            east.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
         }
         if (zipper.shouldRenderFace(Direction.WEST)){
             direction = Direction.WEST;
-            west.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
             face = zipper.getFaceValue(direction);
             corners4.visible = zipper.getBlockState().getValue(OPEN);
             right_up4.visible = face.isLeftDown();
             right_down4.visible = face.isLeftUp();
             left_up4.visible = face.isRightDown();
             left_down4.visible = face.isRightUp();
+            west.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
         }
         if (zipper.shouldRenderFace(Direction.UP)){
             direction = Direction.UP;
-            up.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
             face = zipper.getFaceValue(direction);
             corners5.visible = zipper.getBlockState().getValue(OPEN);
             right_up5.visible = face.isLeftDown();
             right_down5.visible = face.isLeftUp();
             left_up5.visible = face.isRightDown();
             left_down5.visible = face.isRightUp();
+            up.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
         }
         if (zipper.shouldRenderFace(Direction.DOWN)){
             direction = Direction.DOWN;
-            down.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
             face = zipper.getFaceValue(direction);
             corners6.visible = zipper.getBlockState().getValue(OPEN);
             right_up6.visible = face.isLeftDown();
             right_down6.visible = face.isLeftUp();
             left_up6.visible = face.isRightDown();
             left_down6.visible = face.isRightUp();
+            down.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
         }
         if (zipper.getBlockState().getValue(OPEN)){
             RANDOM.setSeed(31101L);

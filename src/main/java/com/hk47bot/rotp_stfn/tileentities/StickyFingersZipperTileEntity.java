@@ -9,6 +9,7 @@ import com.hk47bot.rotp_stfn.init.InitTileEntities;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +17,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -302,85 +304,85 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
 //            result.setLeftDown(true);
 //            result.setLeftUp(true);
 
-//            if (direction.getAxis().isHorizontal()){
-//                //0
-//                if ((neighborFaceDirections.contains(Direction.UP))
-//                        && (neighborFaceDirections.contains(Direction.WEST))) {
-//                    BlockPos neighborPos1 = pos.above();
-//                    BlockPos neighborPos2 = pos.west();
-//                    if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
-//                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
-//                        result.setRightUp(true);
-//                    }
-//                }
-//                else if ((neighborFaceDirections.contains(Direction.UP))
-//                        && (neighborFaceDirections.contains(Direction.SOUTH))) {
-//                    BlockPos neighborPos1 = pos.above();
-//                    BlockPos neighborPos2 = pos.south();
-//                    if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
-//                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
-//                        result.setRightUp(true);
-//                    }
-//                }
-//                //90
-//                else if ((neighborFaceDirections.contains(Direction.DOWN))
-//                        && (neighborFaceDirections.contains(Direction.WEST))) {
-//                    BlockPos neighborPos1 = pos.below();
-//                    BlockPos neighborPos2 = pos.west();
-//                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
-//                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
-//                        result.setRightDown(true);
-//                    }
-//                }
-//                else if ((neighborFaceDirections.contains(Direction.DOWN))
-//                        && (neighborFaceDirections.contains(Direction.SOUTH))) {
-//                    BlockPos neighborPos1 = pos.below();
-//                    BlockPos neighborPos2 = pos.south();
-//                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
-//                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
-//                        result.setRightDown(true);
-//                    }
-//
-//                }
-//                //180
-//                else if ((neighborFaceDirections.contains(Direction.DOWN))
-//                        && (neighborFaceDirections.contains(Direction.EAST))) {
-//                    BlockPos neighborPos1 = pos.below();
-//                    BlockPos neighborPos2 = pos.east();
-//                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
-//                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
-//                        result.setLeftUp(true);
-//                    }
-//                }
-//                else if ((neighborFaceDirections.contains(Direction.DOWN))
-//                        && (neighborFaceDirections.contains(Direction.NORTH))) {
-//                    BlockPos neighborPos1 = pos.below();
-//                    BlockPos neighborPos2 = pos.north();
-//                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
-//                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
-//                        result.setLeftUp(true);
-//                    }
-//                }
-//                //270
-//                else if ((neighborFaceDirections.contains(Direction.EAST))
-//                        && (neighborFaceDirections.contains(Direction.UP))) {
-//                    BlockPos neighborPos1 = pos.above();
-//                    BlockPos neighborPos2 = pos.east();
-//                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
-//                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
-//                        result.setLeftDown(true);
-//                    }
-//                }
-//                else if ((neighborFaceDirections.contains(Direction.NORTH))
-//                        && (neighborFaceDirections.contains(Direction.UP))) {
-//                    BlockPos neighborPos1 = pos.above();
-//                    BlockPos neighborPos2 = pos.north();
-//                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
-//                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
-//                        result.setLeftDown(true);
-//                    }
-//                }
-//            }
+            if (direction.getAxis().isHorizontal()){
+                //0
+                if ((neighborFaceDirections.contains(Direction.UP))
+                        && (neighborFaceDirections.contains(Direction.WEST))) {
+                    BlockPos neighborPos1 = pos.above();
+                    BlockPos neighborPos2 = pos.west();
+                    if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
+                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
+                        result.setRightUp(true);
+                    }
+                }
+                else if ((neighborFaceDirections.contains(Direction.UP))
+                        && (neighborFaceDirections.contains(Direction.SOUTH))) {
+                    BlockPos neighborPos1 = pos.above();
+                    BlockPos neighborPos2 = pos.south();
+                    if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
+                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
+                        result.setRightUp(true);
+                    }
+                }
+                //90
+                if ((neighborFaceDirections.contains(Direction.DOWN))
+                        && (neighborFaceDirections.contains(Direction.WEST))) {
+                    BlockPos neighborPos1 = pos.below();
+                    BlockPos neighborPos2 = pos.west();
+                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
+                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
+                        result.setRightDown(true);
+                    }
+                }
+                else if ((neighborFaceDirections.contains(Direction.DOWN))
+                        && (neighborFaceDirections.contains(Direction.SOUTH))) {
+                    BlockPos neighborPos1 = pos.below();
+                    BlockPos neighborPos2 = pos.south();
+                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
+                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
+                        result.setRightDown(true);
+                    }
+
+                }
+                //180
+                if ((neighborFaceDirections.contains(Direction.DOWN))
+                        && (neighborFaceDirections.contains(Direction.EAST))) {
+                    BlockPos neighborPos1 = pos.below();
+                    BlockPos neighborPos2 = pos.east();
+                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
+                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
+                        result.setLeftDown(true);
+                    }
+                }
+                else if ((neighborFaceDirections.contains(Direction.DOWN))
+                        && (neighborFaceDirections.contains(Direction.NORTH))) {
+                    BlockPos neighborPos1 = pos.below();
+                    BlockPos neighborPos2 = pos.north();
+                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
+                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
+                        result.setLeftDown(true);
+                    }
+                }
+                //270
+                if ((neighborFaceDirections.contains(Direction.EAST))
+                        && (neighborFaceDirections.contains(Direction.UP))) {
+                    BlockPos neighborPos1 = pos.above();
+                    BlockPos neighborPos2 = pos.east();
+                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
+                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
+                        result.setLeftUp(true);
+                    }
+                }
+                else if ((neighborFaceDirections.contains(Direction.NORTH))
+                        && (neighborFaceDirections.contains(Direction.UP))) {
+                    BlockPos neighborPos1 = pos.above();
+                    BlockPos neighborPos2 = pos.north();
+                   if ((world.getBlockState(neighborPos1).getBlock() instanceof StickyFingersZipperBlock2)
+                            && (world.getBlockState(neighborPos2).getBlock() instanceof StickyFingersZipperBlock2)){
+                        result.setLeftUp(true);
+                    }
+                }
+            }
 //            else {
 //                if ((neighborFaceDirections.contains(Direction.EAST))
 //                        && (neighborFaceDirections.contains(Direction.NORTH))) {
@@ -403,9 +405,7 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
 //                    else if (direction == Direction.DOWN) result.setRotation(3);
 //                }
 //            }
-//            if (neighborFaceDirections.size() == 3){
-//                RotpStickyFingersAddon.getLogger().info("{} at X {} Y {} Z {}", neighborFaceDirections, pos.getX(), pos.getY(), pos.getZ());
-//            }
+//            RotpStickyFingersAddon.getLogger().info("{} RU {} RD {} LU {} LD {} at X {} Y {} Z {}", neighborFaceDirections, result.isRightUp(), result.isRightDown(), result.isLeftUp(), result.isLeftDown(), pos.getX(), pos.getY(), pos.getZ());
         }
         return result;
     }
