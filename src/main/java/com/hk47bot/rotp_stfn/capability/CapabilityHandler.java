@@ -20,18 +20,28 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid = RotpStickyFingersAddon.MOD_ID)
 public class CapabilityHandler {
-    private static final ResourceLocation CAPABILITY_ID = new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "sticky_fingers_storage_data");
+    private static final ResourceLocation ENTITY_CAP = new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "sticky_fingers_entity_data");
+    private static final ResourceLocation STORAGE_CAP = new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "sticky_fingers_storage_data");
     
     // Register our capability (this method is called from another event handler, which uses a different mod bus).
     public static void commonSetupRegister() {
         CapabilityManager.INSTANCE.register(ZipperStorageCap.class, new ZipperStorageCapStorage(), () -> new ZipperStorageCap(null));
+        CapabilityManager.INSTANCE.register(EntityZipperCapability.class, new EntityZipperCapabilityStorage(), () -> new EntityZipperCapability(null));
     }
 
     // Attaches the capability to all instances of LivingEntity.
     @SubscribeEvent
-    public static void onAttachCapabilities(AttachCapabilitiesEvent<World> event) {
+    public static void onAttachCapabilitiesToEntity(AttachCapabilitiesEvent<Entity> event) {
+        Entity entity = event.getObject();
+        if (entity instanceof LivingEntity){
+            event.addCapability(ENTITY_CAP, new EntityZipperCapabilityProvider((LivingEntity) entity));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAttachCapabilitiesToWorld(AttachCapabilitiesEvent<World> event) {
         World world = event.getObject();
-        event.addCapability(CAPABILITY_ID, new ZipperStorageCapProvider(world));
+        event.addCapability(STORAGE_CAP, new ZipperStorageCapProvider(world));
     }
 
 
@@ -55,13 +65,10 @@ public class CapabilityHandler {
         syncAttachedData(event.getPlayer());
     }
 
-    @SubscribeEvent
-    public static void onPlayerRespawn(PlayerRespawnEvent event) {
-        syncAttachedData(event.getPlayer());
-    }
-
     private static void syncAttachedData(PlayerEntity player) {
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
-
+        if (serverPlayer != null){
+            serverPlayer.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(capability -> capability.syncData(serverPlayer));
+        }
     }
 }

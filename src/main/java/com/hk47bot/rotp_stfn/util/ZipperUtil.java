@@ -9,6 +9,11 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class ZipperUtil {
 
 //    public static void stopMovementInZipper(Direction direction, Entity entity) {
@@ -52,6 +57,23 @@ public class ZipperUtil {
             }
         }
         return false;
+    }
+
+    public static List<Direction> X_AXIS_DIRECTIONS = Arrays.asList(Direction.UP, Direction.NORTH, Direction.DOWN, Direction.SOUTH);
+    public static List<Direction> Y_AXIS_DIRECTIONS = Arrays.asList(Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH);
+    public static List<Direction> Z_AXIS_DIRECTIONS = Arrays.asList(Direction.UP, Direction.WEST, Direction.DOWN, Direction.EAST);
+
+    public static List<Direction> getDirectionListByAxis(Direction.Axis axis){
+        switch (axis){
+            case X:
+                return X_AXIS_DIRECTIONS;
+            case Y:
+                return Y_AXIS_DIRECTIONS;
+            case Z:
+                return Z_AXIS_DIRECTIONS;
+            default:
+                return null;
+        }
     }
 
     public static Direction rotateClockwise(Direction direction, Direction.Axis axis){
@@ -160,23 +182,5 @@ public class ZipperUtil {
 
         }
         return result;
-    }
-
-    public static Direction relationToNeighbor(BlockPos mainPos, BlockPos nPos){
-        int xDif = mainPos.getX() - nPos.getX();
-        int yDif = mainPos.getY() - nPos.getY();
-        int zDif = mainPos.getZ() - nPos.getZ();
-        if (xDif <= 1 && yDif <= 1 && zDif <= 1){
-            if (xDif != 0 && yDif == 0 && zDif == 0){
-                return xDif == 1 ? Direction.EAST : Direction.WEST;
-            }
-            else if (zDif != 0 && yDif == 0 && xDif == 0){
-                return zDif == 1 ? Direction.SOUTH : Direction.NORTH;
-            }
-            else if (yDif != 0 && xDif == 0 && zDif == 0){
-                return yDif == 1 ? Direction.UP : Direction.DOWN;
-            }
-        }
-        return null;
     }
 }

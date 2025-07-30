@@ -49,7 +49,7 @@ public class BlockZipperContainer extends Container {
     public boolean stillValid(PlayerEntity player) {
         IStandPower power = IStandPower.getPlayerStandPower(player);
         ServerWorld world = (ServerWorld) player.level;
-        return power.getType() == InitStands.STAND_STICKY_FINGERS.getStandType() && !world.getBlockState(storage.getPos()).getCollisionShape(world, storage.getPos()).isEmpty();
+        return power.getType() == InitStands.STAND_STICKY_FINGERS.getStandType() && !world.getBlockState(storage.getPos()).isAir();
     }
 
     @Override

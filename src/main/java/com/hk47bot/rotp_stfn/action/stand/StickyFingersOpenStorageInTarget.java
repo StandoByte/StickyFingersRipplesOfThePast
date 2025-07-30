@@ -2,27 +2,36 @@ package com.hk47bot.rotp_stfn.action.stand;
 
 import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandAction;
-import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.github.standobyte.jojo.util.mod.JojoModUtil;
+import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
+import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import com.hk47bot.rotp_stfn.capability.BlockZipperStorage;
 import com.hk47bot.rotp_stfn.capability.EntityZipperStorage;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCap;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCapProvider;
+import net.minecraft.block.GlassBlock;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import java.util.Optional;
-import java.util.UUID;
+import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2.INITIAL_FACING;
 
-public class StickyFingersOpenPlayerStorage extends StandAction {
-    public StickyFingersOpenPlayerStorage(StandAction.Builder builder) {
+public class StickyFingersOpenStorageInTarget extends StandAction {
+    public StickyFingersOpenStorageInTarget(StandAction.Builder builder) {
         super(builder);
     }
 
+//    @Override
+//    public ActionTarget targetBeforePerform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
+//        switch (target.getType()) {
+//
+//        }
+//        JojoModUtil.rayTrace()
+//        return super.targetBeforePerform(world, user, power, target);
+//    }
     @Override
     protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
         if (!world.isClientSide() && user instanceof ServerPlayerEntity){
@@ -36,6 +45,10 @@ public class StickyFingersOpenPlayerStorage extends StandAction {
                     break;
                 case BLOCK:
                     BlockPos pos = target.getBlockPos();
+                    RotpStickyFingersAddon.getLogger().info(world.getBlockState(pos));
+                    if (world.getBlockState(pos).getBlock() instanceof StickyFingersZipperBlock2){
+                        pos = pos.relative(world.getBlockState(pos).getValue(INITIAL_FACING).getOpposite());
+                    }
                     BlockZipperStorage storage2 = zipperStorageCap.findBlockStorage(pos, (ServerPlayerEntity) user);
                     NetworkHooks.openGui((ServerPlayerEntity) user, storage2);
                     break;

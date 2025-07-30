@@ -23,9 +23,11 @@ public class RotpStickyFingersAddon {
         InitEntities.ENTITIES.register(modEventBus);
         InitSounds.SOUNDS.register(modEventBus);
         InitStands.ACTIONS.register(modEventBus);
-        InitStands.STANDS.register(modEventBus);
+        InitStands.STAND_TYPES.register(modEventBus);
+        InitEffects.EFFECTS.register(modEventBus);
         InitTileEntities.TILE_ENTITIES.register(modEventBus);
         InitContainers.CONTAINERS.register(modEventBus);
+        InitItems.ITEMS.register(modEventBus);
         modEventBus.addListener(this::preInit);
     }
     private void preInit(FMLCommonSetupEvent event) {

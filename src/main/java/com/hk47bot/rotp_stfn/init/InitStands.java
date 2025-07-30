@@ -1,5 +1,6 @@
 package com.hk47bot.rotp_stfn.init;
 
+import com.github.standobyte.jojo.JojoMod;
 import com.github.standobyte.jojo.action.Action;
 import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
@@ -9,12 +10,15 @@ import com.github.standobyte.jojo.action.stand.StandEntityLightAttack;
 import com.github.standobyte.jojo.action.stand.StandEntityMeleeBarrage;
 import com.github.standobyte.jojo.entity.stand.StandEntityType;
 import com.github.standobyte.jojo.entity.stand.StandPose;
+import com.github.standobyte.jojo.entity.stand.stands.MagiciansRedEntity;
+import com.github.standobyte.jojo.init.ModSounds;
 import com.github.standobyte.jojo.init.power.stand.EntityStandRegistryObject;
 import com.github.standobyte.jojo.init.power.stand.ModStandsInit;
 import com.github.standobyte.jojo.power.impl.stand.StandInstance.StandPart;
 import com.github.standobyte.jojo.power.impl.stand.stats.StandStats;
 import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
 import com.github.standobyte.jojo.power.impl.stand.type.StandType;
+import com.github.standobyte.jojo.util.mod.StoryPart;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.action.stand.*;
 import com.hk47bot.rotp_stfn.entity.stand.stands.StickyFingersEntity;
@@ -22,12 +26,15 @@ import com.hk47bot.rotp_stfn.entity.stand.stands.StickyFingersEntity;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
+import static com.github.standobyte.jojo.init.ModEntityTypes.ENTITIES;
+import static com.github.standobyte.jojo.init.power.stand.ModStandsInit.STAND_TYPES;
+
 public class InitStands {
     @SuppressWarnings("unchecked")
     public static final DeferredRegister<Action<?>> ACTIONS = DeferredRegister.create(
             (Class<Action<?>>) ((Class<?>) Action.class), RotpStickyFingersAddon.MOD_ID);
     @SuppressWarnings("unchecked")
-    public static final DeferredRegister<StandType<?>> STANDS = DeferredRegister.create(
+    public static final DeferredRegister<StandType<?>> STAND_TYPES = DeferredRegister.create(
             (Class<StandType<?>>) ((Class<?>) StandType.class), RotpStickyFingersAddon.MOD_ID);
     
  // ======================================== Sticky Fingers ========================================
@@ -55,50 +62,61 @@ public class InitStands {
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_GET_INTO_MOB = ACTIONS.register("sticky_fingers_get_into_mob",
             () -> new StickyFingersGetInsideMob(new StandEntityAction.Builder().partsRequired(StandPart.ARMS)));
 
-    public static final RegistryObject<StandAction> STICKY_FINGERS_TEST = ACTIONS.register("test",
-            () -> new StickyFingersOpenPlayerStorage(new StandAction.Builder()));
+    public static final RegistryObject<StandAction> STICKY_FINGERS_OPEN_STORAGE = ACTIONS.register("sticky_fingers_open_storage",
+            () -> new StickyFingersOpenStorageInTarget(new StandAction.Builder()));
+
+    public static final RegistryObject<StandAction> STICKY_FINGERS_OPEN_INNER_STORAGE = ACTIONS.register("sticky_fingers_open_inner_storage",
+            () -> new StickyFingersOpenStorageInUser(new StandAction.Builder().shiftVariationOf(STICKY_FINGERS_OPEN_STORAGE)));
 
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_PLACE_ZIPPER = ACTIONS.register("sticky_fingers_place_zipper",
-            () -> new StickyFingersPlaceZipper(new StandEntityAction.Builder().holdType()));
+            () -> new StickyFingersPlaceZipper(new StandEntityAction.Builder()
+                    .holdType()
+                    .partsRequired(StandPart.ARMS)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_TOGGLE_ZIPPER = ACTIONS.register("sticky_fingers_toggle_zipper",
-            () -> new StickyFingersToggleZipper(new StandAction.Builder().shiftVariationOf(STICKY_FINGERS_PLACE_ZIPPER)));
+            () -> new StickyFingersToggleZipper(new StandAction.Builder()
+                    .shiftVariationOf(STICKY_FINGERS_PLACE_ZIPPER)
+                    .partsRequired(StandPart.ARMS)));
 
+    public static final RegistryObject<StandAction> STICKY_FINGERS_ZIP_USER_WOUNDS = ACTIONS.register("sticky_fingers_zip_user_wounds",
+            () -> new StickyFingersZipUserWounds(new StandAction.Builder()));
 
-    public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<StickyFingersEntity>> STAND_STICKY_FINGERS = 
-            new EntityStandRegistryObject<>("sticky_fingers", 
-                    STANDS, 
-                    () -> new EntityStandType<StandStats>(
-                            0x3D66D2, ModStandsInit.PART_5_NAME,
+    public static final RegistryObject<StandAction> STICKY_FINGERS_ZIP_TARGET_WOUNDS = ACTIONS.register("sticky_fingers_zip_target_wounds",
+            () -> new StickyFingersZipTargetWounds(new StandAction.Builder().shiftVariationOf(STICKY_FINGERS_ZIP_USER_WOUNDS)));
 
-                            new StandAction[] {
-                                    STICKY_FINGERS_PUNCH.get(), 
+    public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<StickyFingersEntity>> STAND_STICKY_FINGERS =
+            new EntityStandRegistryObject<>("sticky_fingers",
+                    STAND_TYPES,
+                    () -> new EntityStandType.Builder<>()
+                            .color(0x3D66D2)
+                            .storyPartName(StoryPart.GOLDEN_WIND.getName())
+                            .leftClickHotbar(
+                                    STICKY_FINGERS_PUNCH.get(),
                                     STICKY_FINGERS_BARRAGE.get(),
                                     STICKY_FINGERS_EXTENDED_PUNCH.get()
-                                    },
-                            new StandAction[] {
+                            )
+                            .rightClickHotbar(
                                     STICKY_FINGERS_BLOCK.get(),
                                     STICKY_FINGERS_GET_INTO_MOB.get(),
                                     STICKY_FINGERS_PLACE_ZIPPER.get(),
-                                    STICKY_FINGERS_TEST.get()
-                                    },
+                                    STICKY_FINGERS_OPEN_STORAGE.get(),
+                                    STICKY_FINGERS_ZIP_USER_WOUNDS.get()
+                            )
+                            .defaultStats(StandStats.class, new StandStats.Builder()
+                                    .power(12.0, 14.0)
+                                    .speed(11.0, 14.0)
+                                    .range(2.0, 2.0)
+                                    .durability(7.0, 7.0)
+                                    .precision(8.0, 10.0)
+                                    .randomWeight(2)
+                            )
+                            .addSummonShout(InitSounds.BRUNO_STICKY_FINGERS)
+                            .addOst(InitSounds.STICKY_FINGERS_OST)
+                            .build(),
 
-                            StandStats.class, new StandStats.Builder()
-                            .tier(6)
-                            .power(14.0)
-                            .speed(14.0)
-                            .range(2.0, 2.0)
-                            .durability(7.0)
-                            .precision(10.0)
-                            .build("Sticky Fingers"), 
-
-                            new StandType.StandTypeOptionals()
-                            .addSummonShout(InitSounds.STICKY_FINGERS)
-                            .addOst(InitSounds.STICKY_FINGERS_OST)), 
-
-                    InitEntities.ENTITIES, 
+                    ENTITIES,
                     () -> new StandEntityType<StickyFingersEntity>(StickyFingersEntity::new, 0.65F, 1.95F)
-                    .summonSound(InitSounds.STICKY_FINGERS_SUMMON)
-                    .unsummonSound(InitSounds.STICKY_FINGERS_UNSUMMON))
-            .withDefaultStandAttributes();
+                            .summonSound(InitSounds.STICKY_FINGERS_SUMMON)
+                            .unsummonSound(InitSounds.STICKY_FINGERS_UNSUMMON))
+                    .withDefaultStandAttributes();
 }

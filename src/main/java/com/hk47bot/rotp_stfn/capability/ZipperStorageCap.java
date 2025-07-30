@@ -1,7 +1,10 @@
 package com.hk47bot.rotp_stfn.capability;
 
+import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.hk47bot.rotp_stfn.init.InitStands;
 import com.hk47bot.rotp_stfn.network.AddonPackets;
 import com.hk47bot.rotp_stfn.network.ZipperStorageSyncPacket;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -21,7 +24,7 @@ import java.util.UUID;
 public class ZipperStorageCap {
     private final World world;
     private ArrayList<BlockZipperStorage> blockStorages = new ArrayList<>();
-    private  ArrayList<EntityZipperStorage> entityStorages = new ArrayList<>();
+    private ArrayList<EntityZipperStorage> entityStorages = new ArrayList<>();
 
     public ZipperStorageCap(World world) {
         this.world = world;
@@ -36,14 +39,16 @@ public class ZipperStorageCap {
             ArrayList<EntityZipperStorage> entityStoragesToRemove = new ArrayList<>();
             ArrayList<BlockZipperStorage> blockStoragesToRemove = new ArrayList<>();
             blockStorages.forEach(blockZipperStorage -> {
-                if (world.getBlockState(blockZipperStorage.getPos()).getCollisionShape(world, blockZipperStorage.getPos()).isEmpty()){
+                if (world.getBlockState(blockZipperStorage.getPos()).isAir()){
                     InventoryHelper.dropContents(world, blockZipperStorage.getPos(), blockZipperStorage);
                     blockStoragesToRemove.add(blockZipperStorage);
                 }
             });
             entityStorages.forEach(entityZipperStorage -> {
-                if (((ServerWorld) world).getEntity(entityZipperStorage.getMobUUID()) != null
-                        && !((ServerWorld) world).getEntity(entityZipperStorage.getMobUUID()).isAlive()){
+                Entity storageEntity = ((ServerWorld) world).getEntity(entityZipperStorage.getMobUUID());
+                if (storageEntity != null
+                        && !(storageEntity instanceof PlayerEntity && IStandPower.getPlayerStandPower((PlayerEntity) storageEntity).getType() == InitStands.STAND_STICKY_FINGERS.getStandType())
+                        && !storageEntity.isAlive()){
                     InventoryHelper.dropContents(world, ((ServerWorld) world).getEntity(entityZipperStorage.getMobUUID()), entityZipperStorage);
                     entityStoragesToRemove.add(entityZipperStorage);
                 }
@@ -67,12 +72,10 @@ public class ZipperStorageCap {
     @Nullable
     public BlockZipperStorage findBlockStorage(BlockPos pos, ServerPlayerEntity player){
 
-        Optional<BlockZipperStorage> storage = blockStorages.stream().filter(blockZipperStorage -> {
-            System.out.println(blockZipperStorage.getPos().asLong() == pos.asLong());
-            return blockZipperStorage.getPos().getX() == pos.getX()
-                    && blockZipperStorage.getPos().getY() == pos.getY()
-                    && blockZipperStorage.getPos().getZ() == pos.getZ();
-        }).findFirst();
+        Optional<BlockZipperStorage> storage = blockStorages.stream().filter(blockZipperStorage ->
+                   blockZipperStorage.getPos().getX() == pos.getX()
+                && blockZipperStorage.getPos().getY() == pos.getY()
+                && blockZipperStorage.getPos().getZ() == pos.getZ()).findFirst();
 
         if (!storage.isPresent()){
             BlockZipperStorage newStorage = new BlockZipperStorage(pos, world.getBlockState(pos).getBlock().getName());

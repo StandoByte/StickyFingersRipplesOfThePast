@@ -2,6 +2,8 @@ package com.hk47bot.rotp_stfn.block;
 
 import net.minecraft.util.Direction;
 
+import java.util.List;
+
 public class ZipperFace {
     private Direction direction;
 
@@ -15,6 +17,8 @@ public class ZipperFace {
     private boolean right_down;
     private boolean left_up;
     private boolean left_down;
+
+    public List<Direction> neighbours;
 
     public ZipperFace(Direction direction, int rotation, int type, boolean right_up, boolean right_down, boolean left_up, boolean left_down){
         this.direction = direction;

@@ -5,13 +5,12 @@
   "refmap": "mixins.rotp_stfn.refmap.json",
   "minVersion": "0.8",
   "mixins": [
-    "NoClipMixin",
-    "AbstractBlockStateMixin"
+    "AbstractBlockStateMixin",
+    "EntityMixin"
   ],
   "client": [
-
   ],
-  "injectors":{
+  "injectors": {
     "defaultRequire": 1
   }
 }

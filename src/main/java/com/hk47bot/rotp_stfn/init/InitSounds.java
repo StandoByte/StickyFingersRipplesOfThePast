@@ -15,7 +15,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class InitSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, RotpStickyFingersAddon.MOD_ID);
     
-    public static final RegistryObject<SoundEvent> STICKY_FINGERS = SOUNDS.register("sticky_fingers", 
+    public static final RegistryObject<SoundEvent> BRUNO_STICKY_FINGERS = SOUNDS.register("sticky_fingers",
             () -> new SoundEvent(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "sticky_fingers")));
 
     public static final Supplier<SoundEvent> STICKY_FINGERS_SUMMON = ModSounds.STAND_SUMMON_DEFAULT;

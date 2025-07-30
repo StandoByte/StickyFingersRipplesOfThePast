@@ -15,6 +15,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -186,6 +187,10 @@ public class StickyFingersZipperBlock extends SixWayBlock implements IWaterLogga
     }
 
     @Override
+    public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
+        return world.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).isFaceSturdy(world, pos.relative(state.getValue(FACING).getOpposite()), state.getValue(FACING));
+    }
+    @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
         if (neighborState.getBlock() instanceof StickyFingersZipperBlock && world.getBlockState(getLinkedBlockPos(state, pos, world)).getBlock() instanceof StickyFingersZipperBlock){
             if (neighborState.getValue(FACING) == state.getValue(FACING)){
@@ -195,13 +200,17 @@ public class StickyFingersZipperBlock extends SixWayBlock implements IWaterLogga
                 }
             }
         }
+        if (!canSurvive(state, world, pos)){
+            destroy(world, pos, state);
+            return Blocks.AIR.defaultBlockState();
+        }
         return getZipperState((World) world, pos, state);
     }
 
 
     public static BlockPos getLinkedBlockPos(BlockState state, BlockPos pos, IWorld world){
         if (state.getBlock() instanceof StickyFingersZipperBlock){
-            return pos.relative(state.getValue(FACING).getOpposite(), StickyFingersPlaceZipper.isBlockFree(world.getBlockState(pos.relative(state.getValue(FACING).getOpposite(), 2)).getBlock()) ? 2 : 3);
+            return pos.relative(state.getValue(FACING).getOpposite(), StickyFingersPlaceZipper.isBlockFree((World) world, pos.relative(state.getValue(FACING).getOpposite(), 2)) ? 2 : 3);
         }
         return pos;
     }

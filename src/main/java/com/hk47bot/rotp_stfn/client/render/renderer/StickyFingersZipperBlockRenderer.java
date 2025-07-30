@@ -1,5 +1,6 @@
 package com.hk47bot.rotp_stfn.client.render.renderer;
 
+import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.google.common.collect.ImmutableList;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.block.ZipperFace;
@@ -10,12 +11,15 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 
 import java.util.List;
@@ -24,6 +28,7 @@ import java.util.stream.IntStream;
 
 import static com.github.standobyte.jojo.client.ClientUtil.setRotationAngle;
 import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2.OPEN;
+import static net.minecraft.client.renderer.entity.LivingRenderer.getOverlayCoords;
 
 public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyFingersZipperTileEntity> {
     private final ModelRenderer north;
@@ -87,24 +92,24 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         right_up2.setPos(-6.5F, -22.5F, 7.8F);
         corners2.addChild(right_up2);
         setRotationAngle(right_up2, 0.0F, 0.0F, -1.5708F);
-        right_up2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
+        right_up2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.17F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         left_up2 = new ModelRenderer(texWidth, texHeight, 0, 0);
         left_up2.setPos(6.5F, -22.5F, 7.8F);
         corners2.addChild(left_up2);
-        left_up2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
+        left_up2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.17F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         left_down2 = new ModelRenderer(texWidth, texHeight, 0, 0);
         left_down2.setPos(6.5F, -9.5F, 7.8F);
         corners2.addChild(left_down2);
         setRotationAngle(left_down2, 0.0F, 0.0F, 1.5708F);
-        left_down2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
+        left_down2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.17F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         right_down2 = new ModelRenderer(texWidth, texHeight, 0, 0);
         right_down2.setPos(-6.5F, -9.5F, 7.8F);
         corners2.addChild(right_down2);
         setRotationAngle(right_down2, 0.0F, 0.0F, -3.1416F);
-        right_down2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
+        right_down2.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.17F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         south = new ModelRenderer(texWidth, texHeight, 0, 0);
         south.setPos(0.0F, 24.0F, 0.0F);
@@ -119,24 +124,24 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         right_up.setPos(6.5F, -22.5F, -7.8F);
         corners.addChild(right_up);
         setRotationAngle(right_up, 0.0F, 0.0F, 1.5708F);
-        right_up.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
+        right_up.texOffs(0, 16).addBox(-1.5F, -1.5F, -0.17F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         left_up = new ModelRenderer(texWidth, texHeight, 0, 0);
         left_up.setPos(-6.5F, -22.5F, -7.8F);
         corners.addChild(left_up);
-        left_up.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
+        left_up.texOffs(0, 16).addBox(-1.5F, -1.5F, -0.17F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         left_down = new ModelRenderer(texWidth, texHeight, 0, 0);
         left_down.setPos(-6.5F, -9.5F, -7.8F);
         corners.addChild(left_down);
         setRotationAngle(left_down, 0.0F, 0.0F, -1.5708F);
-        left_down.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
+        left_down.texOffs(0, 16).addBox(-1.5F, -1.5F, -0.17F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         right_down = new ModelRenderer(texWidth, texHeight, 0, 0);
         right_down.setPos(6.5F, -9.5F, -7.8F);
         corners.addChild(right_down);
         setRotationAngle(right_down, 0.0F, 0.0F, -3.1416F);
-        right_down.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, true);
+        right_down.texOffs(0, 16).addBox(-1.5F, -1.5F, -0.17F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
         east = new ModelRenderer(texWidth, texHeight, 0, 0);
         east.setPos(0.0F, 24.0F, 0.0F);
@@ -148,24 +153,24 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
 
 
         right_up3 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_up3.setPos(-7.7F, -22.5F, -6.6F);
+        right_up3.setPos(-8.0F, -22.5F, -6.6F);
         corners3.addChild(right_up3);
         setRotationAngle(right_up3, 1.5708F, 0.0F, 0.0F);
-        right_up3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
+        right_up3.texOffs(0, 13).addBox(0.03F, -1.4F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         left_up3 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_up3.setPos(-7.7F, -22.5F, 6.4F);
+        left_up3.setPos(-7.97F, -22.5F, 6.5F);
         corners3.addChild(left_up3);
         left_up3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         left_down3 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        left_down3.setPos(-7.7F, -9.5F, 6.4F);
+        left_down3.setPos(-7.97F, -9.4F, 6.5F);
         corners3.addChild(left_down3);
         setRotationAngle(left_down3, -1.5708F, 0.0F, 0.0F);
-        left_down3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
+        left_down3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.6F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         right_down3 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        right_down3.setPos(-7.7F, -9.5F, -6.6F);
+        right_down3.setPos(-7.97F, -9.5F, -6.5F);
         corners3.addChild(right_down3);
         setRotationAngle(right_down3, 3.1416F, 0.0F, 0.0F);
         right_down3.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
@@ -175,7 +180,7 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         west.texOffs(0, -16).addBox(15.97F, -24.0F, 0.0F, 0.0F, 16.0F, 16.0F, 0.0F, false);
 
         corners4 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        corners4.setPos(8.0F, 0.0F, 8.0F);
+        corners4.setPos(8.0F, 0.0F, 8.1F);
         west.addChild(corners4);
 
 
@@ -183,24 +188,24 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         right_up4.setPos(7.75F, -22.5F, 6.4F);
         corners4.addChild(right_up4);
         setRotationAngle(right_up4, -1.5708F, 0.0F, 0.0F);
-        right_up4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
+        right_up4.texOffs(0, 13).addBox(0.22F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         left_up4 = new ModelRenderer(texWidth, texHeight, 0, 0);
         left_up4.setPos(7.75F, -22.5F, -6.6F);
         corners4.addChild(left_up4);
-        left_up4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
+        left_up4.texOffs(0, 13).addBox(0.22F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         left_down4 = new ModelRenderer(texWidth, texHeight, 0, 0);
         left_down4.setPos(7.75F, -9.5F, -6.6F);
         corners4.addChild(left_down4);
         setRotationAngle(left_down4, 1.5708F, 0.0F, 0.0F);
-        left_down4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
+        left_down4.texOffs(0, 13).addBox(0.22F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         right_down4 = new ModelRenderer(texWidth, texHeight, 0, 0);
         right_down4.setPos(7.75F, -9.5F, 6.4F);
         corners4.addChild(right_down4);
         setRotationAngle(right_down4, 3.1416F, 0.0F, 0.0F);
-        right_down4.texOffs(0, 13).addBox(0.0F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
+        right_down4.texOffs(0, 13).addBox(0.22F, -1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 0.0F, true);
 
         up = new ModelRenderer(texWidth, texHeight, 0, 0);
         up.setPos(0.0F, 24.0F, 0.0F);
@@ -215,24 +220,24 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         right_up5.setPos(-6.5F, -23.9F, -6.6F);
         corners5.addChild(right_up5);
         setRotationAngle(right_up5, 0.0F, -1.5708F, 0.0F);
-        right_up5.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
+        right_up5.texOffs(-3, 16).addBox(-1.4F, -0.07F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         left_up5 = new ModelRenderer(texWidth, texHeight, 0, 0);
         left_up5.setPos(6.5F, -23.9F, -6.6F);
         corners5.addChild(left_up5);
         setRotationAngle(left_up5, 0.0F, 3.1416F, 0.0F);
-        left_up5.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
+        left_up5.texOffs(-3, 16).addBox(-1.5F, -0.07F, -1.6F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         left_down5 = new ModelRenderer(texWidth, texHeight, 0, 0);
         left_down5.setPos(6.5F, -23.9F, 6.4F);
         corners5.addChild(left_down5);
         setRotationAngle(left_down5, 0.0F, 1.5708F, 0.0F);
-        left_down5.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
+        left_down5.texOffs(-3, 16).addBox(-1.6F, -0.07F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         right_down5 = new ModelRenderer(texWidth, texHeight, 0, 0);
         right_down5.setPos(-6.5F, -23.9F, 6.4F);
         corners5.addChild(right_down5);
-        right_down5.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
+        right_down5.texOffs(-3, 16).addBox(-1.5F, -0.07F, -1.4F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         down = new ModelRenderer(texWidth, texHeight, 0, 0);
         down.setPos(0.0F, 24.0F, 0.0F);
@@ -247,41 +252,38 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         right_up6.setPos(6.5F, -8.1F, -6.6F);
         corners6.addChild(right_up6);
         setRotationAngle(right_up6, 0.0F, 3.1416F, 0.0F);
-        right_up6.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
+        right_up6.texOffs(-3, 16).addBox(-1.5F, 0.07F, -1.6F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         left_up6 = new ModelRenderer(texWidth, texHeight, 0, 0);
         left_up6.setPos(-6.5F, -8.1F, -6.6F);
         corners6.addChild(left_up6);
         setRotationAngle(left_up6, 0.0F, -1.5708F, 0.0F);
-        left_up6.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
+        left_up6.texOffs(-3, 16).addBox(-1.4F, 0.07F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         left_down6 = new ModelRenderer(texWidth, texHeight, 0, 0);
         left_down6.setPos(-6.5F, -8.1F, 6.4F);
         corners6.addChild(left_down6);
-        left_down6.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
+        left_down6.texOffs(-3, 16).addBox(-1.5F, 0.07F, -1.4F, 3.0F, 0.0F, 3.0F, 0.0F, false);
 
         right_down6 = new ModelRenderer(texWidth, texHeight, 0, 0);
         right_down6.setPos(6.5F, -8.1F, 6.4F);
         corners6.addChild(right_down6);
         setRotationAngle(right_down6, 0.0F, 1.5708F, 0.0F);
-        right_down6.texOffs(-3, 16).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
-
+        right_down6.texOffs(-3, 16).addBox(-1.6F, 0.07F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
     }
 
-
-    @Override
-    public void render(StickyFingersZipperTileEntity zipper, float p_225616_2_, MatrixStack stack, IRenderTypeBuffer buffer, int p_225616_5_, int p_225616_6_) {
+    public void renderFaces(StickyFingersZipperTileEntity zipper, float partialTick, MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, int packedOverlay){
         Direction direction;
         ZipperFace face;
         if (zipper.shouldRenderFace(Direction.NORTH)){
             direction = Direction.NORTH;
             face = zipper.getFaceValue(direction);
             corners2.visible = zipper.getBlockState().getValue(OPEN);
-            right_up2.visible = face.isLeftDown();
-            right_down2.visible = face.isLeftUp();
-            left_up2.visible = face.isRightDown();
-            left_down2.visible = face.isRightUp();
-            north.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
+            right_up2.visible = face.isRightDown();
+            right_down2.visible = face.isRightUp();
+            left_up2.visible = face.isLeftDown();
+            left_down2.visible = face.isLeftUp();
+            north.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
         if (zipper.shouldRenderFace(Direction.SOUTH)){
             direction = Direction.SOUTH;
@@ -291,7 +293,7 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
             right_down.visible = face.isLeftUp();
             left_up.visible = face.isRightDown();
             left_down.visible = face.isRightUp();
-            south.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
+            south.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
         if (zipper.shouldRenderFace(Direction.EAST)){
             direction = Direction.EAST;
@@ -301,17 +303,17 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
             right_down3.visible = face.isLeftUp();
             left_up3.visible = face.isRightDown();
             left_down3.visible = face.isRightUp();
-            east.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
+            east.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
         if (zipper.shouldRenderFace(Direction.WEST)){
             direction = Direction.WEST;
             face = zipper.getFaceValue(direction);
             corners4.visible = zipper.getBlockState().getValue(OPEN);
-            right_up4.visible = face.isLeftDown();
-            right_down4.visible = face.isLeftUp();
-            left_up4.visible = face.isRightDown();
-            left_down4.visible = face.isRightUp();
-            west.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
+            right_up4.visible = face.isRightDown();
+            right_down4.visible = face.isRightUp();
+            left_up4.visible = face.isLeftDown();
+            left_down4.visible = face.isLeftUp();
+            west.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
         if (zipper.shouldRenderFace(Direction.UP)){
             direction = Direction.UP;
@@ -321,18 +323,35 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
             right_down5.visible = face.isLeftUp();
             left_up5.visible = face.isRightDown();
             left_down5.visible = face.isRightUp();
-            up.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
+            up.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
         if (zipper.shouldRenderFace(Direction.DOWN)){
             direction = Direction.DOWN;
             face = zipper.getFaceValue(direction);
             corners6.visible = zipper.getBlockState().getValue(OPEN);
-            right_up6.visible = face.isLeftDown();
-            right_down6.visible = face.isLeftUp();
-            left_up6.visible = face.isRightDown();
-            left_down6.visible = face.isRightUp();
-            down.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), p_225616_5_, p_225616_6_);
+            right_up6.visible = face.isRightDown();
+            right_down6.visible = face.isRightUp();
+            left_up6.visible = face.isLeftDown();
+            left_down6.visible = face.isLeftUp();
+            down.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
+    }
+
+    private static final float OVERLAY_TICKS = 10.0F;
+
+    public static int getOverlayCoords(float partialTick) {
+        return OverlayTexture.pack(OverlayTexture.u(partialTick), OverlayTexture.v(false));
+    }
+
+    protected float getWhiteOverlayProgress(StickyFingersZipperTileEntity entity, float partialTick) {
+        return entity.overlayTickCount > OVERLAY_TICKS ? 0 :
+                (OVERLAY_TICKS - MathHelper.clamp(entity.overlayTickCount + partialTick, 0.0F, OVERLAY_TICKS)) / OVERLAY_TICKS;
+    }
+
+    @Override
+    public void render(StickyFingersZipperTileEntity zipper, float partialTick, MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, int packedOverlay) {
+        int whiteOverlay = getOverlayCoords(getWhiteOverlayProgress(zipper, partialTick));
+        this.renderFaces(zipper, partialTick, stack, buffer, packedLight, whiteOverlay);
         if (zipper.getBlockState().getValue(OPEN)){
             RANDOM.setSeed(31101L);
             double d0 = zipper.getBlockPos().distSqr(this.renderer.camera.getPosition(), true);
@@ -348,15 +367,10 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
     }
 
     private void renderCube(StickyFingersZipperTileEntity tileEntity, float uvAnimationOffset, float colorIntensity, Matrix4f poseMatrix, IVertexBuilder vertexBuffer) {
-        // Генерация случайных цветовых компонентов с учётом интенсивности
-//        float red = (RANDOM.nextFloat() * 0.8F + 0.1F) * colorIntensity;
-//        float green = 0;
-//        float blue = (RANDOM.nextFloat() * 0.6F + 0.5F) * colorIntensity;
         float red = (0.75f + RANDOM.nextFloat() * 0.05f) * colorIntensity;
         float green = (0.35f + RANDOM.nextFloat() * 0.05f) * colorIntensity;
         float blue = (0.90f + RANDOM.nextFloat() * 0.05f) * colorIntensity;
 
-        // Отрисовка всех граней куба
         this.renderFace(tileEntity, poseMatrix, vertexBuffer, 0.0F, 1.0F, 0.0F, 1.0F, uvAnimationOffset, uvAnimationOffset, uvAnimationOffset, uvAnimationOffset, red, green, blue, Direction.SOUTH);
         this.renderFace(tileEntity, poseMatrix, vertexBuffer, 0.0F, 1.0F, 1.0F, 0.0F, 1.0F-uvAnimationOffset, 1.0F-uvAnimationOffset, 1.0F-uvAnimationOffset, 1.0F-uvAnimationOffset, red, green, blue, Direction.NORTH);
         this.renderFace(tileEntity, poseMatrix, vertexBuffer, uvAnimationOffset, uvAnimationOffset, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, red, green, blue, Direction.EAST);
@@ -367,7 +381,6 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
 
     private void renderFace(StickyFingersZipperTileEntity tileEntity, Matrix4f poseMatrix, IVertexBuilder vertexBuffer, float startX, float endX, float startY, float endY, float z1, float z2, float z3, float z4, float red, float green, float blue, Direction direction) {
         if (tileEntity.shouldRenderFace(direction)) {
-            // Вершины грани (порядок: нижний левый, нижний правый, верхний правый, верхний левый)
             vertexBuffer.vertex(poseMatrix, startX, startY, z1).color(red, green, blue, 1.0F).endVertex();
             vertexBuffer.vertex(poseMatrix, endX, startY, z2).color(red, green, blue, 1.0F).endVertex();
             vertexBuffer.vertex(poseMatrix, endX, endY, z3).color(red, green, blue, 1.0F).endVertex();
@@ -396,12 +409,12 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
     }
 
     protected float getOffset() {
-        return 0.0004F;
+        return 0.001F;
     }
 
-    private static class StickyFingersZipperRenderType extends RenderType {
+    public static class StickyFingersZipperRenderType extends RenderType {
 
-        private StickyFingersZipperRenderType(String name, VertexFormat format, int mode, int bufferSize,
+        public StickyFingersZipperRenderType(String name, VertexFormat format, int mode, int bufferSize,
                                               boolean affectCrumbling, boolean sortOnUpload, Runnable setupState, Runnable clearState) {
             super(name, format, mode, bufferSize, affectCrumbling, sortOnUpload, setupState, clearState);
         }

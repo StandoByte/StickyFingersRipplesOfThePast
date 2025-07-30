@@ -3,12 +3,22 @@ package com.hk47bot.rotp_stfn.mixin;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldVertexBufferUploader;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.*;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -20,6 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hk47bot.rotp_stfn.client.render.renderer.StickyFingersZipperBlockRenderer.END_PORTAL_LOCATION;
 import static com.hk47bot.rotp_stfn.util.ZipperUtil.hasZippersAround;
 
 @Mixin(value = AbstractBlock.AbstractBlockState.class)
@@ -128,16 +139,5 @@ public abstract class AbstractBlockStateMixin {
 //        else {
 //            cir.cancel();
 //        }
-//    }
-
-//    @Unique
-//    private List<Direction> getZipperDirectionsAround(BlockPos pos, IBlockReader world){
-//        List<Direction> directions = new ArrayList<>();
-//        for (Direction direction : Direction.values()){
-//            if (world.getBlockState(pos.relative(direction)).getBlock() instanceof StickyFingersZipperBlock){
-//                directions.add(direction);
-//            }
-//        }
-//        return directions;
 //    }
 }
