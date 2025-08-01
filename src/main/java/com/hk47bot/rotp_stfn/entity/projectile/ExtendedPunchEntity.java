@@ -119,12 +119,12 @@ public class ExtendedPunchEntity extends OwnerBoundProjectileEntity {
 
     @Override
     protected int timeAtFullLength() {
-        return 4;
+        return 1;
     }
 
     @Override
     protected float retractSpeed() {
-        return movementSpeed() * 3F;
+        return movementSpeed() * 5F;
     }
 
     @Override

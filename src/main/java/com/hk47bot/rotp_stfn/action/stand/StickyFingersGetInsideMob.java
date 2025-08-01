@@ -1,6 +1,7 @@
 package com.hk47bot.rotp_stfn.action.stand;
 
 import com.github.standobyte.jojo.action.ActionTarget;
+import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.action.stand.StandEntityAction;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
@@ -14,8 +15,8 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = RotpStickyFingersAddon.MOD_ID)
 
-public class StickyFingersGetInsideMob extends StandEntityAction {
-    public StickyFingersGetInsideMob(StandEntityAction.Builder builder) {
+public class StickyFingersGetInsideMob extends StandAction {
+    public StickyFingersGetInsideMob(StandAction.Builder builder) {
         super(builder);
     }
     @Override
@@ -23,9 +24,7 @@ public class StickyFingersGetInsideMob extends StandEntityAction {
         return TargetRequirement.ENTITY;
     }
     @Override
-    public void standPerform(World world, StandEntity standEntity, IStandPower userPower, StandEntityTask task) {
-        LivingEntity user = userPower.getUser();
-        ActionTarget target = task.getTarget();
+    protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
         if (!world.isClientSide() && user instanceof IPlayerPossess) {
             Entity targetEntity = target.getEntity();
             ((IPlayerPossess)user).jojoPossessEntity(targetEntity, true, this);

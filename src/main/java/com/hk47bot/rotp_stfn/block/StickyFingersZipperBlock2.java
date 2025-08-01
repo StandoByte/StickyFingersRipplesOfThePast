@@ -142,7 +142,7 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
         if (linkedState.is(this)) {
             world.destroyBlock(linkedPos, true);
         }
-        super.destroy(world, pos, state);
+        world.destroyBlock(pos, true);
     }
 
     public static BlockPos getLinkedBlockPos(BlockState state, BlockPos pos, IWorld world){

@@ -17,12 +17,15 @@ public class EntityZipperCapSyncPacket {
     private final boolean rightArmBlocked;
     private final boolean rightLegBlocked;
     private final boolean leftLegBlocked;
-    public EntityZipperCapSyncPacket(int entityId, boolean leftArmBlocked, boolean rightArmBlocked, boolean leftLegBlocked, boolean rightLegBlocked){
+    private final boolean hasHead;
+
+    public EntityZipperCapSyncPacket(int entityId, boolean leftArmBlocked, boolean rightArmBlocked, boolean leftLegBlocked, boolean rightLegBlocked, boolean hasHead){
         this.entityId = entityId;
         this.leftArmBlocked = leftArmBlocked;
         this.rightArmBlocked = rightArmBlocked;
         this.leftLegBlocked = leftLegBlocked;
         this.rightLegBlocked = rightLegBlocked;
+        this.hasHead = hasHead;
     }
     public EntityZipperCapSyncPacket(EntityZipperCapability capability){
         this.entityId = capability.getEntityId();
@@ -30,6 +33,7 @@ public class EntityZipperCapSyncPacket {
         this.rightLegBlocked = capability.isRightLegBlocked();
         this.leftArmBlocked = capability.isLeftArmBlocked();
         this.rightArmBlocked = capability.isRightArmBlocked();
+        this.hasHead = capability.hasHead();
     }
     public static class Handler implements IModPacketHandler<EntityZipperCapSyncPacket> {
         private final Minecraft mc = Minecraft.getInstance();
@@ -40,11 +44,12 @@ public class EntityZipperCapSyncPacket {
             buf.writeBoolean(entityZipperCapSyncPacket.rightArmBlocked);
             buf.writeBoolean(entityZipperCapSyncPacket.leftLegBlocked);
             buf.writeBoolean(entityZipperCapSyncPacket.rightLegBlocked);
+            buf.writeBoolean(entityZipperCapSyncPacket.hasHead);
         }
 
         @Override
         public EntityZipperCapSyncPacket decode(PacketBuffer buf) {
-            return new EntityZipperCapSyncPacket(buf.readInt(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
+            return new EntityZipperCapSyncPacket(buf.readInt(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
         }
 
         @Override
@@ -57,6 +62,7 @@ public class EntityZipperCapSyncPacket {
                     capability.setRightLegBlocked(entityZipperCapSyncPacket.rightArmBlocked);
                     capability.setLeftLegBlocked(entityZipperCapSyncPacket.leftLegBlocked);
                     capability.setRightLegBlocked(entityZipperCapSyncPacket.rightLegBlocked);
+                    capability.setHead(entityZipperCapSyncPacket.hasHead);
                 });
             }
         }

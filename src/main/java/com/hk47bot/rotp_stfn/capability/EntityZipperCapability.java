@@ -12,6 +12,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.vector.Vector3d;
@@ -22,6 +23,9 @@ public class EntityZipperCapability {
     private boolean rightArmBlocked;
     private boolean rightLegBlocked;
     private boolean leftLegBlocked;
+
+    private boolean hasHead;
+
     public EntityZipperCapability(LivingEntity entity) {
         this.entity = entity;
     }
@@ -124,7 +128,7 @@ public class EntityZipperCapability {
         if (noLegs()){
             entity.setDeltaMovement(entity.getDeltaMovement().x, entity.getDeltaMovement().y > 0 ? entity.getDeltaMovement().y / 2 : entity.getDeltaMovement().y, entity.getDeltaMovement().z);
             if (noArms()){
-                entity.setDeltaMovement(Vector3d.ZERO);
+                entity.setDeltaMovement(0, entity.hasEffect(Effects.LEVITATION) ? (0.05D * (double)(entity.getEffect(Effects.LEVITATION).getAmplifier() + 1) - entity.getDeltaMovement().y) * 0.2D : entity.getDeltaMovement().y, 0);
             }
         }
         else if (isLeftLegBlocked() || isRightLegBlocked()) {
@@ -150,5 +154,14 @@ public class EntityZipperCapability {
         leftArmBlocked = nbt.getBoolean("LeftArm");
         rightLegBlocked = nbt.getBoolean("RightLeg");
         leftLegBlocked = nbt.getBoolean("LeftLeg");
+    }
+    public boolean hasHead() {
+        return hasHead;
+    }
+    public void setHead(boolean hasHead) {
+        this.hasHead = hasHead;
+        if (entity != null && entity instanceof ServerPlayerEntity){
+            syncData((ServerPlayerEntity) entity);
+        }
     }
 }

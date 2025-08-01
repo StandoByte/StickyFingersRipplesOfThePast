@@ -3,43 +3,77 @@ package com.hk47bot.rotp_stfn.client;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
-import com.hk47bot.rotp_stfn.client.render.renderer.StickyFingersZipperBlockRenderer;
+import com.hk47bot.rotp_stfn.client.render.renderer.tileentity.StickyFingersZipperBlockRenderer;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Optional;
 import java.util.Random;
-
-import static com.hk47bot.rotp_stfn.client.render.renderer.StickyFingersZipperBlockRenderer.END_PORTAL_LOCATION;
-import static com.hk47bot.rotp_stfn.client.render.renderer.StickyFingersZipperBlockRenderer.END_SKY_LOCATION;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = RotpStickyFingersAddon.MOD_ID, value = Dist.CLIENT)
 public class ClientEvents {
 
-    private static Minecraft mc = Minecraft.getInstance();
+    private ClientEvents(Minecraft mc){
+        ClientEvents.mc = mc;
+    }
+
+    public static void init(Minecraft mc){
+        MinecraftForge.EVENT_BUS.register(new ClientEvents(mc));
+    }
+
+    private static Minecraft mc;
 
     @SubscribeEvent
     public static void onRenderBlockOverlay(RenderBlockOverlayEvent event) {
         if (ZipperUtil.hasZippersAround(event.getBlockPos(), mc.level)) {
             event.setCanceled(true);
             renderEndSky(event);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPreRenderLiving(RenderLivingEvent.Pre event) {
+        EntityModel model = event.getRenderer().getModel();
+        LivingEntity entity = event.getEntity();
+        if (model instanceof BipedModel && entity instanceof AbstractClientPlayerEntity) {
+            PlayerEntity player = (PlayerEntity) entity;
+            Optional<EntityZipperCapability> capability = player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
+            if (capability.isPresent()){
+                if (capability.get().noArms() && capability.get().noLegs()){
+                    ((BipedModel<?>) model).head.setPos(0.0F, 0.0F, -2.5F);
+                    ((BipedModel<?>) model).body.setPos(0.0F, 0.0F, -2.5F);
+                }
+                ((BipedModel<?>) model).leftArm.visible = !capability.get().isLeftArmBlocked();
+                ((BipedModel<?>) model).rightArm.visible = !capability.get().isRightArmBlocked();
+                ((BipedModel<?>) model).leftLeg.visible = !capability.get().isLeftLegBlocked();
+                ((BipedModel<?>) model).rightLeg.visible = !capability.get().isRightLegBlocked();
+                if (model instanceof PlayerModel){
+                    ((PlayerModel<?>) model).leftSleeve.visible = !capability.get().isLeftArmBlocked();
+                    ((PlayerModel<?>) model).rightSleeve.visible = !capability.get().isRightArmBlocked();
+                    ((PlayerModel<?>) model).leftPants.visible = !capability.get().isLeftLegBlocked();
+                    ((PlayerModel<?>) model).rightPants.visible = !capability.get().isRightLegBlocked();
+                }
+            }
         }
     }
 

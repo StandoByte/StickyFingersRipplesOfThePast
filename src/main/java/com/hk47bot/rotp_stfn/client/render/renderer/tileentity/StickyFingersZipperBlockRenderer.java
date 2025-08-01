@@ -1,6 +1,5 @@
-package com.hk47bot.rotp_stfn.client.render.renderer;
+package com.hk47bot.rotp_stfn.client.render.renderer.tileentity;
 
-import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.google.common.collect.ImmutableList;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.block.ZipperFace;
@@ -16,7 +15,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -28,7 +26,6 @@ import java.util.stream.IntStream;
 
 import static com.github.standobyte.jojo.client.ClientUtil.setRotationAngle;
 import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2.OPEN;
-import static net.minecraft.client.renderer.entity.LivingRenderer.getOverlayCoords;
 
 public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyFingersZipperTileEntity> {
     private final ModelRenderer north;

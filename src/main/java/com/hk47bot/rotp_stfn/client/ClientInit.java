@@ -1,13 +1,17 @@
 package com.hk47bot.rotp_stfn.client;
 
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
-import com.hk47bot.rotp_stfn.client.render.renderer.StickyFingersZipperBlockRenderer;
+import com.hk47bot.rotp_stfn.client.render.renderer.bodypart.PlayerArmRenderer;
+import com.hk47bot.rotp_stfn.client.render.renderer.bodypart.PlayerHeadRenderer;
+import com.hk47bot.rotp_stfn.client.render.renderer.bodypart.PlayerLegRenderer;
+import com.hk47bot.rotp_stfn.client.render.renderer.tileentity.StickyFingersZipperBlockRenderer;
 import com.hk47bot.rotp_stfn.client.render.renderer.projectile.ExtendedPunchRenderer;
 
 import com.hk47bot.rotp_stfn.client.render.renderer.stand.StickyFingersUpdatedRenderer;
 import com.hk47bot.rotp_stfn.client.ui.ZipperInventoryMenu;
 import com.hk47bot.rotp_stfn.client.ui.EntityZipperInventoryMenu;
 import com.hk47bot.rotp_stfn.init.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -23,14 +27,18 @@ public class ClientInit {
     
     @SubscribeEvent
     public static void onFMLClientSetup(FMLClientSetupEvent event) {
+        Minecraft mc = event.getMinecraftSupplier().get();
         RenderingRegistry.registerEntityRenderingHandler(
                 InitStands.STAND_STICKY_FINGERS.getEntityType(), StickyFingersUpdatedRenderer::new);
-
         ScreenManager.register(InitContainers.STICKY_FINGERS_ENTITY_CONTAINER.get(), EntityZipperInventoryMenu::new);
         ScreenManager.register(InitContainers.STICKY_FINGERS_BLOCK_CONTAINER.get(), ZipperInventoryMenu::new);
 
         RenderingRegistry.registerEntityRenderingHandler(InitEntities.EXTENDED_PUNCH.get(), ExtendedPunchRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InitEntities.PLAYER_HEAD.get(), PlayerHeadRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InitEntities.PLAYER_ARM.get(), PlayerArmRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InitEntities.PLAYER_LEG.get(), PlayerLegRenderer::new);
         ClientRegistry.bindTileEntityRenderer(InitTileEntities.ZIPPER_TILE_ENTITY.get(), StickyFingersZipperBlockRenderer::new);
         RenderTypeLookup.setRenderLayer(InitBlocks.STICKY_FINGERS_ZIPPER.get(), RenderType.cutoutMipped());
+        ClientEvents.init(mc);
     }
 }
