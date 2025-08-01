@@ -1,5 +1,5 @@
 package com.hk47bot.rotp_stfn.client;
 
 public class HeadController {
-    // I have no idea what should be there
+    // Если вкратце, я хотел сделать так, чтобы тело игрока могло передвигаться
 }
