@@ -23,19 +23,19 @@ import javax.annotation.Nullable;
 public class StickyFingersPlaceZipper extends StandAction {
     public StickyFingersPlaceZipper(StandAction.Builder builder){super(builder);}
 
-    @Nullable
-    @Override
-    public Action<IStandPower> getVisibleAction(IStandPower power, ActionTarget target) {
-        RayTraceResult rayTraceResult = JojoModUtil.rayTrace(power.getUser(), 5, null);
-        if (rayTraceResult.getType() == RayTraceResult.Type.BLOCK) {
-            BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
-            BlockPos targetedBlockPos = blockRayTraceResult.getBlockPos();
-            if (isBlockZipper(power.getUser().level, targetedBlockPos)) {
-                return InitStands.STICKY_FINGERS_REMOVE_ZIPPER.get();
-            }
-        }
-        return this;
-    }
+//    @Nullable
+//    @Override
+//    public Action<IStandPower> getVisibleAction(IStandPower power, ActionTarget target) {
+//        RayTraceResult rayTraceResult = JojoModUtil.rayTrace(power.getUser(), 5, null);
+//        if (rayTraceResult.getType() == RayTraceResult.Type.BLOCK) {
+//            BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
+//            BlockPos targetedBlockPos = blockRayTraceResult.getBlockPos();
+//            if (isBlockZipper(power.getUser().level, targetedBlockPos)) {
+//                return InitStands.STICKY_FINGERS_REMOVE_ZIPPER.get();
+//            }
+//        }
+//        return this;
+//    }
     @Override
     protected ActionConditionResult checkSpecificConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         RayTraceResult rayTraceResult = JojoModUtil.rayTrace(power.getUser(), 5, null);

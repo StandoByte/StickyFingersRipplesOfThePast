@@ -1,9 +1,9 @@
 package com.hk47bot.rotp_stfn.network;
 
+import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
@@ -36,7 +36,6 @@ public class EntityZipperCapSyncPacket {
         this.hasHead = capability.hasHead();
     }
     public static class Handler implements IModPacketHandler<EntityZipperCapSyncPacket> {
-        private final Minecraft mc = Minecraft.getInstance();
         @Override
         public void encode(EntityZipperCapSyncPacket entityZipperCapSyncPacket, PacketBuffer buf) {
             buf.writeInt(entityZipperCapSyncPacket.entityId);
@@ -54,7 +53,7 @@ public class EntityZipperCapSyncPacket {
 
         @Override
         public void handle(EntityZipperCapSyncPacket entityZipperCapSyncPacket, Supplier<NetworkEvent.Context> ctx) {
-            Entity entity = mc.level.getEntity(entityZipperCapSyncPacket.entityId);
+            Entity entity = ClientUtil.getEntityById(entityZipperCapSyncPacket.entityId);
             if (entity instanceof LivingEntity){
                 LivingEntity livingEntity = (LivingEntity) entity;
                 livingEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(capability -> {

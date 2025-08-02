@@ -1,21 +1,14 @@
 package com.hk47bot.rotp_stfn.entity.bodypart;
 
+import com.github.standobyte.jojo.client.ClientUtil;
+import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.init.InitEntities;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
-
-import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.UUID;
 
 public class PlayerHeadEntity extends BodyPartEntity {
 
@@ -27,5 +20,14 @@ public class PlayerHeadEntity extends BodyPartEntity {
         super(InitEntities.PLAYER_HEAD.get(), world);
         this.setOwnerUUID(owner.getUUID());
         this.setInvulnerable(true);
+    }
+
+    @Override
+    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+        player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
+            cap.setHead(true);
+            this.remove();
+        });
+        return super.mobInteract(player, hand);
     }
 }

@@ -1,7 +1,6 @@
 package com.hk47bot.rotp_stfn.client.render.model.bodypart;
 
 import com.github.standobyte.jojo.util.general.MathUtil;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;

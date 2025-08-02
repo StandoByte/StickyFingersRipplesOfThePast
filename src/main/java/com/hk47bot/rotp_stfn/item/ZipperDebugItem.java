@@ -1,6 +1,5 @@
 package com.hk47bot.rotp_stfn.item;
 
-import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.util.mod.JojoModUtil;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import com.hk47bot.rotp_stfn.block.ZipperFace;
@@ -15,8 +14,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 public class ZipperDebugItem extends Item {

@@ -4,7 +4,6 @@ import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
 import com.hk47bot.rotp_stfn.capability.EntityZipperStorage;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCapProvider;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -20,7 +19,6 @@ public class ZipperStorageSyncPacket {
     }
 
     public static class Handler implements IModPacketHandler<ZipperStorageSyncPacket> {
-        private final Minecraft mc = Minecraft.getInstance();
         @Override
         public void encode(ZipperStorageSyncPacket msg, PacketBuffer buffer) {
             buffer.writeInt(msg.storages.size());
@@ -38,7 +36,7 @@ public class ZipperStorageSyncPacket {
             int storagesCount = buf.readInt();
             for (int i = 0; i < storagesCount; i++) {
 //                mc.level.getEntities(null, )
-                LivingEntity entity = (LivingEntity) mc.level.getEntity(buf.readInt());
+                LivingEntity entity = (LivingEntity) ClientUtil.getEntityById(buf.readInt());
                 EntityZipperStorage storage = new EntityZipperStorage(entity.getName(), entity.getUUID());
                 for (int j = 0; j < buf.readInt(); j++) {
                     storage.addItem(buf.readItem());
@@ -49,7 +47,7 @@ public class ZipperStorageSyncPacket {
         }
         @Override
         public void handle(ZipperStorageSyncPacket zipperStorageSyncPacket, Supplier<NetworkEvent.Context> ctx) {
-            mc.level.getCapability(ZipperStorageCapProvider.CAPABILITY).ifPresent(zipperStorageCap -> zipperStorageCap.setEntityStorages(zipperStorageSyncPacket.storages));
+            ClientUtil.getClientPlayer().level.getCapability(ZipperStorageCapProvider.CAPABILITY).ifPresent(zipperStorageCap -> zipperStorageCap.setEntityStorages(zipperStorageSyncPacket.storages));
         }
         @Override
         public Class<ZipperStorageSyncPacket> getPacketClass() {

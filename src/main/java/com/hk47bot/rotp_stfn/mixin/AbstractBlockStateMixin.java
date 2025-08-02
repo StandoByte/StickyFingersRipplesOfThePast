@@ -2,11 +2,14 @@ package com.hk47bot.rotp_stfn.mixin;
 
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import net.minecraft.block.*;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.*;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.*;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.ServerWorldInfo;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,11 +26,6 @@ public abstract class AbstractBlockStateMixin {
     public abstract Block getBlock();
 
     @Shadow protected abstract BlockState asState();
-
-//    @Unique
-//    private boolean isAbove(Entity entity, VoxelShape shape, BlockPos pos, boolean defaultValue) {
-//        return entity.getY() > (double)pos.getY() + shape.max(Direction.Axis.Y) - (entity.isOnGround() ? 8.05/16.0 : 0.0015);
-//    }
 
     @Inject(method = "updateNeighbourShapes(Lnet/minecraft/world/IWorld;Lnet/minecraft/util/math/BlockPos;II)V", at = @At("HEAD"), cancellable = true)
     private void iHateFuckingFinal(IWorld world, BlockPos pos, int p_241482_3_, int p_241482_4_, CallbackInfo ci){
@@ -50,22 +48,21 @@ public abstract class AbstractBlockStateMixin {
         }
     }
 
-
     @Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/shapes/ISelectionContext;)Lnet/minecraft/util/math/shapes/VoxelShape;", cancellable = true)
     private void phaseThroughBlocks(IBlockReader world, BlockPos pos, ISelectionContext context, CallbackInfoReturnable<VoxelShape> info) {
-        VoxelShape blockShape = getBlock().getShape(this.asState(), world, pos, context);
-        if(!blockShape.isEmpty() && context instanceof EntitySelectionContext) {
-//            EntitySelectionContext esc = (EntitySelectionContext)context;
+        VoxelShape blockShape = getBlock().getCollisionShape(this.asState(), world, pos, context);
+        if (world instanceof IWorldReader && ((IWorldReader) world).getChunk(pos) != null){
+            info.setReturnValue(blockShape);
+        }
+        else if (!blockShape.isEmpty() && context instanceof EntitySelectionContext) {
             if (hasZippersAround(pos, world)){
                 VoxelShape shape = VoxelShapes.empty();
-
                 BlockState upState = world.getBlockState(pos.above());
                 BlockState downState = world.getBlockState(pos.below());
                 BlockState northState = world.getBlockState(pos.north());
                 BlockState southState = world.getBlockState(pos.south());
                 BlockState westState = world.getBlockState(pos.west());
                 BlockState eastState = world.getBlockState(pos.east());
-
 
                 if (upState.getBlock() instanceof AirBlock) {
                     shape = VoxelShapes.join(shape, VoxelShapes.box(0.0, 1, 0.0, 1, 0.99, 1), IBooleanFunction.OR);
@@ -85,23 +82,8 @@ public abstract class AbstractBlockStateMixin {
                 if (eastState.getBlock() instanceof AirBlock) {
                     shape = VoxelShapes.join(shape, VoxelShapes.box(1, 0, 0, 0.99, 1, 1), IBooleanFunction.OR);
                 }
-
                 info.setReturnValue(shape);
             }
-
-//            if(esc.getEntity() != null) {
-//                Entity entity = esc.getEntity();
-//                if (entity instanceof LivingEntity){
-//                    entity.getCapability(EntityZipperDataProvider.CAPABILITY).ifPresent(cap -> {
-//                        if (cap.getRemainingZipperTicks() > 0 && cap.getRemainingZipperCooldown() == 0){
-//                            if (!this.isAbove(entity, blockShape, pos, false) || (cap.getEnterDirection() == Direction.DOWN && entity.isShiftKeyDown() && world.getBlockState(pos).getBlock() != Blocks.BEDROCK)){
-//                                ZipperUtil.stopMovementInZipper(cap.getEnterDirection(), entity);
-//                                info.setReturnValue(VoxelShapes.empty());
-//                            }
-//                        }
-//                    });
-//                }
-//            }
         }
     }
     @Inject(at = @At("HEAD"), method = "isSuffocating", cancellable = true)
@@ -113,14 +95,4 @@ public abstract class AbstractBlockStateMixin {
             cir.cancel();
         }
     }
-
-//    @Inject(at = @At("HEAD"), method = "isViewBlocking", cancellable = true)
-//    private void cancelViewBlocking(IBlockReader world, BlockPos pos, CallbackInfoReturnable<Boolean> cir){
-//        if (hasZippersAround(pos, world)){
-//            cir.setReturnValue(false);
-//        }
-//        else {
-//            cir.cancel();
-//        }
-//    }
 }

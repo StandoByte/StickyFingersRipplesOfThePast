@@ -1,6 +1,5 @@
 package com.hk47bot.rotp_stfn.mixin;
 
-import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

@@ -6,9 +6,12 @@
   "minVersion": "0.8",
   "mixins": [
     "AbstractBlockStateMixin",
-    "EntityMixin"
+    "EntityMixin",
+    "StandUtilMixin"
   ],
   "client": [
+    "ClientPlayerMixin",
+    "GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

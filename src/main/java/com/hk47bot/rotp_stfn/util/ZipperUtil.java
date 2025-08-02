@@ -1,17 +1,16 @@
 package com.hk47bot.rotp_stfn.util;
 
-import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
-import net.minecraft.entity.Entity;
-import net.minecraft.state.Property;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EmptyBlockReader;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.chunk.storage.ChunkLoaderUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class ZipperUtil {
@@ -51,7 +50,7 @@ public class ZipperUtil {
     public static boolean hasZippersAround(BlockPos pos, IBlockReader world){
         for (Direction direction : Direction.values()){
             if (world.getBlockState(pos.relative(direction)).getBlock() instanceof StickyFingersZipperBlock2
-                    && (world.getBlockState(pos.relative(direction)).getValue(StickyFingersZipperBlock2.INITIAL_FACING) == direction )
+                    && (world.getBlockState(pos.relative(direction)).getValue(StickyFingersZipperBlock2.INITIAL_FACING) == direction)
                     && world.getBlockState(pos.relative(direction)).getValue(StickyFingersZipperBlock.OPEN)){
                 return true;
             }

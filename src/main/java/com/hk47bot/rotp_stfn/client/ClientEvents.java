@@ -1,9 +1,11 @@
 package com.hk47bot.rotp_stfn.client;
 
+import com.github.standobyte.jojo.client.ClientUtil;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.client.render.renderer.tileentity.StickyFingersZipperBlockRenderer;
+import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -22,6 +24,7 @@ import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -52,6 +55,16 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
+    public void onHeadInteract(PlayerInteractEvent.EntityInteract event){
+        if (event.getTarget() instanceof PlayerHeadEntity){
+            PlayerHeadEntity head = (PlayerHeadEntity) event.getTarget();
+            if (head.getOwner() == event.getPlayer()){
+                ClientUtil.setCameraEntityPreventShaderSwitch(mc.player);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onPreRenderLiving(RenderLivingEvent.Pre event) {
         EntityModel model = event.getRenderer().getModel();
         LivingEntity entity = event.getEntity();
@@ -63,11 +76,13 @@ public class ClientEvents {
                     ((BipedModel<?>) model).head.setPos(0.0F, 0.0F, -2.5F);
                     ((BipedModel<?>) model).body.setPos(0.0F, 0.0F, -2.5F);
                 }
+                ((BipedModel<?>) model).head.visible = capability.get().hasHead();
                 ((BipedModel<?>) model).leftArm.visible = !capability.get().isLeftArmBlocked();
                 ((BipedModel<?>) model).rightArm.visible = !capability.get().isRightArmBlocked();
                 ((BipedModel<?>) model).leftLeg.visible = !capability.get().isLeftLegBlocked();
                 ((BipedModel<?>) model).rightLeg.visible = !capability.get().isRightLegBlocked();
                 if (model instanceof PlayerModel){
+                    ((PlayerModel<?>) model).hat.visible = capability.get().hasHead();
                     ((PlayerModel<?>) model).leftSleeve.visible = !capability.get().isLeftArmBlocked();
                     ((PlayerModel<?>) model).rightSleeve.visible = !capability.get().isRightArmBlocked();
                     ((PlayerModel<?>) model).leftPants.visible = !capability.get().isLeftLegBlocked();

@@ -13,8 +13,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = RotpStickyFingersAddon.MOD_ID)
-
 public class StickyFingersGetInsideMob extends StandAction {
     public StickyFingersGetInsideMob(StandAction.Builder builder) {
         super(builder);

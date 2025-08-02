@@ -2,7 +2,6 @@ package com.hk47bot.rotp_stfn.entity.projectile;
 
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.init.ModSounds;
-import com.github.standobyte.jojo.init.power.stand.ModStandsInit;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.mod.JojoModUtil;
 import com.hk47bot.rotp_stfn.init.InitEntities;

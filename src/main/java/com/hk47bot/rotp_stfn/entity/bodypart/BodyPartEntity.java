@@ -1,6 +1,5 @@
 package com.hk47bot.rotp_stfn.entity.bodypart;
 
-import com.hk47bot.rotp_stfn.init.InitEntities;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
