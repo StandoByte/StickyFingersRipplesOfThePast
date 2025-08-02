@@ -17,10 +17,6 @@ public class StickyFingersZipUserWounds extends StandAction {
 
     @Override
     protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
-//        user.addEffect(new EffectInstance(InitEffects.ZIP_WOUNDS.get(), 1200, 0, false, false, true));
-        PlayerHeadEntity entity = new PlayerHeadEntity(world, user);
-        entity.moveTo(user.position());
-        world.addFreshEntity(entity);
-        ClientUtil.setCameraEntityPreventShaderSwitch(entity);
+        user.addEffect(new EffectInstance(InitEffects.ZIP_WOUNDS.get(), 1200, 0, false, false, true));
     }
 }

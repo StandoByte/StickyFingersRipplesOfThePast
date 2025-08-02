@@ -1,5 +1,6 @@
 package com.hk47bot.rotp_stfn.mixin;
 
+import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import net.minecraft.block.*;
 import net.minecraft.server.MinecraftServer;
@@ -51,41 +52,45 @@ public abstract class AbstractBlockStateMixin {
     @Inject(at = @At("HEAD"), method = "getCollisionShape(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/shapes/ISelectionContext;)Lnet/minecraft/util/math/shapes/VoxelShape;", cancellable = true)
     private void phaseThroughBlocks(IBlockReader world, BlockPos pos, ISelectionContext context, CallbackInfoReturnable<VoxelShape> info) {
         VoxelShape blockShape = getBlock().getCollisionShape(this.asState(), world, pos, context);
-        if (world instanceof IWorldReader && ((IWorldReader) world).getChunk(pos) != null){
-            info.setReturnValue(blockShape);
-        }
-        else if (!blockShape.isEmpty() && context instanceof EntitySelectionContext) {
-            if (hasZippersAround(pos, world)){
-                VoxelShape shape = VoxelShapes.empty();
-                BlockState upState = world.getBlockState(pos.above());
-                BlockState downState = world.getBlockState(pos.below());
-                BlockState northState = world.getBlockState(pos.north());
-                BlockState southState = world.getBlockState(pos.south());
-                BlockState westState = world.getBlockState(pos.west());
-                BlockState eastState = world.getBlockState(pos.east());
+        try {
+            if (!blockShape.isEmpty() && context instanceof EntitySelectionContext) {
+                if (hasZippersAround(pos, world)){
+                    VoxelShape shape = VoxelShapes.empty();
+                    BlockState upState = world.getBlockState(pos.above());
+                    BlockState downState = world.getBlockState(pos.below());
+                    BlockState northState = world.getBlockState(pos.north());
+                    BlockState southState = world.getBlockState(pos.south());
+                    BlockState westState = world.getBlockState(pos.west());
+                    BlockState eastState = world.getBlockState(pos.east());
 
-                if (upState.getBlock() instanceof AirBlock) {
-                    shape = VoxelShapes.join(shape, VoxelShapes.box(0.0, 1, 0.0, 1, 0.99, 1), IBooleanFunction.OR);
+                    if (upState.getBlock() instanceof AirBlock) {
+                        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0, 1, 0.0, 1, 0.99, 1), IBooleanFunction.OR);
+                    }
+                    if (downState.getBlock() instanceof AirBlock) {
+                        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 0.01, 1), IBooleanFunction.OR);
+                    }
+                    if (northState.getBlock() instanceof AirBlock) {
+                        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 1, 0.01), IBooleanFunction.OR);
+                    }
+                    if (southState.getBlock() instanceof AirBlock) {
+                        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 1, 1, 1, 0.99), IBooleanFunction.OR);
+                    }
+                    if (westState.getBlock() instanceof AirBlock) {
+                        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 0.01, 1, 1), IBooleanFunction.OR);
+                    }
+                    if (eastState.getBlock() instanceof AirBlock) {
+                        shape = VoxelShapes.join(shape, VoxelShapes.box(1, 0, 0, 0.99, 1, 1), IBooleanFunction.OR);
+                    }
+                    info.setReturnValue(shape);
                 }
-                if (downState.getBlock() instanceof AirBlock) {
-                    shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 0.01, 1), IBooleanFunction.OR);
-                }
-                if (northState.getBlock() instanceof AirBlock) {
-                    shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 1, 0.01), IBooleanFunction.OR);
-                }
-                if (southState.getBlock() instanceof AirBlock) {
-                    shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 1, 1, 1, 0.99), IBooleanFunction.OR);
-                }
-                if (westState.getBlock() instanceof AirBlock) {
-                    shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 0.01, 1, 1), IBooleanFunction.OR);
-                }
-                if (eastState.getBlock() instanceof AirBlock) {
-                    shape = VoxelShapes.join(shape, VoxelShapes.box(1, 0, 0, 0.99, 1, 1), IBooleanFunction.OR);
-                }
-                info.setReturnValue(shape);
             }
         }
+        catch (Exception e){
+            RotpStickyFingersAddon.getLogger().info("Checking zippers for unloaded chunks:");
+            info.setReturnValue(blockShape);
+        }
     }
+
     @Inject(at = @At("HEAD"), method = "isSuffocating", cancellable = true)
     private void cancelSuffocation(IBlockReader world, BlockPos pos, CallbackInfoReturnable<Boolean> cir){
         if (hasZippersAround(pos, world)){
