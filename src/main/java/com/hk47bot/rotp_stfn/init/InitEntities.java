@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-@Mod.EventBusSubscriber(modid = RotpStickyFingersAddon.MOD_ID)
+@Mod.EventBusSubscriber(modid = RotpStickyFingersAddon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class InitEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, RotpStickyFingersAddon.MOD_ID);
 
