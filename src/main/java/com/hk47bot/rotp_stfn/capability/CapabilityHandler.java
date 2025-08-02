@@ -50,7 +50,7 @@ public class CapabilityHandler {
         Entity entityTracked = event.getTarget();
         ServerPlayerEntity trackingPlayer = (ServerPlayerEntity) event.getPlayer();
         if (entityTracked instanceof LivingEntity) {
-
+            syncAttachedData(trackingPlayer);
         }
     }
 

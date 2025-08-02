@@ -3,8 +3,8 @@ package com.hk47bot.rotp_stfn.network;
 import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -29,7 +29,7 @@ public class EntityRemoveHeadPacket {
         @Override
         public void handle(EntityRemoveHeadPacket entityZipperCapSyncPacket, Supplier<NetworkEvent.Context> ctx) {
             Entity head = ClientUtil.getEntityById(entityZipperCapSyncPacket.headEntityId);
-            if (head instanceof PlayerHeadEntity){
+            if (head instanceof PlayerHeadEntity && ((PlayerHeadEntity) head).getOwner() == Minecraft.getInstance().player){
                 ClientUtil.setCameraEntityPreventShaderSwitch(head);
             }
 

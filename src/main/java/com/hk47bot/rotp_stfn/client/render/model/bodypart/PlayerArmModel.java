@@ -19,23 +19,25 @@ public class PlayerArmModel extends EntityModel<PlayerArmEntity> {
 
         this.rightArm = new ModelRenderer(this, 40, 16);
         this.rightArm.addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F);
+        this.rightArm.setPos(1.0F, 0.0F, 0.0F);
 
-        this.leftArm = new ModelRenderer(this, 40, 16);
+        this.leftArm = new ModelRenderer(this, 32, 48);
         this.leftArm.addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F);
-        this.leftArm.mirror = true;
+        this.leftArm.setPos(1.0F, 0.0F, 0.0F);
 
         this.rightSleeve = new ModelRenderer(this, 40, 32);
         this.rightSleeve.addBox(-2.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, 0.25F);
+        this.rightSleeve.setPos(1.0F, 0.0F, 0.0F);
 
         this.leftSleeve = new ModelRenderer(this, 48, 48);
         this.leftSleeve.addBox(-1.0F, -2.0F, -2.0F, 3.0F, 12.0F, 4.0F, 0.25F);
-        this.leftSleeve.mirror = true;
+        this.leftSleeve.setPos(1.0F, 0.0F, 0.0F);
     }
 
     @Override
     public void setupAnim(PlayerArmEntity entity, float walkAnimPos, float walkAnimSpeed, float ticks, float yRotationOffset, float xRotation) {
-        rightArm.xRot = xRotation * MathUtil.DEG_TO_RAD;
-        leftArm.xRot = xRotation * MathUtil.DEG_TO_RAD;
+        rightArm.xRot = (xRotation + 90) * MathUtil.DEG_TO_RAD;
+        leftArm.xRot = (xRotation + 90) * MathUtil.DEG_TO_RAD;
     }
 
     @Override

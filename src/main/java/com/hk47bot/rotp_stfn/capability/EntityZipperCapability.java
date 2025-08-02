@@ -14,10 +14,10 @@ import net.minecraft.util.HandSide;
 
 public class EntityZipperCapability {
     private final LivingEntity entity;
-    private boolean leftArmBlocked;
-    private boolean rightArmBlocked;
-    private boolean rightLegBlocked;
-    private boolean leftLegBlocked;
+    private boolean leftArmBlocked = false;
+    private boolean rightArmBlocked = false;
+    private boolean rightLegBlocked = false;
+    private boolean leftLegBlocked = false;
 
     private boolean hasHead = true;
 
@@ -83,7 +83,7 @@ public class EntityZipperCapability {
 
     public void syncData(PlayerEntity player) {
         if (!player.level.isClientSide()) {
-            AddonPackets.sendToClient(new EntityZipperCapSyncPacket(this), (ServerPlayerEntity) player);
+            AddonPackets.sendToClientsTrackingAndSelf(new EntityZipperCapSyncPacket(this), player);
         }
     }
 
@@ -141,7 +141,7 @@ public class EntityZipperCapability {
         nbt.putBoolean("LeftArm", leftArmBlocked);
         nbt.putBoolean("RightLeg", rightLegBlocked);
         nbt.putBoolean("LeftLeg", leftLegBlocked);
-        nbt.putBoolean("HasHead", leftLegBlocked);
+        nbt.putBoolean("HasHead", hasHead);
         return nbt;
     }
 

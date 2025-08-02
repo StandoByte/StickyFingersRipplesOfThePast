@@ -2,6 +2,7 @@ package com.hk47bot.rotp_stfn.network;
 
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.FakePlayer;
@@ -35,6 +36,7 @@ public class AddonPackets {
         registerMessage(serverChannel, new ZipperStorageSyncPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(serverChannel, new EntityZipperCapSyncPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(serverChannel, new EntityRemoveHeadPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        registerMessage(clientChannel, new PacketToPacketPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
     private static <MSG> void registerMessage(SimpleChannel channel, IModPacketHandler<MSG> handler, Optional<NetworkDirection> networkDirection) {
         if (packetIndex > 127) {
@@ -45,6 +47,11 @@ public class AddonPackets {
     public static void sendToServer(Object msg) {
         clientChannel.sendToServer(msg);
     }
+
+    public static void sendToClientsTrackingAndSelf(Object msg, Entity entity) {
+        serverChannel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), msg);
+    }
+
     public static void sendToClient(Object msg, ServerPlayerEntity player) {
         if (!(player instanceof FakePlayer)) {
             serverChannel.send(PacketDistributor.PLAYER.with(() -> player), msg);

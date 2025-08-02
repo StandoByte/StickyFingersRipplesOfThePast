@@ -18,11 +18,10 @@ import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
 import com.hk47bot.rotp_stfn.network.AddonPackets;
-import com.hk47bot.rotp_stfn.network.EntityRemoveHeadPacket;
+import com.hk47bot.rotp_stfn.network.PacketToPacketPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.World;
 
 public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
@@ -71,12 +70,12 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                     EntityZipperCapability capability = targetEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
                     switch (hitPart) {
                         case HEAD:
-                            if (entity instanceof PlayerEntity){
+                            if (targetEntity instanceof PlayerEntity) {
                                 capability.setHead(false);
-                                PlayerHeadEntity head = new PlayerHeadEntity(world,(LivingEntity) entity);
-                                head.moveTo(entity.position());
+                                PlayerHeadEntity head = new PlayerHeadEntity(world, targetEntity);
+                                head.moveTo(targetEntity.position());
                                 world.addFreshEntity(head);
-                                AddonPackets.sendToClient(new EntityRemoveHeadPacket(head.getId()), (ServerPlayerEntity) targetEntity);
+                                AddonPackets.sendToServer(new PacketToPacketPacket(head.getId()));
                             }
                             break;
                         case TORSO_ARMS:

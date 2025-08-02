@@ -21,7 +21,6 @@ public class PlayerLegModel extends EntityModel<PlayerLegEntity> {
         this.rightLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F);
 
         this.leftLeg = new ModelRenderer(this, 0, 16);
-        this.leftLeg.mirror = true;
         this.leftLeg.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F);
 
         this.leftPants = new ModelRenderer(this, 0, 48);
@@ -29,14 +28,12 @@ public class PlayerLegModel extends EntityModel<PlayerLegEntity> {
 
         this.rightPants = new ModelRenderer(this, 0, 32);
         this.rightPants.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.25F);
-
-
     }
 
     @Override
     public void setupAnim(PlayerLegEntity entity, float walkAnimPos, float walkAnimSpeed, float ticks, float yRotationOffset, float xRotation) {
-        rightLeg.xRot = xRotation * MathUtil.DEG_TO_RAD;
-        leftLeg.xRot = xRotation * MathUtil.DEG_TO_RAD;
+        rightLeg.xRot = (xRotation + 90) * MathUtil.DEG_TO_RAD;
+        leftLeg.xRot = (xRotation + 90) * MathUtil.DEG_TO_RAD;
     }
 
     @Override
