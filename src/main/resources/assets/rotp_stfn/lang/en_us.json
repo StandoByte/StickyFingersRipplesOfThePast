@@ -1,18 +1,24 @@
 {
-  "entity.rotp_wr.weather_report": "Weather Report",
-  "stand.rotp_wr.weather_report": "Weather Report",
-  "action.rotp_wr.weather_report_punch": "Punch",
-  "action.rotp_wr.weather_report_heavy_punch": "Heavy Punch",
-  "action.rotp_wr.weather_report_finisher": "Air Friction Punch",
-  "action.rotp_wr.weather_report_barrage": "Barrage",
-  "action.rotp_wr.weather_report_lightning": "Lightning Strike",
-  "action.rotp_wr.weather_report_wind": "Wind Blow",
-  "action.rotp_wr.weather_report_cold_wind": "Cold Wind Blow",
-  "action.rotp_wr.weather_report_change_weather": "Change Weather",
-  "action.rotp_wr.weather_report_block": "Block",
-  "action.rotp_wr.weather_report_fugu_rain": "Pufferfish Rain",
-  "rotp_wr.subtitle.weather_report_name": "\"Weather Report\"",
-  "jojo.message.action_condition.fugurain-warningrain": "Weather is too calm.",
-  "jojo.message.action_condition.fugurain-warningneedtoseesky": "Need some open space.",
-  "jojo.message.action_condition.fugurain-warningotherdimension": "Can't manipulate the weather here..."
+  "entity.rotp_stfn.sticky_fingers": "Sticky Fingers",
+  "stand.rotp_stfn.sticky_fingers": "Sticky Fingers",
+
+  "action.rotp_stfn.sticky_fingers_punch": "Punch",
+  "action.rotp_stfn.sticky_fingers_heavy_punch": "Heavy Punch",
+
+  "action.rotp_stfn.sticky_fingers_unzip_punch": "Unzip Punch",
+  "action.rotp_stfn.sticky_fingers_unzip_head": "Unzip Head",
+  "action.rotp_stfn.sticky_fingers_unzip_arm": "Unzip Arm",
+  "action.rotp_stfn.sticky_fingers_unzip_leg": "Unzip Leg",
+
+  "action.rotp_stfn.sticky_fingers_extended_punch": "Extended Punch",
+
+  "action.rotp_stfn.sticky_fingers_block": "Block",
+  "action.rotp_stfn.sticky_fingers_get_into_mob": "Get Into Mob",
+  "action.rotp_stfn.sticky_fingers_open_storage": "Open Storage",
+  "action.rotp_stfn.sticky_fingers_open_inner_storage": "Open Inner Storage",
+  "action.rotp_stfn.sticky_fingers_remove_zipper": "Remove Zipper",
+  "action.rotp_stfn.sticky_fingers_place_zipper": "Place Zipper",
+  "action.rotp_stfn.sticky_fingers_toggle_zipper": "Toggle Zipper",
+  "action.rotp_stfn.sticky_fingers_zip_user_wounds": "Zip User Wounds",
+  "action.rotp_stfn.sticky_fingers_zip_target_wounds": "Zip Target Wounds"
 }
