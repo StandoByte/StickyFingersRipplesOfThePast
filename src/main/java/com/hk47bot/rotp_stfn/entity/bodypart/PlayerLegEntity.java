@@ -14,7 +14,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class PlayerLegEntity extends BodyPartEntity {
-    protected static final DataParameter<Boolean> IS_RIGHT = EntityDataManager.defineId(PlayerArmEntity.class, DataSerializers.BOOLEAN);
+    protected static final DataParameter<Boolean> IS_RIGHT = EntityDataManager.defineId(PlayerLegEntity.class, DataSerializers.BOOLEAN);
 
     public PlayerLegEntity(EntityType<? extends PlayerLegEntity> p_i48580_1_, World p_i48580_2_) {
         super(p_i48580_1_, p_i48580_2_);
@@ -22,7 +22,7 @@ public class PlayerLegEntity extends BodyPartEntity {
 
     public PlayerLegEntity(World world, LivingEntity owner) {
         super(InitEntities.PLAYER_LEG.get(), world);
-        this.setOwnerUUID(owner.getUUID());
+        this.setOwner(owner);
         this.setInvulnerable(true);
     }
 

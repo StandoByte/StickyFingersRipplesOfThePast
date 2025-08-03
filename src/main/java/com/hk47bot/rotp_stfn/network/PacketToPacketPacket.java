@@ -3,6 +3,7 @@ package com.hk47bot.rotp_stfn.network;
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -27,8 +28,8 @@ public class PacketToPacketPacket {
         @Override
         public void handle(PacketToPacketPacket entityZipperCapSyncPacket, Supplier<NetworkEvent.Context> ctx) {
             Entity head = ctx.get().getSender().level.getEntity(entityZipperCapSyncPacket.headEntityId);
-            if (head instanceof PlayerHeadEntity && ((PlayerHeadEntity) head).getOwner() == ctx.get().getSender()){
-                AddonPackets.sendToClient(new EntityRemoveHeadPacket(head.getId()), ctx.get().getSender());
+            if (head instanceof PlayerHeadEntity && ((PlayerHeadEntity) head).getOwner() != null){
+                AddonPackets.sendToClient(new EntityRemoveHeadPacket(head.getId()), (ServerPlayerEntity) ((PlayerHeadEntity) head).getOwner());
             }
         }
 

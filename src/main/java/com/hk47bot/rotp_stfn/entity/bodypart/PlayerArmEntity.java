@@ -23,7 +23,7 @@ public class PlayerArmEntity extends BodyPartEntity {
 
     public PlayerArmEntity(World world, LivingEntity owner) {
         super(InitEntities.PLAYER_ARM.get(), world);
-        this.setOwnerUUID(owner.getUUID());
+        this.setOwner(owner);
         this.setInvulnerable(true);
     }
 

@@ -18,10 +18,12 @@ import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
 import com.hk47bot.rotp_stfn.network.AddonPackets;
+import com.hk47bot.rotp_stfn.network.EntityRemoveHeadPacket;
 import com.hk47bot.rotp_stfn.network.PacketToPacketPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.World;
 
 public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
@@ -65,17 +67,16 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                                 standEntity.getSoundSource(), 1.0F, 1.0F, false);
                     }
                 }
-                else if (triggerEffect) {
+                if (triggerEffect) {
                     LivingEntity targetEntity = StandUtil.getStandUser((LivingEntity) entity);
                     EntityZipperCapability capability = targetEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
                     switch (hitPart) {
                         case HEAD:
-                            if (targetEntity instanceof PlayerEntity) {
+                            if (targetEntity instanceof ServerPlayerEntity) {
                                 capability.setHead(false);
                                 PlayerHeadEntity head = new PlayerHeadEntity(world, targetEntity);
-                                head.moveTo(targetEntity.position());
+                                head.moveTo(targetEntity.position().add(0, targetEntity.getBbHeight(), 0));
                                 world.addFreshEntity(head);
-                                AddonPackets.sendToServer(new PacketToPacketPacket(head.getId()));
                             }
                             break;
                         case TORSO_ARMS:

@@ -3,13 +3,15 @@ package com.hk47bot.rotp_stfn.entity.bodypart;
 import com.github.standobyte.jojo.client.ClientUtil;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.init.InitEntities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber
 public class PlayerHeadEntity extends BodyPartEntity {
 
     public PlayerHeadEntity(EntityType<? extends PlayerHeadEntity> p_i48580_1_, World p_i48580_2_) {
@@ -18,8 +20,8 @@ public class PlayerHeadEntity extends BodyPartEntity {
 
     public PlayerHeadEntity(World world, LivingEntity owner) {
         super(InitEntities.PLAYER_HEAD.get(), world);
-        this.setOwnerUUID(owner.getUUID());
-        this.setInvulnerable(true);
+        setInvulnerable(true);
+        setOwner(owner);
     }
 
     @Override

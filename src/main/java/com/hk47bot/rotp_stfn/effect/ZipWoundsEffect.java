@@ -16,7 +16,7 @@ public class ZipWoundsEffect extends Effect {
             entity.removeEffect(ModStatusEffects.BLEEDING.get());
         }
         if (entity.getHealth() < entity.getMaxHealth()) {
-            entity.heal(1F);
+            entity.heal(2F);
         }
     }
 

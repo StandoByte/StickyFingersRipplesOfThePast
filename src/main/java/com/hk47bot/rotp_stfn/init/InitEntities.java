@@ -26,7 +26,7 @@ public class InitEntities {
                     .build(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "stfn_extended_punch").toString()));
 
     public static final RegistryObject<EntityType<PlayerHeadEntity>> PLAYER_HEAD = ENTITIES.register("player_head",
-            () -> EntityType.Builder.<PlayerHeadEntity>of(PlayerHeadEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F)
+            () -> EntityType.Builder.<PlayerHeadEntity>of(PlayerHeadEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F).noSave()
                     .build(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "player_head").toString()));
 
     public static final RegistryObject<EntityType<PlayerArmEntity>> PLAYER_ARM = ENTITIES.register("player_arm",
