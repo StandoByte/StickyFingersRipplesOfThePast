@@ -9,7 +9,6 @@ import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.entity.stand.TargetHitPart;
-import com.github.standobyte.jojo.init.ModSounds;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.power.impl.stand.StandUtil;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
@@ -17,9 +16,7 @@ import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
-import com.hk47bot.rotp_stfn.network.AddonPackets;
-import com.hk47bot.rotp_stfn.network.EntityRemoveHeadPacket;
-import com.hk47bot.rotp_stfn.network.PacketToPacketPacket;
+import com.hk47bot.rotp_stfn.init.InitSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -63,7 +60,7 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
             if (entity.isAlive() && entity instanceof LivingEntity) {
                 if (world.isClientSide()) {
                     if (task.getTick() == 0 && ClientUtil.canHearStands()) {
-                        world.playLocalSound(entity.getX(), entity.getY(0.5), entity.getZ(), ModSounds.CRAZY_DIAMOND_FIX_STARTED.get(),
+                        world.playLocalSound(entity.getX(), entity.getY(0.5), entity.getZ(), InitSounds.STICKY_FINGERS_UNZIP_PART.get(),
                                 standEntity.getSoundSource(), 1.0F, 1.0F, false);
                     }
                 }

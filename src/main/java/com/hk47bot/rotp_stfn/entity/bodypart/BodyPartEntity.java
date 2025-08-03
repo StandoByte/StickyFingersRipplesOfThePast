@@ -45,14 +45,24 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         super.addAdditionalSaveData(nbt);
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.getOwner() == null || !this.getOwner().isAlive()){
+            this.remove();
+        }
+    }
+
     @Nullable
     public LivingEntity getOwner() {
         return owner.getEntityLiving(this.level);
     }
+
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
         owner.writeNetwork(buffer);
     }
+
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
         owner.readNetwork(additionalData);
@@ -60,6 +70,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
             ClientUtil.setCameraEntityPreventShaderSwitch(this);
         }
     }
+
     @Override
     public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);

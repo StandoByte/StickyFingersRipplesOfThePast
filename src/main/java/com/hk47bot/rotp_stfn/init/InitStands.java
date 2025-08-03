@@ -37,22 +37,35 @@ public class InitStands {
  // ======================================== Sticky Fingers ========================================
     
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_PUNCH = ACTIONS.register("sticky_fingers_punch",
-            () -> new StandEntityLightAttack(new StandEntityLightAttack.Builder()));
+            () -> new StandEntityLightAttack(new StandEntityLightAttack.Builder()
+                    .shout(InitSounds.BRUNO_PUNCH)
+                    .punchSound(InitSounds.STICKY_FINGERS_PUNCH_LIGHT)));
     
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_BARRAGE = ACTIONS.register("sticky_fingers_barrage",
-            () -> new StandEntityMeleeBarrage(new StandEntityMeleeBarrage.Builder()));
+            () -> new StandEntityMeleeBarrage(new StandEntityMeleeBarrage.Builder()
+                    .shout(InitSounds.BRUNO_BARRAGE)
+                    .barrageHitSound(InitSounds.STICKY_FINGERS_BARRAGE)));
 
     public static final RegistryObject<StandEntityActionModifier> STICKY_FINGERS_UNZIP_HEAD = ACTIONS.register("sticky_fingers_unzip_head",
-            () -> new StickyFingersUnzipBodyPart(new StandAction.Builder().staminaCost(50).resolveLevelToUnlock(1), TargetHitPart.HEAD));
+            () -> new StickyFingersUnzipBodyPart(new StandAction.Builder()
+                    .staminaCost(50)
+                    .resolveLevelToUnlock(1), TargetHitPart.HEAD));
 
     public static final RegistryObject<StandEntityActionModifier> STICKY_FINGERS_UNZIP_ARM = ACTIONS.register("sticky_fingers_unzip_arm",
-            () -> new StickyFingersUnzipBodyPart(new StandAction.Builder().staminaCost(50).resolveLevelToUnlock(1), TargetHitPart.TORSO_ARMS));
+            () -> new StickyFingersUnzipBodyPart(new StandAction.Builder()
+                    .staminaCost(50)
+                    .resolveLevelToUnlock(1), TargetHitPart.TORSO_ARMS));
 
     public static final RegistryObject<StandEntityActionModifier> STICKY_FINGERS_UNZIP_LEG = ACTIONS.register("sticky_fingers_unzip_leg",
-            () -> new StickyFingersUnzipBodyPart(new StandAction.Builder().staminaCost(50).resolveLevelToUnlock(1), TargetHitPart.LEGS));
+            () -> new StickyFingersUnzipBodyPart(new StandAction.Builder()
+                    .staminaCost(50)
+                    .resolveLevelToUnlock(1), TargetHitPart.LEGS));
 
     public static final RegistryObject<StandEntityHeavyAttack> STICKY_FINGERS_FINISHER_PUNCH = ACTIONS.register("sticky_fingers_unzip_punch",
             () -> new StickyFingersUnzipOpponent(new StandEntityHeavyAttack.Builder()
+                    .standPose(StandPose.HEAVY_ATTACK)
+                    .punchSound(InitSounds.STICKY_FINGERS_FINISHER)
+                    .shout(InitSounds.BRUNO_FINISHER)
                     .attackRecoveryFollowup(STICKY_FINGERS_UNZIP_HEAD)
                     .attackRecoveryFollowup(STICKY_FINGERS_UNZIP_ARM)
                     .attackRecoveryFollowup(STICKY_FINGERS_UNZIP_LEG)
@@ -61,14 +74,23 @@ public class InitStands {
     public static final RegistryObject<StandEntityHeavyAttack> STICKY_FINGERS_HEAVY_PUNCH = ACTIONS.register("sticky_fingers_heavy_punch",
             () -> new StandEntityHeavyAttack(new StandEntityHeavyAttack.Builder()
                     .setFinisherVariation(STICKY_FINGERS_FINISHER_PUNCH)
+                    .punchSound(InitSounds.STICKY_FINGERS_PUNCH_HEAVY)
+                    .shout(InitSounds.BRUNO_HEAVY_PUNCH)
                     .shiftVariationOf(STICKY_FINGERS_PUNCH)
                     .shiftVariationOf(STICKY_FINGERS_BARRAGE)
                     .partsRequired(StandPart.ARMS)));
 
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_EXTENDED_PUNCH = ACTIONS.register("sticky_fingers_extended_punch",
-            () -> new StickyFingersExtendedPunch(new StandEntityAction.Builder().staminaCost(375).standPerformDuration(25).cooldown(20, 60)
-                    .ignoresPerformerStun().resolveLevelToUnlock(3)
-                    .standOffsetFront().standPose(StandPose.RANGED_ATTACK)
+            () -> new StickyFingersExtendedPunch(new StandEntityAction.Builder()
+                    .shout(InitSounds.BRUNO_HEAVY_PUNCH)
+                    .standSound(InitSounds.STICKY_FINGERS_EXTENDED_PUNCH)
+                    .staminaCost(375)
+                    .standPerformDuration(25)
+                    .cooldown(20, 60)
+                    .ignoresPerformerStun()
+                    .resolveLevelToUnlock(3)
+                    .standOffsetFront()
+                    .standPose(StandPose.RANGED_ATTACK)
                     .partsRequired(StandPart.ARMS)));
     
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_BLOCK = ACTIONS.register("sticky_fingers_block",
@@ -89,8 +111,7 @@ public class InitStands {
             () -> new StickyFingersRemoveZipper(new StandAction.Builder()));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_PLACE_ZIPPER = ACTIONS.register("sticky_fingers_place_zipper",
-            () -> new StickyFingersPlaceZipper(new StandAction.Builder()
-                    .holdType()));
+            () -> new StickyFingersPlaceZipper(new StandAction.Builder().standPose(StandPose.LIGHT_ATTACK)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_TOGGLE_ZIPPER = ACTIONS.register("sticky_fingers_toggle_zipper",
             () -> new StickyFingersToggleZipper(new StandAction.Builder()

@@ -26,7 +26,8 @@ public class StickyFingersRemoveZipper extends StandAction {
         if (rayTraceResult.getType() == RayTraceResult.Type.BLOCK) {
             BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
             BlockPos targetedBlockPos = blockRayTraceResult.getBlockPos();
-            if (isBlockZipper(user.level, targetedBlockPos)
+            if (!(power.getHeldAction() instanceof StickyFingersPlaceZipper)
+                    && isBlockZipper(user.level, targetedBlockPos)
                     && (isBlockZipper(user.level, targetedBlockPos.relative(blockRayTraceResult.getDirection().getOpposite(), 2))
                     || isBlockZipper(user.level, targetedBlockPos.relative(blockRayTraceResult.getDirection().getOpposite(), 3)))) {
                 return ActionConditionResult.POSITIVE;
@@ -43,7 +44,6 @@ public class StickyFingersRemoveZipper extends StandAction {
                 BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
                 BlockPos targetedBlockPos = blockRayTraceResult.getBlockPos();
                 if (isBlockZipper(world, targetedBlockPos)) {
-                    System.out.println("I WORK");
                     world.getBlockState(targetedBlockPos).getBlock().destroy(world, targetedBlockPos, world.getBlockState(targetedBlockPos));
                 }
             }
