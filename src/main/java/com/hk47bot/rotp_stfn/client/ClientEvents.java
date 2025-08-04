@@ -1,9 +1,6 @@
 package com.hk47bot.rotp_stfn.client;
 
 import com.github.standobyte.jojo.client.ClientUtil;
-import com.github.standobyte.jojo.client.ui.screen.widgets.ImageVanillaButton;
-import com.github.standobyte.jojo.network.PacketManager;
-import com.github.standobyte.jojo.network.packets.fromclient.ClAngeloRockButtonPacket;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
@@ -16,7 +13,6 @@ import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -36,7 +32,6 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderBlockOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -105,6 +100,10 @@ public class ClientEvents {
         }
     }
 
+//    @SubscribeEvent
+//    public static void oneLegMovement(){}
+
+
     @SubscribeEvent(priority = EventPriority.LOW)
     public void addToScreen(GuiScreenEvent.InitGuiEvent.Post event) {
         Screen screen = event.getGui();
@@ -118,13 +117,6 @@ public class ClientEvents {
                         button -> AddonPackets.sendToServer(new HeadRespawnPacket()));
                 event.addWidget(angeloRockDieButton);
             }
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void clientTick(TickEvent.ClientTickEvent event){
-        if (mc.player != null){
-            mc.player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tick);
         }
     }
 

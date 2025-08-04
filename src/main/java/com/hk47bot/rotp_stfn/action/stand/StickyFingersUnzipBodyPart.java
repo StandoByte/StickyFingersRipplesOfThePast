@@ -64,7 +64,7 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                                 standEntity.getSoundSource(), 1.0F, 1.0F, false);
                     }
                 }
-                if (triggerEffect) {
+                else if (triggerEffect) {
                     LivingEntity targetEntity = StandUtil.getStandUser((LivingEntity) entity);
                     EntityZipperCapability capability = targetEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
                     switch (hitPart) {

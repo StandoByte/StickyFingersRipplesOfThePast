@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
@@ -87,7 +88,23 @@ public class EntityZipperCapability {
         }
     }
 
-    public void tick() {
+    public void tickLegs(){
+        if (noLegs()){
+            entity.setDeltaMovement(entity.getDeltaMovement().x, entity.getDeltaMovement().y > 0 ? entity.getDeltaMovement().y / 2 : entity.getDeltaMovement().y, entity.getDeltaMovement().z);
+            if (noArms()){
+                entity.setDeltaMovement(0, entity.hasEffect(Effects.LEVITATION) ? (0.05D * (double)(entity.getEffect(Effects.LEVITATION).getAmplifier() + 1) - entity.getDeltaMovement().y) * 0.2D : entity.getDeltaMovement().y, 0);
+            }
+        }
+        else if (isLeftLegBlocked() || isRightLegBlocked()) {
+            if (entity instanceof PlayerEntity) {
+                PlayerEntity player = (PlayerEntity) entity;
+                player.abilities.flying = false;
+            }
+            entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 10, 10, false, false, false));
+        }
+    }
+
+    public void tickArms() {
         if (isLeftArmBlocked()){
             ItemStack handItem = entity.getItemInHand(entity.getMainArm() == HandSide.LEFT ? Hand.MAIN_HAND : Hand.OFF_HAND);
             if (!handItem.isEmpty()) {
@@ -119,19 +136,6 @@ public class EntityZipperCapability {
                 itemEntity.setPickUpDelay(40);
                 entity.level.addFreshEntity(itemEntity);
             }
-        }
-        if (noLegs()){
-            entity.setDeltaMovement(entity.getDeltaMovement().x, entity.getDeltaMovement().y > 0 ? entity.getDeltaMovement().y / 2 : entity.getDeltaMovement().y, entity.getDeltaMovement().z);
-            if (noArms()){
-                entity.setDeltaMovement(0, entity.hasEffect(Effects.LEVITATION) ? (0.05D * (double)(entity.getEffect(Effects.LEVITATION).getAmplifier() + 1) - entity.getDeltaMovement().y) * 0.2D : entity.getDeltaMovement().y, 0);
-            }
-        }
-        else if (isLeftLegBlocked() || isRightLegBlocked()) {
-            if (entity instanceof PlayerEntity) {
-                PlayerEntity player = (PlayerEntity) entity;
-                player.abilities.flying = false;
-            }
-            entity.setDeltaMovement(entity.isOnGround() ? 0 : entity.getDeltaMovement().x, entity.getDeltaMovement().y, entity.isOnGround() ? 0 : entity.getDeltaMovement().z);
         }
     }
 

@@ -43,7 +43,7 @@ public class InitStands {
     
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_BARRAGE = ACTIONS.register("sticky_fingers_barrage",
             () -> new StandEntityMeleeBarrage(new StandEntityMeleeBarrage.Builder()
-                    .shout(InitSounds.BRUNO_BARRAGE)
+                    .standSound(StandEntityAction.Phase.PERFORM, false, InitSounds.BRUNO_BARRAGE)
                     .barrageHitSound(InitSounds.STICKY_FINGERS_BARRAGE)));
 
     public static final RegistryObject<StandEntityActionModifier> STICKY_FINGERS_UNZIP_HEAD = ACTIONS.register("sticky_fingers_unzip_head",

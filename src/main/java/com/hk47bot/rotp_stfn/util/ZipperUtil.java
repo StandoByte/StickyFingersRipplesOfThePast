@@ -4,11 +4,7 @@ import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EmptyBlockReader;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.chunk.storage.ChunkLoaderUtil;
 
 import java.util.Arrays;
 import java.util.List;

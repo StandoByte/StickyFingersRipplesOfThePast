@@ -21,5 +21,7 @@
   "action.rotp_stfn.sticky_fingers_place_zipper": "Place Zipper",
   "action.rotp_stfn.sticky_fingers_toggle_zipper": "Toggle Zipper",
   "action.rotp_stfn.sticky_fingers_zip_user_wounds": "Zip User Wounds",
-  "action.rotp_stfn.sticky_fingers_zip_target_wounds": "Zip Target Wounds"
+  "action.rotp_stfn.sticky_fingers_zip_target_wounds": "Zip Target Wounds",
+
+  "effect.rotp_stfn.zip_wounds": "Zip Wounds"
 }

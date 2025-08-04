@@ -184,6 +184,7 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
             }
         }
         for (Direction direction : Direction.values()){
+            newState = newState.setValue(DIRECTION_PROPERTIES.get(direction.get3DDataValue()), false);
             if ((diagonalNeighbors.contains(direction.getOpposite()) && newState.getValue(INITIAL_FACING).getAxis().isHorizontal())
                     || (direction == newState.getValue(INITIAL_FACING))){
                 newState = newState.setValue(DIRECTION_PROPERTIES.get(direction.get3DDataValue()), true);

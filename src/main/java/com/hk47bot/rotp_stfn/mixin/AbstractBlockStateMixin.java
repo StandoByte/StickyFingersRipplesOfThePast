@@ -38,8 +38,8 @@ public abstract class AbstractBlockStateMixin {
                         BlockPos neighbourPos = pos.offset(i, j, k);
                         if (world.getBlockState(neighbourPos).getBlock() instanceof StickyFingersZipperBlock2
                                 && world.getBlockState(neighbourPos).getValue(StickyFingersZipperBlock2.INITIAL_FACING) == state.getValue(StickyFingersZipperBlock2.INITIAL_FACING)){
-                            BlockState blockstate = world.getBlockState(neighbourPos);
-                            BlockState blockstate1 = blockstate.updateShape(Direction.DOWN, this.asState(), world, neighbourPos, pos);
+                            BlockState blockstate = world.getBlockState(pos);
+                            BlockState blockstate1 = StickyFingersZipperBlock2.getZipperState((World) world, pos, world.getBlockState(pos));
                             Block.updateOrDestroy(blockstate, blockstate1, world, neighbourPos, p_241482_3_, p_241482_4_);
                         }
                     }

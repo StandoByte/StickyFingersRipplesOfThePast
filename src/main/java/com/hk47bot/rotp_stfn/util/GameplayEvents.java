@@ -6,7 +6,7 @@ import com.hk47bot.rotp_stfn.capability.ZipperStorageCap;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCapProvider;
 import com.hk47bot.rotp_stfn.init.InitEffects;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.Pose;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -32,6 +32,9 @@ public class GameplayEvents {
     @SubscribeEvent
     public static void onEntityTick(LivingEvent.LivingUpdateEvent event){
         LivingEntity entity = event.getEntityLiving();
-        entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tick);
+        if (!entity.level.isClientSide()){
+            entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tickArms);
+        }
+        entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tickLegs);
     }
 }
