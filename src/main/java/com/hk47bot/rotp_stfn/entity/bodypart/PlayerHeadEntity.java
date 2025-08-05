@@ -35,16 +35,4 @@ public class PlayerHeadEntity extends BodyPartEntity {
         }
         return super.mobInteract(player, hand);
     }
-
-    @Override
-    public void remove() {
-        super.remove();
-
-        if (owner.getEntityLiving(this.level) != null) {
-            LivingEntity livingEntity = owner.getEntityLiving(this.level);
-            livingEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
-                cap.setHeadId(-1);
-            });
-        }
-    }
 }

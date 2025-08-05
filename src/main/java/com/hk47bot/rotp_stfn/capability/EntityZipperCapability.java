@@ -92,7 +92,7 @@ public class EntityZipperCapability {
     public void tickLegs() {
         if (noLegs()) {
             entity.setSwimming(true);
-            if (!(entity instanceof PlayerEntity)){
+            if (!(entity instanceof PlayerEntity)) {
                 entity.setPose(Pose.SWIMMING);
             }
             entity.setDeltaMovement(entity.getDeltaMovement().x, entity.getDeltaMovement().y > 0 ? entity.getDeltaMovement().y / 2 : entity.getDeltaMovement().y, entity.getDeltaMovement().z);
@@ -105,6 +105,9 @@ public class EntityZipperCapability {
                 player.abilities.flying = false;
             }
             entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 10, 10, false, false, false));
+
+            checkBodyPartEntity(leftLegId, () -> setLeftLegId(-1));
+            checkBodyPartEntity(rightLegId, () -> setRightLegId(-1));
         }
     }
 
@@ -124,7 +127,9 @@ public class EntityZipperCapability {
                 itemEntity.setPickUpDelay(40);
                 entity.level.addFreshEntity(itemEntity);
             }
+            checkBodyPartEntity(leftArmId, () -> setLeftArmId(-1));
         }
+
         if (isRightArmBlocked()) {
             ItemStack handItem = entity.getItemInHand(entity.getMainArm() == HandSide.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND);
             if (!handItem.isEmpty()) {
@@ -140,6 +145,16 @@ public class EntityZipperCapability {
                 itemEntity.setPickUpDelay(40);
                 entity.level.addFreshEntity(itemEntity);
             }
+
+            checkBodyPartEntity(rightArmId, () -> setRightArmId(-1));
+        }
+    }
+
+    private void checkBodyPartEntity(int id, Runnable trouble) {
+        if (id == -1) return;
+
+        if (entity.level.getEntity(id) == null) {
+            trouble.run();
         }
     }
 

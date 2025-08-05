@@ -76,20 +76,4 @@ public class PlayerLegEntity extends BodyPartEntity {
     public boolean isRight() {
         return entityData.get(IS_RIGHT);
     }
-
-    @Override
-    public void remove() {
-        super.remove();
-
-        if (owner.getEntityLiving(this.level) != null) {
-            LivingEntity livingEntity = owner.getEntityLiving(this.level);
-            livingEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
-                if (isRight()) {
-                    cap.setRightArmId(-1);
-                } else {
-                    cap.setLeftArmId(-1);
-                }
-            });
-        }
-    }
 }

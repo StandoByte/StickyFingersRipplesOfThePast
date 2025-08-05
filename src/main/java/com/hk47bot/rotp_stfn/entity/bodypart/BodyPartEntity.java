@@ -100,10 +100,6 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                 return;
             }
 
-            if (this.tickCount % 20 == 0) {
-                RotpStickyFingersAddon.getLogger().info("isclientside: {}, noGravity: {}", this.level.isClientSide, this.isNoGravity());
-            }
-
             if (this.lastTickNotified == -1) return;
 
             if (this.tickCount - this.lastTickNotified > 5) {
