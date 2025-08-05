@@ -11,6 +11,7 @@ import com.github.standobyte.jojo.entity.damaging.projectile.ownerbound.OwnerBou
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -20,13 +21,11 @@ public class ExtendedPunchEntity extends OwnerBoundProjectileEntity {
 
     private boolean bindEntities;
     private static final UUID MANUAL_MOVEMENT_LOCK = UUID.fromString("3f243248-974a-41f6-940e-13554f3dc2fc");
-    private IStandPower userStandPower;
     private StandEntity stand;
     private boolean caughtAnEntity = false;
 
     public ExtendedPunchEntity(World world, StandEntity entity, IStandPower power) {
         super(InitEntities.EXTENDED_PUNCH.get(), entity, world);
-        userStandPower = power;
         stand = entity;
         
     }
@@ -36,6 +35,10 @@ public class ExtendedPunchEntity extends OwnerBoundProjectileEntity {
         if (!level.isClientSide() && stand != null && caughtAnEntity) {
             stand.getManualMovementLocks().removeLock(MANUAL_MOVEMENT_LOCK);
         }
+    }
+    @Override
+    protected void afterBlockHit(BlockRayTraceResult blockRayTraceResult, boolean blockDestroyed) {
+        setIsRetracting(true);
     }
 
     public void setBindEntities(boolean bindEntities) {
@@ -91,6 +94,8 @@ public class ExtendedPunchEntity extends OwnerBoundProjectileEntity {
             }
         }
     }
+
+
 
     @Override
     public boolean standDamage() {
