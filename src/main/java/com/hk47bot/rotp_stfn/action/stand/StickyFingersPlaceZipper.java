@@ -71,7 +71,7 @@ public class StickyFingersPlaceZipper extends StandAction {
             BlockPos targetedBlockPos = target.getBlockPos();
             if (!world.isClientSide()) {
                 if (isBlockFree(world, targetedBlockPos.relative(target.getFace()))) {
-                    StickyFingersZipperBlock2.placeZippers(world, targetedBlockPos, target.getFace());
+                    StickyFingersZipperBlock2.placeZippers(world, targetedBlockPos, target.getFace(), user);
                 }
             } else if (ClientUtil.canHearStands()) {
                 world.playLocalSound(targetedBlockPos.getX(), targetedBlockPos.getY(), targetedBlockPos.getZ(), InitSounds.ZIPPER_CREATE.get(),
