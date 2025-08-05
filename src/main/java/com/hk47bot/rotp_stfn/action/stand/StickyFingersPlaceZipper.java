@@ -53,14 +53,12 @@ public class StickyFingersPlaceZipper extends StandAction {
 
     @Override
     protected ActionConditionResult checkSpecificConditions(LivingEntity user, IStandPower power, ActionTarget target) {
-        RayTraceResult rayTraceResult = JojoModUtil.rayTrace(power.getUser(), 5, null);
-        if (rayTraceResult.getType() == RayTraceResult.Type.BLOCK) {
-            BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
-            BlockPos targetedBlockPos = blockRayTraceResult.getBlockPos();
-            if (user.level.getBlockState(targetedBlockPos).isFaceSturdy(user.level, targetedBlockPos, blockRayTraceResult.getDirection())
-                    && isBlockFree(user.level, targetedBlockPos.relative(blockRayTraceResult.getDirection()))
-                    && (isBlockFree(user.level, targetedBlockPos.relative(blockRayTraceResult.getDirection().getOpposite()))
-                    || isBlockFree(user.level, targetedBlockPos.relative(blockRayTraceResult.getDirection().getOpposite(), 2)))) {
+        if (target.getType() == ActionTarget.TargetType.BLOCK) {
+            BlockPos targetedBlockPos = target.getBlockPos();
+            if (user.level.getBlockState(targetedBlockPos).isFaceSturdy(user.level, targetedBlockPos, target.getFace())
+                    && isBlockFree(user.level, targetedBlockPos.relative(target.getFace()))
+                    && (isBlockFree(user.level, targetedBlockPos.relative(target.getFace().getOpposite()))
+                    || isBlockFree(user.level, targetedBlockPos.relative(target.getFace().getOpposite(), 2)))) {
                 return ActionConditionResult.POSITIVE;
             }
         }
@@ -69,13 +67,11 @@ public class StickyFingersPlaceZipper extends StandAction {
 
     @Override
     protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
-        RayTraceResult rayTraceResult = JojoModUtil.rayTrace(user, 5, null);
-        if (rayTraceResult.getType() == RayTraceResult.Type.BLOCK) {
-            BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
-            BlockPos targetedBlockPos = blockRayTraceResult.getBlockPos();
+        if (target.getType() == ActionTarget.TargetType.BLOCK) {
+            BlockPos targetedBlockPos = target.getBlockPos();
             if (!world.isClientSide()) {
-                if (isBlockFree(world, targetedBlockPos.relative(blockRayTraceResult.getDirection()))) {
-                    StickyFingersZipperBlock2.placeZippers(world, targetedBlockPos, blockRayTraceResult.getDirection());
+                if (isBlockFree(world, targetedBlockPos.relative(target.getFace()))) {
+                    StickyFingersZipperBlock2.placeZippers(world, targetedBlockPos, target.getFace());
                 }
             } else if (ClientUtil.canHearStands()) {
                 world.playLocalSound(targetedBlockPos.getX(), targetedBlockPos.getY(), targetedBlockPos.getZ(), InitSounds.ZIPPER_CREATE.get(),
@@ -90,5 +86,10 @@ public class StickyFingersPlaceZipper extends StandAction {
 
     public static boolean isBlockZipper(World world, BlockPos blockPos) {
         return world.getBlockState(blockPos).getBlock() instanceof StickyFingersZipperBlock2;
+    }
+
+    @Override
+    public TargetRequirement getTargetRequirement() {
+        return TargetRequirement.BLOCK;
     }
 }
