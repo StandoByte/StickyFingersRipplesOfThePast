@@ -17,7 +17,7 @@ public class HumanoidUtil {
         copy.cubes = part.cubes;
         copy.children = part.children;
         if (shouldRotate) {
-            copy.xRot = -90 * MathUtil.DEG_TO_RAD; // todo: rotate by xRot and yRot
+            copy.xRot = -90 * MathUtil.DEG_TO_RAD;
         } else {
             copy.xRot = 0;
         }

@@ -11,6 +11,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -50,12 +51,29 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         super.tick();
         if (this.getOwner() == null || !this.getOwner().isAlive()){
             this.remove();
+        } else {
+            this.setHealth(this.getOwner().getHealth());
         }
     }
 
     @Nullable
     public LivingEntity getOwner() {
         return owner.getEntityLiving(this.level);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        LivingEntity ownerEntity = getOwner();
+        if (ownerEntity != null && !this.level.isClientSide) {
+            return ownerEntity.hurt(source, amount);
+        }
+        return super.hurt(source, amount);
+    }
+
+    @Override
+    public float getHealth() {
+        LivingEntity ownerEntity = getOwner();
+        return ownerEntity != null ? ownerEntity.getHealth() : super.getHealth();
     }
 
     @Override
