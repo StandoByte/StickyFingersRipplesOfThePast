@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -59,6 +60,7 @@ public class ClientEvents {
         if (ZipperUtil.hasZippersAround(event.getBlockPos(), mc.level)) {
             event.setCanceled(true);
             renderEndSky(event);
+            mc.options.setCameraType(PointOfView.FIRST_PERSON);
         }
     }
 

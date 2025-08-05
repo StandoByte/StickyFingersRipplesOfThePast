@@ -1,6 +1,5 @@
 package com.hk47bot.rotp_stfn.entity.bodypart;
 
-import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.util.mc.EntityOwnerResolver;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import net.minecraft.block.BlockState;
@@ -12,15 +11,16 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -28,26 +28,30 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalSpawnData {
+public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalSpawnData, IFlyingAnimal {
     public EntityOwnerResolver owner = new EntityOwnerResolver();
     private boolean isReturning = false;
+    protected GoToOwnerGoal goToOwnerGoal;
 
     public BodyPartEntity(EntityType<? extends BodyPartEntity> p_i48580_1_, World p_i48580_2_) {
         super(p_i48580_1_, p_i48580_2_);
-        this.moveControl = new FlyingMovementController(this, 10, false);
+        this.moveControl = new FlyingMovementController(this, 70, true);
+        this.navigation = new FlyingPathNavigator(this, p_i48580_2_);
+        this.setPathfindingMalus(PathNodeType.DANGER_FIRE, -1.0F);
     }
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new GoToOwnerGoal(this, 1D));
+        goToOwnerGoal = new GoToOwnerGoal(this, 1D);
+        this.goalSelector.addGoal(0, goToOwnerGoal);
     }
 
     @Override
     protected PathNavigator createNavigation(World world) {
         FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
-//        flyingpathnavigator.setCanFloat(true); // idk for what this
-//        flyingpathnavigator.setCanPassDoors(true); // no
+        flyingpathnavigator.setCanFloat(true); // idk for what this
+        flyingpathnavigator.setCanPassDoors(true); // no
         return flyingpathnavigator;
     }
 
@@ -61,6 +65,11 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     public void setOwner(LivingEntity entity) {
         owner.setOwner(entity);
+    }
+
+    @Override
+    public float getWalkTargetValue(BlockPos p_205022_1_, IWorldReader p_205022_2_) {
+        return p_205022_2_.getBlockState(p_205022_1_).isAir() ? 10.0F : 5.0F;
     }
 
     @Override
@@ -87,8 +96,9 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
             }
 
             if (isReturning) {
+                goToOwnerGoal.start();
                 LivingEntity ownerEntity = getOwner();
-                if (this.distanceToSqr(ownerEntity.position()) <= 5) {
+                if (this.distanceToSqr(ownerEntity.position()) <= 2) {
                     ownerEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
                         if (this instanceof PlayerArmEntity) {
                             if (((PlayerArmEntity) this).isRight()) cap.setRightArmBlocked(false);
@@ -102,6 +112,8 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                     });
                     this.remove();
                 }
+            } else {
+                goToOwnerGoal.stop();
             }
         }
     }
@@ -146,9 +158,9 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
         owner.readNetwork(additionalData);
-        if (this instanceof PlayerHeadEntity && this.getOwner() == ClientUtil.getClientPlayer()) {
-            ClientUtil.setCameraEntityPreventShaderSwitch(this);
-        }
+//        if (this instanceof PlayerHeadEntity && this.getOwner() == ClientUtil.getClientPlayer()) {
+//            ClientUtil.setCameraEntityPreventShaderSwitch(this);
+//        }
     }
 
     @Override
