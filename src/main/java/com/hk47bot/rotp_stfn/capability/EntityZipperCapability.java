@@ -3,6 +3,7 @@ package com.hk47bot.rotp_stfn.capability;
 import com.hk47bot.rotp_stfn.network.AddonPackets;
 import com.hk47bot.rotp_stfn.network.EntityZipperCapSyncPacket;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -89,6 +90,10 @@ public class EntityZipperCapability {
 
     public void tickLegs() {
         if (noLegs()) {
+            entity.setSwimming(true);
+            if (!(entity instanceof PlayerEntity)){
+                entity.setPose(Pose.SWIMMING);
+            }
             entity.setDeltaMovement(entity.getDeltaMovement().x, entity.getDeltaMovement().y > 0 ? entity.getDeltaMovement().y / 2 : entity.getDeltaMovement().y, entity.getDeltaMovement().z);
             if (noArms()) {
                 entity.setDeltaMovement(0, entity.hasEffect(Effects.LEVITATION) ? (0.05D * (double) (entity.getEffect(Effects.LEVITATION).getAmplifier() + 1) - entity.getDeltaMovement().y) * 0.2D : entity.getDeltaMovement().y, 0);

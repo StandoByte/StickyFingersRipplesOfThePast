@@ -1,17 +1,24 @@
 package com.hk47bot.rotp_stfn.block;
 
+import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.action.stand.StickyFingersPlaceZipper;
 import com.hk47bot.rotp_stfn.init.InitBlocks;
+import com.hk47bot.rotp_stfn.init.InitSounds;
 import com.hk47bot.rotp_stfn.tileentities.StickyFingersZipperTileEntity;
 import net.minecraft.block.*;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.potion.Effects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -55,7 +62,6 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
                 .setValue(DOWN, Boolean.FALSE)
         );
     }
-
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add((OPEN));
@@ -74,17 +80,19 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
         //DOWN
         builder.add((DOWN));
     }
-
     @Override
     public TileEntity newBlockEntity(IBlockReader world) {
         return new StickyFingersZipperTileEntity();
+    }
+
+    public FluidState getFluidState(BlockState p_204507_1_) {
+        return p_204507_1_.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(p_204507_1_);
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         return state.getValue(OPEN) ? VoxelShapes.empty() : super.getCollisionShape(state, world, pos, context);
     }
-
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         VoxelShape shape = VoxelShapes.empty();
@@ -129,10 +137,12 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
     public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
         return world.getBlockState(pos.relative(state.getValue(INITIAL_FACING).getOpposite())).isFaceSturdy(world, pos.relative(state.getValue(INITIAL_FACING).getOpposite()), state.getValue(INITIAL_FACING));
     }
-
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
-        if (!canSurvive(state, world, pos)) {
+        if (state.getValue(WATERLOGGED)) {
+            world.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+        }
+        if (!canSurvive(state, world, pos)){
             destroy(world, pos, state);
             return Blocks.AIR.defaultBlockState();
         }
