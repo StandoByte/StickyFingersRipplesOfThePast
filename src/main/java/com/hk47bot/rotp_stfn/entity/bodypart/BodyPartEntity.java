@@ -1,7 +1,10 @@
 package com.hk47bot.rotp_stfn.entity.bodypart;
 
 import com.github.standobyte.jojo.util.mc.EntityOwnerResolver;
+import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -31,6 +34,8 @@ import java.util.EnumSet;
 public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalSpawnData, IFlyingAnimal {
     public EntityOwnerResolver owner = new EntityOwnerResolver();
     private boolean isReturning = false;
+    @Getter @Setter
+    private int lastTickNotified;
     protected GoToOwnerGoal goToOwnerGoal;
 
     public BodyPartEntity(EntityType<? extends BodyPartEntity> p_i48580_1_, World p_i48580_2_) {
@@ -42,7 +47,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Override
     protected void registerGoals() {
-        goToOwnerGoal = new GoToOwnerGoal(this, 1D);
+        goToOwnerGoal = new GoToOwnerGoal(this, 1.5D);
         this.goalSelector.addGoal(0, goToOwnerGoal);
     }
 
@@ -90,8 +95,21 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     public void tick() {
         super.tick();
         if (!this.level.isClientSide()) {
-            if (this.getOwner() == null || !this.getOwner().isAlive()) {
+            if (this.getOwner() == null) {
                 this.remove();
+                return;
+            }
+
+            if (this.tickCount % 20 == 0) {
+                RotpStickyFingersAddon.getLogger().info("isclientside: {}, noGravity: {}", this.level.isClientSide, this.isNoGravity());
+            }
+
+            if (this.lastTickNotified == -1) return;
+
+            if (this.tickCount - this.lastTickNotified > 5) {
+                isReturning = false;
+                goToOwnerGoal.stop();
+                this.lastTickNotified = -1;
                 return;
             }
 
@@ -112,14 +130,13 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                     });
                     this.remove();
                 }
-            } else {
-                goToOwnerGoal.stop();
             }
         }
     }
 
     public void startReturning() {
         this.isReturning = true;
+        this.lastTickNotified = this.tickCount;
     }
 
     @Nullable
@@ -207,6 +224,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         public void stop() {
             this.owner = null;
             this.bodyPart.getNavigation().stop();
+            this.bodyPart.setNoGravity(false);
         }
     }
 }
