@@ -42,8 +42,8 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
         if (!capabilityOpt.isPresent()) return;
         EntityZipperCapability capability = capabilityOpt.get();
 
-        setPartAndLayersVisibility(this.head, capability.hasHead());
-        setPartAndLayersVisibility(this.hat, capability.hasHead());
+        setPartAndLayersVisibility(this.head, capability.isHasHead());
+        setPartAndLayersVisibility(this.hat, capability.isHasHead());
         setPartAndLayersVisibility(this.leftArm, !capability.isLeftArmBlocked());
         setPartAndLayersVisibility(this.rightArm, !capability.isRightArmBlocked());
         setPartAndLayersVisibility(this.leftLeg, !capability.isLeftLegBlocked());

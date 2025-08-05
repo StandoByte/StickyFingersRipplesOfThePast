@@ -13,7 +13,7 @@ public class StandUtilMixin {
     @Inject(method = "setManualControl", at = @At(value = "HEAD"), cancellable = true)
     private static void cancelControlWhenHead(PlayerEntity player, boolean manualControl, boolean keepPosition, CallbackInfo ci){
         player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(entityZipperCapability -> {
-            if (!entityZipperCapability.hasHead()){
+            if (!entityZipperCapability.isHasHead()){
                 ci.cancel();
             }
         });

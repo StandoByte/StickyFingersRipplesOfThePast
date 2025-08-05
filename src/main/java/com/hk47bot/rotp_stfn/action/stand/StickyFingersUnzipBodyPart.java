@@ -71,7 +71,7 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                     EntityZipperCapability capability = targetEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
                     switch (hitPart) {
                         case HEAD:
-                            if (capability.hasHead()) {
+                            if (capability.isHasHead()) {
                                 capability.setHead(false);
                                 PlayerHeadEntity head = new PlayerHeadEntity(world, targetEntity);
                                 Vector3d position = targetEntity.position().add(0, targetEntity.getBbHeight(), 0);
@@ -80,56 +80,62 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                             }
                             break;
                         case TORSO_ARMS:
-                            PlayerArmEntity arm = new PlayerArmEntity(world, targetEntity);
                             if (!capability.noArms()){
+                                boolean isRight = false;
                                 switch (targetEntity.getMainArm()) {
                                     case RIGHT:
                                         if (capability.isLeftArmBlocked()) {
                                             capability.setRightArmBlocked(true);
-                                            arm.setRightOrLeft(true);
+                                            isRight = true;
                                         } else {
                                             capability.setLeftArmBlocked(true);
-                                            arm.setRightOrLeft(false);
+                                            isRight = false;
                                         }
                                         break;
                                     case LEFT:
                                         if (capability.isRightArmBlocked()) {
                                             capability.setLeftArmBlocked(true);
-                                            arm.setRightOrLeft(false);
+                                            isRight = false;
                                         } else {
                                             capability.setRightArmBlocked(true);
-                                            arm.setRightOrLeft(true);
+                                            isRight = true;
                                         }
                                         break;
                                 }
+                                PlayerArmEntity arm = new PlayerArmEntity(world, targetEntity, isRight);
                                 Vector3d position = targetEntity.position();
                                 arm.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(arm);
                             }
                             break;
                         case LEGS:
-                            PlayerLegEntity leg = new PlayerLegEntity(world, targetEntity);
+                            boolean isRight = false;
                             if (!capability.noLegs()) {
                                 switch (targetEntity.getMainArm()) {
                                     case RIGHT:
                                         if (capability.isLeftLegBlocked()) {
                                             capability.setRightLegBlocked(true);
-                                            leg.setRightOrLeft(true);
+                                            isRight = true;
+//                                            leg.setRight(true);
                                         } else {
                                             capability.setLeftLegBlocked(true);
-                                            leg.setRightOrLeft(false);
+                                            isRight = false;
+//                                            leg.setRight(false);
                                         }
                                         break;
                                     case LEFT:
                                         if (capability.isRightLegBlocked()) {
                                             capability.setLeftLegBlocked(true);
-                                            leg.setRightOrLeft(false);
+//                                            leg.setRight(false);
+                                            isRight = false;
                                         } else {
                                             capability.setRightLegBlocked(true);
-                                            leg.setRightOrLeft(true);
+//                                            leg.setRight(true)
+                                            isRight = true;
                                         }
                                         break;
                                 }
+                                PlayerLegEntity leg = new PlayerLegEntity(world, targetEntity, isRight);
                                 Vector3d position = targetEntity.position();
                                 leg.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(leg);

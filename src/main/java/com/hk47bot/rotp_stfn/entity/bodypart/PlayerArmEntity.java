@@ -14,17 +14,26 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class PlayerArmEntity extends BodyPartEntity {
-
     protected static final DataParameter<Boolean> IS_RIGHT = EntityDataManager.defineId(PlayerArmEntity.class, DataSerializers.BOOLEAN);
 
     public PlayerArmEntity(EntityType<? extends PlayerArmEntity> p_i48580_1_, World p_i48580_2_) {
         super(p_i48580_1_, p_i48580_2_);
     }
 
-    public PlayerArmEntity(World world, LivingEntity owner) {
+    public PlayerArmEntity(World world, LivingEntity owner, boolean isRight) {
         super(InitEntities.PLAYER_ARM.get(), world);
         this.setOwner(owner);
-        this.setInvulnerable(true);
+        this.setRight(isRight);
+
+        if (owner != null) {
+            owner.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
+                if (isRight()) {
+                    cap.setRightArmId(this.getId());
+                } else {
+                    cap.setLeftArmId(this.getId());
+                }
+            });
+        }
     }
 
     @Override
@@ -49,22 +58,37 @@ public class PlayerArmEntity extends BodyPartEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt){
+    public void readAdditionalSaveData(CompoundNBT nbt) {
         entityData.set(IS_RIGHT, nbt.getBoolean("IsRight"));
         super.readAdditionalSaveData(nbt);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt){
+    public void addAdditionalSaveData(CompoundNBT nbt) {
         nbt.putBoolean("IsRight", entityData.get(IS_RIGHT));
         super.addAdditionalSaveData(nbt);
     }
 
-    public void setRightOrLeft(boolean side){
+    public void setRight(boolean side) {
         entityData.set(IS_RIGHT, side);
     }
 
-    public boolean isRight(){
+    public boolean isRight() {
         return entityData.get(IS_RIGHT);
+    }
+
+    @Override
+    public void remove() {
+        if (owner.getEntityLiving(this.level) != null) {
+            LivingEntity livingEntity = owner.getEntityLiving(this.level);
+            livingEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
+                if (isRight()) {
+                    cap.setRightArmId(-1);
+                } else {
+                    cap.setLeftArmId(-1);
+                }
+            });
+        }
+        super.remove();
     }
 }

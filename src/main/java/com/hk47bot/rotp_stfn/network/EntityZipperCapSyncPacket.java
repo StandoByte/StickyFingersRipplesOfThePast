@@ -15,19 +15,42 @@ public class EntityZipperCapSyncPacket {
     private final int entityId;
     private final boolean leftArmBlocked;
     private final boolean rightArmBlocked;
-
     private final boolean rightLegBlocked;
     private final boolean leftLegBlocked;
-
     private final boolean hasHead;
 
-    public EntityZipperCapSyncPacket(int entityId, boolean leftArmBlocked, boolean rightArmBlocked, boolean leftLegBlocked, boolean rightLegBlocked, boolean hasHead) {
+    private final int headId;
+    private final int leftArmId;
+    private final int rightArmId;
+    private final int rightLegId;
+    private final int leftLegId;
+
+    public EntityZipperCapSyncPacket(
+            int entityId,
+            boolean leftArmBlocked,
+            boolean rightArmBlocked,
+            boolean leftLegBlocked,
+            boolean rightLegBlocked,
+            boolean hasHead,
+
+            int headId,
+            int leftArmId,
+            int rightArmId,
+            int leftLegId,
+            int rightLegId
+    ) {
         this.entityId = entityId;
         this.leftArmBlocked = leftArmBlocked;
         this.rightArmBlocked = rightArmBlocked;
         this.leftLegBlocked = leftLegBlocked;
         this.rightLegBlocked = rightLegBlocked;
         this.hasHead = hasHead;
+
+        this.headId = headId;
+        this.leftArmId = leftArmId;
+        this.rightArmId = rightArmId;
+        this.rightLegId = rightLegId;
+        this.leftLegId = leftLegId;
     }
 
     public EntityZipperCapSyncPacket(EntityZipperCapability capability) {
@@ -36,7 +59,13 @@ public class EntityZipperCapSyncPacket {
         this.rightArmBlocked = capability.isRightArmBlocked();
         this.leftLegBlocked = capability.isLeftLegBlocked();
         this.rightLegBlocked = capability.isRightLegBlocked();
-        this.hasHead = capability.hasHead();
+        this.hasHead = capability.isHasHead();
+
+        this.headId = capability.getHeadId();
+        this.leftArmId = capability.getLeftArmId();
+        this.rightArmId = capability.getRightArmId();
+        this.rightLegId = capability.getRightLegId();
+        this.leftLegId = capability.getLeftLegId();
     }
 
     public static class Handler implements IModPacketHandler<EntityZipperCapSyncPacket> {
@@ -48,11 +77,19 @@ public class EntityZipperCapSyncPacket {
             buf.writeBoolean(entityZipperCapSyncPacket.leftLegBlocked);
             buf.writeBoolean(entityZipperCapSyncPacket.rightLegBlocked);
             buf.writeBoolean(entityZipperCapSyncPacket.hasHead);
+
+            buf.writeInt(entityZipperCapSyncPacket.headId);
+            buf.writeInt(entityZipperCapSyncPacket.leftArmId);
+            buf.writeInt(entityZipperCapSyncPacket.rightArmId);
+            buf.writeInt(entityZipperCapSyncPacket.rightLegId);
+            buf.writeInt(entityZipperCapSyncPacket.leftLegId);
         }
 
         @Override
         public EntityZipperCapSyncPacket decode(PacketBuffer buf) {
-            return new EntityZipperCapSyncPacket(buf.readInt(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
+            return new EntityZipperCapSyncPacket(
+                    buf.readInt(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(),
+                    buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt());
         }
 
         @Override
@@ -68,6 +105,12 @@ public class EntityZipperCapSyncPacket {
                     capability.setRightLegBlocked(entityZipperCapSyncPacket.rightLegBlocked);
 
                     capability.setHead(entityZipperCapSyncPacket.hasHead);
+
+                    capability.setHeadId(entityZipperCapSyncPacket.headId);
+                    capability.setLeftArmId(entityZipperCapSyncPacket.leftArmId);
+                    capability.setRightArmId(entityZipperCapSyncPacket.rightArmId);
+                    capability.setRightLegId(entityZipperCapSyncPacket.rightLegId);
+                    capability.setLeftLegId(entityZipperCapSyncPacket.leftLegId);
                 });
             }
         }

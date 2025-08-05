@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
-@Mixin(ArmorStandArmorModel.class)
+@Mixin(value = ArmorStandArmorModel.class, remap = false)
 public class ArmorStandArmorModelMixin<T extends LivingEntity> {
     @Inject(method = "setupAnim(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     private void copyModelVisibility(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
@@ -22,8 +22,8 @@ public class ArmorStandArmorModelMixin<T extends LivingEntity> {
         if (capability.isPresent()) {
             EntityZipperCapability cap = capability.get();
 
-            model.head.visible = cap.hasHead();
-            model.head.children.forEach(m -> m.visible = cap.hasHead());
+            model.head.visible = cap.isHasHead();
+            model.head.children.forEach(m -> m.visible = cap.isHasHead());
 
             model.leftArm.visible = !cap.isLeftArmBlocked();
             model.leftArm.children.forEach(m -> m.visible = !cap.isLeftArmBlocked());

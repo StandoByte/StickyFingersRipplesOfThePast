@@ -2,22 +2,27 @@ package com.hk47bot.rotp_stfn.entity.bodypart;
 
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.init.InitEntities;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class PlayerHeadEntity extends BodyPartEntity {
-
     public PlayerHeadEntity(EntityType<? extends PlayerHeadEntity> p_i48580_1_, World p_i48580_2_) {
         super(p_i48580_1_, p_i48580_2_);
     }
 
     public PlayerHeadEntity(World world, LivingEntity owner) {
         super(InitEntities.PLAYER_HEAD.get(), world);
-        setInvulnerable(true);
         setOwner(owner);
+
+        if (owner != null) {
+            owner.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
+                cap.setHeadId(this.getId());
+            });
+        }
     }
 
     @Override
@@ -29,5 +34,17 @@ public class PlayerHeadEntity extends BodyPartEntity {
             });
         }
         return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+
+        if (owner.getEntityLiving(this.level) != null) {
+            LivingEntity livingEntity = owner.getEntityLiving(this.level);
+            livingEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
+                cap.setHeadId(-1);
+            });
+        }
     }
 }

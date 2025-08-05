@@ -2,6 +2,7 @@ package com.hk47bot.rotp_stfn.capability;
 
 import com.hk47bot.rotp_stfn.network.AddonPackets;
 import com.hk47bot.rotp_stfn.network.EntityZipperCapSyncPacket;
+import lombok.Getter;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.item.ItemEntity;
@@ -15,12 +16,28 @@ import net.minecraft.util.HandSide;
 
 public class EntityZipperCapability {
     private final LivingEntity entity;
+
+    @Getter
+    private boolean hasHead = true;
+    @Getter
     private boolean leftArmBlocked = false;
+    @Getter
     private boolean rightArmBlocked = false;
+    @Getter
     private boolean rightLegBlocked = false;
+    @Getter
     private boolean leftLegBlocked = false;
 
-    private boolean hasHead = true;
+    @Getter
+    private int headId = -1;
+    @Getter
+    private int leftArmId = -1;
+    @Getter
+    private int rightArmId = -1;
+    @Getter
+    private int rightLegId = -1;
+    @Getter
+    private int leftLegId = -1;
 
     public EntityZipperCapability(LivingEntity entity) {
         this.entity = entity;
@@ -30,19 +47,11 @@ public class EntityZipperCapability {
         return entity.getId();
     }
 
-    public boolean isLeftArmBlocked() {
-        return leftArmBlocked;
-    }
-
     public void setLeftArmBlocked(boolean leftArmBlocked) {
         this.leftArmBlocked = leftArmBlocked;
         if (entity != null) {
             syncData(entity);
         }
-    }
-
-    public boolean isRightArmBlocked() {
-        return rightArmBlocked;
     }
 
     public void setRightArmBlocked(boolean rightArmBlocked) {
@@ -52,19 +61,11 @@ public class EntityZipperCapability {
         }
     }
 
-    public boolean isRightLegBlocked() {
-        return rightLegBlocked;
-    }
-
     public void setRightLegBlocked(boolean rightLegBlocked) {
         this.rightLegBlocked = rightLegBlocked;
         if (entity != null) {
             syncData(entity);
         }
-    }
-
-    public boolean isLeftLegBlocked() {
-        return leftLegBlocked;
     }
 
     public void setLeftLegBlocked(boolean leftLegBlocked) {
@@ -149,6 +150,12 @@ public class EntityZipperCapability {
         nbt.putBoolean("RightLeg", rightLegBlocked);
         nbt.putBoolean("LeftLeg", leftLegBlocked);
         nbt.putBoolean("HasHead", hasHead);
+
+        nbt.putInt("RightArmId", rightArmId);
+        nbt.putInt("LeftArmId", leftArmId);
+        nbt.putInt("RightLegId", rightLegId);
+        nbt.putInt("LeftLegId", leftLegId);
+        nbt.putInt("HeadId", headId);
         return nbt;
     }
 
@@ -158,14 +165,53 @@ public class EntityZipperCapability {
         rightLegBlocked = nbt.getBoolean("RightLeg");
         leftLegBlocked = nbt.getBoolean("LeftLeg");
         hasHead = nbt.getBoolean("HasHead");
-    }
 
-    public boolean hasHead() {
-        return hasHead;
+        rightArmId = nbt.getInt("RightArmId");
+        leftArmId = nbt.getInt("LeftArmId");
+        rightLegId = nbt.getInt("RightLegId");
+        leftLegId = nbt.getInt("LeftLegId");
+        headId = nbt.getInt("HeadId");
     }
 
     public void setHead(boolean hasHead) {
         this.hasHead = hasHead;
+        if (entity != null) {
+            syncData(entity);
+        }
+    }
+
+    // fuckin ids
+
+    public void setHeadId(int headId) {
+        this.headId = headId;
+        if (entity != null) {
+            syncData(entity);
+        }
+    }
+
+    public void setLeftArmId(int leftArmId) {
+        this.leftArmId = leftArmId;
+        if (entity != null) {
+            syncData(entity);
+        }
+    }
+
+    public void setRightArmId(int rightArmId) {
+        this.rightArmId = rightArmId;
+        if (entity != null) {
+            syncData(entity);
+        }
+    }
+
+    public void setRightLegId(int rightLegId) {
+        this.rightLegId = rightLegId;
+        if (entity != null) {
+            syncData(entity);
+        }
+    }
+
+    public void setLeftLegId(int leftLegId) {
+        this.leftLegId = leftLegId;
         if (entity != null) {
             syncData(entity);
         }
