@@ -6,7 +6,6 @@ import com.hk47bot.rotp_stfn.capability.ZipperStorageCap;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCapProvider;
 import com.hk47bot.rotp_stfn.init.InitEffects;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
