@@ -15,11 +15,13 @@ public class EntityZipperCapSyncPacket {
     private final int entityId;
     private final boolean leftArmBlocked;
     private final boolean rightArmBlocked;
+
     private final boolean rightLegBlocked;
     private final boolean leftLegBlocked;
+
     private final boolean hasHead;
 
-    public EntityZipperCapSyncPacket(int entityId, boolean leftArmBlocked, boolean rightArmBlocked, boolean leftLegBlocked, boolean rightLegBlocked, boolean hasHead){
+    public EntityZipperCapSyncPacket(int entityId, boolean leftArmBlocked, boolean rightArmBlocked, boolean leftLegBlocked, boolean rightLegBlocked, boolean hasHead) {
         this.entityId = entityId;
         this.leftArmBlocked = leftArmBlocked;
         this.rightArmBlocked = rightArmBlocked;
@@ -27,7 +29,8 @@ public class EntityZipperCapSyncPacket {
         this.rightLegBlocked = rightLegBlocked;
         this.hasHead = hasHead;
     }
-    public EntityZipperCapSyncPacket(EntityZipperCapability capability){
+
+    public EntityZipperCapSyncPacket(EntityZipperCapability capability) {
         this.entityId = capability.getEntityId();
         this.leftArmBlocked = capability.isLeftArmBlocked();
         this.rightArmBlocked = capability.isRightArmBlocked();
@@ -35,6 +38,7 @@ public class EntityZipperCapSyncPacket {
         this.rightLegBlocked = capability.isRightLegBlocked();
         this.hasHead = capability.hasHead();
     }
+
     public static class Handler implements IModPacketHandler<EntityZipperCapSyncPacket> {
         @Override
         public void encode(EntityZipperCapSyncPacket entityZipperCapSyncPacket, PacketBuffer buf) {
@@ -54,13 +58,15 @@ public class EntityZipperCapSyncPacket {
         @Override
         public void handle(EntityZipperCapSyncPacket entityZipperCapSyncPacket, Supplier<NetworkEvent.Context> ctx) {
             Entity entity = ClientUtil.getEntityById(entityZipperCapSyncPacket.entityId);
-            if (entity instanceof LivingEntity){
+            if (entity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) entity;
                 livingEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(capability -> {
                     capability.setLeftArmBlocked(entityZipperCapSyncPacket.leftArmBlocked);
-                    capability.setRightLegBlocked(entityZipperCapSyncPacket.rightArmBlocked);
+                    capability.setRightArmBlocked(entityZipperCapSyncPacket.rightArmBlocked);
+
                     capability.setLeftLegBlocked(entityZipperCapSyncPacket.leftLegBlocked);
                     capability.setRightLegBlocked(entityZipperCapSyncPacket.rightLegBlocked);
+
                     capability.setHead(entityZipperCapSyncPacket.hasHead);
                 });
             }

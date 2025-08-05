@@ -1,4 +1,4 @@
-package com.hk47bot.rotp_stfn.mixin;
+package com.hk47bot.rotp_stfn.mixin.client;
 
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
 import net.minecraft.client.renderer.GameRenderer;

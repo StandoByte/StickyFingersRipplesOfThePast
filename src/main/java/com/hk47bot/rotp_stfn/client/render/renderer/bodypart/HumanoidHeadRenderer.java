@@ -34,7 +34,7 @@ public class HumanoidHeadRenderer extends SimpleEntityRenderer<PlayerHeadEntity,
                 EntityModel entityModel = renderer.getModel();
                 if (entityModel instanceof BipedModel){
                     BipedModel humanoidModel = (BipedModel) entityModel;
-                    HumanoidUtil.renderPart(humanoidModel.head, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, false, 0, 0, 0);
+                    HumanoidUtil.renderPart(entity, humanoidModel.head, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, false, 0, 0, 0);
                 }
             }
         }

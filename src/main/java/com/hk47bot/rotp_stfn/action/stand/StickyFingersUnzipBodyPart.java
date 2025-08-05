@@ -20,6 +20,7 @@ import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
 import com.hk47bot.rotp_stfn.init.InitSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
@@ -73,7 +74,8 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                             if (capability.hasHead()) {
                                 capability.setHead(false);
                                 PlayerHeadEntity head = new PlayerHeadEntity(world, targetEntity);
-                                head.moveTo(targetEntity.position().add(0, targetEntity.getBbHeight(), 0));
+                                Vector3d position = targetEntity.position().add(0, targetEntity.getBbHeight(), 0);
+                                head.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(head);
                             }
                             break;
@@ -100,7 +102,8 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                                         }
                                         break;
                                 }
-                                arm.moveTo(targetEntity.position());
+                                Vector3d position = targetEntity.position();
+                                arm.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(arm);
                             }
                             break;
@@ -127,7 +130,8 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                                         }
                                         break;
                                 }
-                                leg.moveTo(targetEntity.position());
+                                Vector3d position = targetEntity.position();
+                                leg.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(leg);
                             }
                             break;

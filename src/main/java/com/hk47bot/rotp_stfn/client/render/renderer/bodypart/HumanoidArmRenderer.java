@@ -30,7 +30,7 @@ public class HumanoidArmRenderer extends SimpleEntityRenderer<PlayerArmEntity, P
                 if (entityModel instanceof BipedModel){
                     BipedModel humanoidModel = (BipedModel) entityModel;
 
-                    HumanoidUtil.renderPart(entity.isRight() ? humanoidModel.rightArm : humanoidModel.leftArm, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, true, -2, -2, 2);
+                    HumanoidUtil.renderPart(entity, entity.isRight() ? humanoidModel.rightArm : humanoidModel.leftArm, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, true, -2, -2, 2);
                 }
             }
         }

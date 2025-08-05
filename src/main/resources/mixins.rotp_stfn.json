@@ -10,10 +10,11 @@
     "StandUtilMixin"
   ],
   "client": [
-    "BipedModelMixin",
-    "ClientPlayerMixin",
-    "GameRendererMixin",
-    "ModelRendererMixin"
+    "client.ArmorStandArmorModelMixin",
+    "client.BipedModelMixin",
+    "client.ClientPlayerMixin",
+    "client.GameRendererMixin",
+    "client.ModelRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,4 +1,4 @@
-package com.hk47bot.rotp_stfn.mixin;
+package com.hk47bot.rotp_stfn.mixin.client;
 
 import net.minecraft.client.renderer.model.ModelRenderer;
 import org.spongepowered.asm.mixin.Mixin;
