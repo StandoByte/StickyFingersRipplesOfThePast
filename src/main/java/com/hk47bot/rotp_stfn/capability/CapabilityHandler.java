@@ -48,9 +48,8 @@ public class CapabilityHandler {
     @SubscribeEvent
     public static void syncWithNewPlayer(PlayerEvent.StartTracking event) {
         Entity entityTracked = event.getTarget();
-        ServerPlayerEntity trackingPlayer = (ServerPlayerEntity) event.getPlayer();
         if (entityTracked instanceof LivingEntity) {
-            syncAttachedData(trackingPlayer);
+            syncAttachedData((LivingEntity) entityTracked);
         }
     }
 
@@ -64,10 +63,7 @@ public class CapabilityHandler {
         syncAttachedData(event.getPlayer());
     }
 
-    private static void syncAttachedData(PlayerEntity player) {
-        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
-        if (serverPlayer != null){
-            serverPlayer.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(capability -> capability.syncData(serverPlayer));
-        }
+    private static void syncAttachedData(LivingEntity entity) {
+        entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(capability -> capability.syncData(entity));
     }
 }

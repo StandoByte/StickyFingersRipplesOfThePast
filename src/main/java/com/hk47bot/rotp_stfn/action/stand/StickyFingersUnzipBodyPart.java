@@ -13,14 +13,13 @@ import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.power.impl.stand.StandUtil;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
+import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
 import com.hk47bot.rotp_stfn.init.InitSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.World;
 
 public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
@@ -35,7 +34,7 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
     protected ActionConditionResult checkSpecificConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         if (power.isActive()) {
             Entity targetEntity = target.getEntity();
-            if (targetEntity instanceof LivingEntity && StandUtil.getStandUser((LivingEntity) targetEntity) instanceof PlayerEntity) {
+            if (targetEntity instanceof LivingEntity) {
                 StandEntity standEntity = (StandEntity) power.getStandManifestation();
                 TargetHitPart hitPart = standEntity.getCurrentTask().map(task -> {
                     if (task.hasModifierAction(null)) {
@@ -63,13 +62,15 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                         world.playLocalSound(entity.getX(), entity.getY(0.5), entity.getZ(), InitSounds.STICKY_FINGERS_UNZIP_PART.get(),
                                 standEntity.getSoundSource(), 1.0F, 1.0F, false);
                     }
-                }
-                else if (triggerEffect) {
+                } else if (triggerEffect) {
                     LivingEntity targetEntity = StandUtil.getStandUser((LivingEntity) entity);
+                    if (targetEntity instanceof BodyPartEntity){
+                        return;
+                    }
                     EntityZipperCapability capability = targetEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
                     switch (hitPart) {
                         case HEAD:
-                            if (targetEntity instanceof ServerPlayerEntity) {
+                            if (capability.hasHead()) {
                                 capability.setHead(false);
                                 PlayerHeadEntity head = new PlayerHeadEntity(world, targetEntity);
                                 head.moveTo(targetEntity.position().add(0, targetEntity.getBbHeight(), 0));
@@ -77,58 +78,58 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                             }
                             break;
                         case TORSO_ARMS:
-                            PlayerArmEntity arm = new PlayerArmEntity(world, userPower.getUser());
-                            switch (userPower.getUser().getMainArm()){
-                                case RIGHT:
-                                    if (capability.isLeftArmBlocked()){
-                                        capability.setRightArmBlocked(true);
-                                        arm.setRightOrLeft(true);
-                                    }
-                                    else {
-                                        capability.setLeftArmBlocked(true);
-                                        arm.setRightOrLeft(false);
-                                    }
-                                    break;
-                                case LEFT:
-                                    if (capability.isRightArmBlocked()){
-                                        capability.setLeftArmBlocked(true);
-                                        arm.setRightOrLeft(false);
-                                    }
-                                    else {
-                                        capability.setRightArmBlocked(true);
-                                        arm.setRightOrLeft(true);
-                                    }
-                                    break;
+                            PlayerArmEntity arm = new PlayerArmEntity(world, targetEntity);
+                            if (!capability.noArms()){
+                                switch (targetEntity.getMainArm()) {
+                                    case RIGHT:
+                                        if (capability.isLeftArmBlocked()) {
+                                            capability.setRightArmBlocked(true);
+                                            arm.setRightOrLeft(true);
+                                        } else {
+                                            capability.setLeftArmBlocked(true);
+                                            arm.setRightOrLeft(false);
+                                        }
+                                        break;
+                                    case LEFT:
+                                        if (capability.isRightArmBlocked()) {
+                                            capability.setLeftArmBlocked(true);
+                                            arm.setRightOrLeft(false);
+                                        } else {
+                                            capability.setRightArmBlocked(true);
+                                            arm.setRightOrLeft(true);
+                                        }
+                                        break;
+                                }
+                                arm.moveTo(targetEntity.position());
+                                world.addFreshEntity(arm);
                             }
-                            arm.moveTo(userPower.getUser().position());
-                            world.addFreshEntity(arm);
                             break;
                         case LEGS:
-                            PlayerLegEntity leg = new PlayerLegEntity(world, userPower.getUser());
-                            switch (userPower.getUser().getMainArm()){
-                                case RIGHT:
-                                    if (capability.isLeftLegBlocked()){
-                                        capability.setRightLegBlocked(true);
-                                        leg.setRightOrLeft(true);
-                                    }
-                                    else {
-                                        capability.setLeftLegBlocked(true);
-                                        leg.setRightOrLeft(false);
-                                    }
-                                    break;
-                                case LEFT:
-                                    if (capability.isRightLegBlocked()){
-                                        capability.setLeftLegBlocked(true);
-                                        leg.setRightOrLeft(false);
-                                    }
-                                    else {
-                                        capability.setRightLegBlocked(true);
-                                        leg.setRightOrLeft(true);
-                                    }
-                                    break;
+                            PlayerLegEntity leg = new PlayerLegEntity(world, targetEntity);
+                            if (!capability.noLegs()) {
+                                switch (targetEntity.getMainArm()) {
+                                    case RIGHT:
+                                        if (capability.isLeftLegBlocked()) {
+                                            capability.setRightLegBlocked(true);
+                                            leg.setRightOrLeft(true);
+                                        } else {
+                                            capability.setLeftLegBlocked(true);
+                                            leg.setRightOrLeft(false);
+                                        }
+                                        break;
+                                    case LEFT:
+                                        if (capability.isRightLegBlocked()) {
+                                            capability.setLeftLegBlocked(true);
+                                            leg.setRightOrLeft(false);
+                                        } else {
+                                            capability.setRightLegBlocked(true);
+                                            leg.setRightOrLeft(true);
+                                        }
+                                        break;
+                                }
+                                leg.moveTo(targetEntity.position());
+                                world.addFreshEntity(leg);
                             }
-                            leg.moveTo(userPower.getUser().position());
-                            world.addFreshEntity(leg);
                             break;
                     }
                     IPunch punch = standEntity.getLastPunch();

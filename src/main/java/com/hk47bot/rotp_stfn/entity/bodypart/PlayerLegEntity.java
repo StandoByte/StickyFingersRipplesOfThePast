@@ -28,15 +28,17 @@ public class PlayerLegEntity extends BodyPartEntity {
 
     @Override
     protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
-        player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
-            if (isRight()){
-                cap.setRightLegBlocked(false);
-            }
-            else {
-                cap.setLeftLegBlocked(false);
-            }
-            this.remove();
-        });
+        if (player == getOwner()){
+            player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
+                if (isRight()){
+                    cap.setRightLegBlocked(false);
+                }
+                else {
+                    cap.setLeftLegBlocked(false);
+                }
+                this.remove();
+            });
+        }
         return super.mobInteract(player, hand);
     }
 

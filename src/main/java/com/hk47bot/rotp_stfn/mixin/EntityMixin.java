@@ -3,6 +3,8 @@ package com.hk47bot.rotp_stfn.mixin;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Pose;
+import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,6 +21,9 @@ public class EntityMixin {
             livingEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(capability -> {
                 if (capability.noLegs()){
                     livingEntity.setSwimming(true);
+                    if (!(livingEntity instanceof PlayerEntity)){
+                        livingEntity.setPose(Pose.SWIMMING);
+                    }
                 }
             });
         }

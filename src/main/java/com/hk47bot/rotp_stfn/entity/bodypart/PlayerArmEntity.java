@@ -29,15 +29,16 @@ public class PlayerArmEntity extends BodyPartEntity {
 
     @Override
     protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
-        player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
-            if (isRight()){
-                cap.setRightArmBlocked(false);
-            }
-            else {
-                cap.setLeftArmBlocked(false);
-            }
-            this.remove();
-        });
+        if (player == getOwner()) {
+            player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
+                if (isRight()) {
+                    cap.setRightArmBlocked(false);
+                } else {
+                    cap.setLeftArmBlocked(false);
+                }
+                this.remove();
+            });
+        }
         return super.mobInteract(player, hand);
     }
 

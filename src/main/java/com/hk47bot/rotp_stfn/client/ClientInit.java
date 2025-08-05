@@ -1,9 +1,9 @@
 package com.hk47bot.rotp_stfn.client;
 
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
-import com.hk47bot.rotp_stfn.client.render.renderer.bodypart.PlayerArmRenderer;
-import com.hk47bot.rotp_stfn.client.render.renderer.bodypart.PlayerHeadRenderer;
-import com.hk47bot.rotp_stfn.client.render.renderer.bodypart.PlayerLegRenderer;
+import com.hk47bot.rotp_stfn.client.render.renderer.bodypart.HumanoidArmRenderer;
+import com.hk47bot.rotp_stfn.client.render.renderer.bodypart.HumanoidHeadRenderer;
+import com.hk47bot.rotp_stfn.client.render.renderer.bodypart.HumanoidLegRenderer;
 import com.hk47bot.rotp_stfn.client.render.renderer.tileentity.StickyFingersZipperBlockRenderer;
 import com.hk47bot.rotp_stfn.client.render.renderer.projectile.ExtendedPunchRenderer;
 
@@ -34,9 +34,9 @@ public class ClientInit {
         ScreenManager.register(InitContainers.STICKY_FINGERS_BLOCK_CONTAINER.get(), ZipperInventoryMenu::new);
 
         RenderingRegistry.registerEntityRenderingHandler(InitEntities.EXTENDED_PUNCH.get(), ExtendedPunchRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(InitEntities.PLAYER_HEAD.get(), PlayerHeadRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(InitEntities.PLAYER_ARM.get(), PlayerArmRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(InitEntities.PLAYER_LEG.get(), PlayerLegRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InitEntities.PLAYER_HEAD.get(), HumanoidHeadRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InitEntities.PLAYER_ARM.get(), HumanoidArmRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(InitEntities.PLAYER_LEG.get(), HumanoidLegRenderer::new);
         ClientRegistry.bindTileEntityRenderer(InitTileEntities.ZIPPER_TILE_ENTITY.get(), StickyFingersZipperBlockRenderer::new);
         RenderTypeLookup.setRenderLayer(InitBlocks.STICKY_FINGERS_ZIPPER.get(), RenderType.cutoutMipped());
         ClientEvents.init(mc);

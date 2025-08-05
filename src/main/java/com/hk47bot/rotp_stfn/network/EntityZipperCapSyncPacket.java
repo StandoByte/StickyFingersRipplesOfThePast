@@ -29,10 +29,10 @@ public class EntityZipperCapSyncPacket {
     }
     public EntityZipperCapSyncPacket(EntityZipperCapability capability){
         this.entityId = capability.getEntityId();
-        this.leftLegBlocked = capability.isLeftLegBlocked();
-        this.rightLegBlocked = capability.isRightLegBlocked();
         this.leftArmBlocked = capability.isLeftArmBlocked();
         this.rightArmBlocked = capability.isRightArmBlocked();
+        this.leftLegBlocked = capability.isLeftLegBlocked();
+        this.rightLegBlocked = capability.isRightLegBlocked();
         this.hasHead = capability.hasHead();
     }
     public static class Handler implements IModPacketHandler<EntityZipperCapSyncPacket> {

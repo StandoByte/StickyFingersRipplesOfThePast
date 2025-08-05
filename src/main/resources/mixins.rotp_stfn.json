@@ -10,8 +10,10 @@
     "StandUtilMixin"
   ],
   "client": [
+    "BipedModelMixin",
     "ClientPlayerMixin",
-    "GameRendererMixin"
+    "GameRendererMixin",
+    "ModelRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

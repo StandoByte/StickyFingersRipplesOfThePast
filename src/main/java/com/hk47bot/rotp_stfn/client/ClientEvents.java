@@ -76,25 +76,11 @@ public class ClientEvents {
     public void onPreRenderLiving(RenderLivingEvent.Pre event) {
         EntityModel model = event.getRenderer().getModel();
         LivingEntity entity = event.getEntity();
-        if (model instanceof BipedModel && entity instanceof AbstractClientPlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
-            Optional<EntityZipperCapability> capability = player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
+        if (model instanceof BipedModel) {
+            Optional<EntityZipperCapability> capability = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
             if (capability.isPresent()){
-                if (capability.get().noArms() && capability.get().noLegs()){
-                    ((BipedModel<?>) model).head.setPos(0.0F, 0.0F, -2.5F);
-                    ((BipedModel<?>) model).body.setPos(0.0F, 0.0F, -2.5F);
-                }
-                ((BipedModel<?>) model).head.visible = capability.get().hasHead();
-                ((BipedModel<?>) model).leftArm.visible = !capability.get().isLeftArmBlocked();
-                ((BipedModel<?>) model).rightArm.visible = !capability.get().isRightArmBlocked();
-                ((BipedModel<?>) model).leftLeg.visible = !capability.get().isLeftLegBlocked();
-                ((BipedModel<?>) model).rightLeg.visible = !capability.get().isRightLegBlocked();
-                if (model instanceof PlayerModel){
-                    ((PlayerModel<?>) model).hat.visible = capability.get().hasHead();
-                    ((PlayerModel<?>) model).leftSleeve.visible = !capability.get().isLeftArmBlocked();
-                    ((PlayerModel<?>) model).rightSleeve.visible = !capability.get().isRightArmBlocked();
-                    ((PlayerModel<?>) model).leftPants.visible = !capability.get().isLeftLegBlocked();
-                    ((PlayerModel<?>) model).rightPants.visible = !capability.get().isRightLegBlocked();
+                if (capability.get().noLegs() && !(entity instanceof PlayerEntity)){
+                    event.getMatrixStack().translate(0.0D, -1.0D, (double)0.3F);
                 }
             }
         }

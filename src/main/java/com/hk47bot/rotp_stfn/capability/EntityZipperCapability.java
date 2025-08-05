@@ -5,7 +5,6 @@ import com.hk47bot.rotp_stfn.network.EntityZipperCapSyncPacket;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
@@ -26,7 +25,7 @@ public class EntityZipperCapability {
         this.entity = entity;
     }
 
-    public int getEntityId(){
+    public int getEntityId() {
         return entity.getId();
     }
 
@@ -36,8 +35,8 @@ public class EntityZipperCapability {
 
     public void setLeftArmBlocked(boolean leftArmBlocked) {
         this.leftArmBlocked = leftArmBlocked;
-        if (entity != null && entity instanceof ServerPlayerEntity){
-            syncData((ServerPlayerEntity) entity);
+        if (entity != null) {
+            syncData(entity);
         }
     }
 
@@ -47,8 +46,8 @@ public class EntityZipperCapability {
 
     public void setRightArmBlocked(boolean rightArmBlocked) {
         this.rightArmBlocked = rightArmBlocked;
-        if (entity != null && entity instanceof ServerPlayerEntity){
-            syncData((ServerPlayerEntity) entity);
+        if (entity != null) {
+            syncData(entity);
         }
     }
 
@@ -58,8 +57,8 @@ public class EntityZipperCapability {
 
     public void setRightLegBlocked(boolean rightLegBlocked) {
         this.rightLegBlocked = rightLegBlocked;
-        if (entity != null && entity instanceof ServerPlayerEntity){
-            syncData((ServerPlayerEntity) entity);
+        if (entity != null) {
+            syncData(entity);
         }
     }
 
@@ -69,33 +68,32 @@ public class EntityZipperCapability {
 
     public void setLeftLegBlocked(boolean leftLegBlocked) {
         this.leftLegBlocked = leftLegBlocked;
-        if (entity != null && entity instanceof ServerPlayerEntity){
-            syncData((ServerPlayerEntity) entity);
+        if (entity != null) {
+            syncData(entity);
         }
     }
 
-    public boolean noLegs(){
+    public boolean noLegs() {
         return isLeftLegBlocked() && isRightLegBlocked();
     }
 
-    public boolean noArms(){
+    public boolean noArms() {
         return isLeftArmBlocked() && isRightArmBlocked();
     }
 
-    public void syncData(PlayerEntity player) {
-        if (!player.level.isClientSide()) {
-            AddonPackets.sendToClientsTrackingAndSelf(new EntityZipperCapSyncPacket(this), player);
+    public void syncData(LivingEntity entity) {
+        if (!entity.level.isClientSide()) {
+            AddonPackets.sendToClientsTrackingAndSelf(new EntityZipperCapSyncPacket(this), entity);
         }
     }
 
-    public void tickLegs(){
-        if (noLegs()){
+    public void tickLegs() {
+        if (noLegs()) {
             entity.setDeltaMovement(entity.getDeltaMovement().x, entity.getDeltaMovement().y > 0 ? entity.getDeltaMovement().y / 2 : entity.getDeltaMovement().y, entity.getDeltaMovement().z);
-            if (noArms()){
-                entity.setDeltaMovement(0, entity.hasEffect(Effects.LEVITATION) ? (0.05D * (double)(entity.getEffect(Effects.LEVITATION).getAmplifier() + 1) - entity.getDeltaMovement().y) * 0.2D : entity.getDeltaMovement().y, 0);
+            if (noArms()) {
+                entity.setDeltaMovement(0, entity.hasEffect(Effects.LEVITATION) ? (0.05D * (double) (entity.getEffect(Effects.LEVITATION).getAmplifier() + 1) - entity.getDeltaMovement().y) * 0.2D : entity.getDeltaMovement().y, 0);
             }
-        }
-        else if (isLeftLegBlocked() || isRightLegBlocked()) {
+        } else if (isLeftLegBlocked() || isRightLegBlocked()) {
             if (entity instanceof PlayerEntity) {
                 PlayerEntity player = (PlayerEntity) entity;
                 player.abilities.flying = false;
@@ -105,7 +103,7 @@ public class EntityZipperCapability {
     }
 
     public void tickArms() {
-        if (isLeftArmBlocked()){
+        if (isLeftArmBlocked()) {
             ItemStack handItem = entity.getItemInHand(entity.getMainArm() == HandSide.LEFT ? Hand.MAIN_HAND : Hand.OFF_HAND);
             if (!handItem.isEmpty()) {
                 ItemStack droppedItem = handItem.copy();
@@ -121,7 +119,7 @@ public class EntityZipperCapability {
                 entity.level.addFreshEntity(itemEntity);
             }
         }
-        if (isRightArmBlocked()){
+        if (isRightArmBlocked()) {
             ItemStack handItem = entity.getItemInHand(entity.getMainArm() == HandSide.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND);
             if (!handItem.isEmpty()) {
                 ItemStack droppedItem = handItem.copy();
@@ -163,8 +161,8 @@ public class EntityZipperCapability {
 
     public void setHead(boolean hasHead) {
         this.hasHead = hasHead;
-        if (entity != null && entity instanceof ServerPlayerEntity){
-            syncData((ServerPlayerEntity) entity);
+        if (entity != null) {
+            syncData(entity);
         }
     }
 }

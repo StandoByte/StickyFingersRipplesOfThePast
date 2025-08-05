@@ -111,7 +111,8 @@ public class InitStands {
             () -> new StickyFingersRemoveZipper(new StandAction.Builder()));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_PLACE_ZIPPER = ACTIONS.register("sticky_fingers_place_zipper",
-            () -> new StickyFingersPlaceZipper(new StandAction.Builder().standPose(StandPose.LIGHT_ATTACK)));
+            () -> new StickyFingersPlaceZipper(new StandAction.Builder()
+                    .standPose(StickyFingersPlaceZipper.STAND_POSE)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_TOGGLE_ZIPPER = ACTIONS.register("sticky_fingers_toggle_zipper",
             () -> new StickyFingersToggleZipper(new StandAction.Builder()
