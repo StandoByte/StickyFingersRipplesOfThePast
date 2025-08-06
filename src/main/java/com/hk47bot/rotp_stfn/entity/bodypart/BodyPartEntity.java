@@ -1,28 +1,43 @@
 package com.hk47bot.rotp_stfn.entity.bodypart;
 
+import com.github.standobyte.jojo.entity.IPassengerMixinReposition;
+import com.github.standobyte.jojo.util.general.MathUtil;
 import com.github.standobyte.jojo.util.mc.EntityOwnerResolver;
-import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
+import com.github.standobyte.jojo.util.mc.MCUtil;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
+import com.hk47bot.rotp_stfn.util.StickyUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.IFlyingAnimal;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShootableItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.KeybindTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -31,10 +46,12 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalSpawnData, IFlyingAnimal {
+public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalSpawnData, IFlyingAnimal, IPassengerMixinReposition {
+    private static final DataParameter<Boolean> IS_CARRIED = EntityDataManager.defineId(BodyPartEntity.class, DataSerializers.BOOLEAN);
     public EntityOwnerResolver owner = new EntityOwnerResolver();
     private boolean isReturning = false;
-    @Getter @Setter
+    @Getter
+    @Setter
     private int lastTickNotified;
     protected GoToOwnerGoal goToOwnerGoal;
 
@@ -81,6 +98,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     public void readAdditionalSaveData(CompoundNBT nbt) {
         owner.loadNbt(nbt, "OwnerId");
         this.isReturning = nbt.getBoolean("IsReturning");
+        entityData.set(IS_CARRIED, nbt.getBoolean("Carried"));
         super.readAdditionalSaveData(nbt);
     }
 
@@ -88,18 +106,25 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     public void addAdditionalSaveData(CompoundNBT nbt) {
         owner.saveNbt(nbt, "OwnerId");
         nbt.putBoolean("IsReturning", this.isReturning);
+        nbt.putBoolean("Carried", isCarried());
         super.addAdditionalSaveData(nbt);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(IS_CARRIED, false);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!this.level.isClientSide()) {
-            if (this.getOwner() == null) {
-                this.remove();
-                return;
-            }
+        if (this.getOwner() == null) {
+            this.remove();
+            return;
+        }
 
+        if (!this.level.isClientSide()) {
             if (this.lastTickNotified == -1) return;
 
             if (this.tickCount - this.lastTickNotified > 5) {
@@ -110,6 +135,10 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
             }
 
             if (isReturning) {
+                if (this.isCarried()) {
+                    stopRiding();
+                }
+
                 goToOwnerGoal.start();
                 LivingEntity ownerEntity = getOwner();
                 if (this.distanceToSqr(ownerEntity.position()) <= 2) {
@@ -127,6 +156,46 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                     this.remove();
                 }
             }
+        }
+
+        if (!level.isClientSide() && getVehicle() == null) {
+            entityData.set(IS_CARRIED, false);
+        }
+        LivingEntity carrier = getCarrier(); // FIXME sometimes doesn't trigger on client (IS_CARRIED has already been synced to client)
+        if (carrier != null) {
+            if (!MCUtil.itemHandFree(carrier.getItemInHand(Hand.OFF_HAND)) || carrier.isSpectator()) {
+                stopRiding();
+            } else {
+                float headRotOffset = carrier.yBodyRot - this.yHeadRot;
+                this.yRot = carrier.yBodyRot;
+                this.yHeadRot += headRotOffset;
+                this.yBodyRot += headRotOffset;
+            }
+        }
+    }
+
+    @Override
+    public ActionResultType mobInteract(PlayerEntity player, Hand pHand) {
+        ItemStack heldItem = player.getItemInHand(pHand);
+        if (pHand == Hand.MAIN_HAND && !player.isShiftKeyDown() && !this.isPassenger() && !(heldItem.getItem() instanceof ShootableItem)) {
+            if (StickyUtil.isHandFree(player, Hand.OFF_HAND)) {
+                if (this.startRiding(player, true)) {
+                    if (!level.isClientSide()) {
+                        entityData.set(IS_CARRIED, true);
+                        player.displayClientMessage(new TranslationTextComponent("coco_jumbo.hint.release",
+                                new KeybindTextComponent("key.swapOffhand"), getDisplayName()), true);
+                    }
+                }
+                return ActionResultType.sidedSuccess(this.level.isClientSide);
+            } else {
+                if (level.isClientSide()) {
+                    player.displayClientMessage(new TranslationTextComponent("coco_jumbo.carry.offhand",
+                            getDisplayName()), true);
+                }
+                return ActionResultType.PASS;
+            }
+        } else {
+            return super.mobInteract(player, pHand);
         }
     }
 
@@ -171,14 +240,124 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
         owner.readNetwork(additionalData);
-//        if (this instanceof PlayerHeadEntity && this.getOwner() == ClientUtil.getClientPlayer()) {
-//            ClientUtil.setCameraEntityPreventShaderSwitch(this);
-//        }
     }
 
     @Override
     public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    public boolean isCarried() {
+        return entityData.get(IS_CARRIED);
+    }
+
+    @Nullable
+    public LivingEntity getCarrier() {
+        if (isCarried()) {
+            Entity vehicle = getVehicle();
+            if (vehicle instanceof LivingEntity) {
+                return ((LivingEntity) vehicle);
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void stopRiding() {
+        if (cancelStopRiding()) {
+            return;
+        }
+        super.stopRiding();
+        if (!level.isClientSide() && getVehicle() == null) {
+            entityData.set(IS_CARRIED, false);
+        }
+    }
+
+    @Override
+    public void onSyncedDataUpdated(DataParameter<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (IS_CARRIED.equals(key) && !entityData.get(IS_CARRIED)) {
+            stopRiding();
+        }
+    }
+
+    @Override
+    public boolean startRiding(Entity vehicle, boolean force) {
+        boolean res = super.startRiding(vehicle, force);
+        return res;
+    }
+
+    @Override
+    public boolean isPickable() {
+        return super.isPickable() && !isCarried();
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distToClosestPlayer) {
+        return false;
+    }
+
+    @Override
+    public Vector3d repositionPassenger(Entity vehicle) {
+        if (isCarried() && vehicle instanceof LivingEntity) {
+            LivingEntity carrier = (LivingEntity) vehicle;
+            Vector3d carryVec = carryOffset(carrier.yBodyRot, carrier);
+            return vehicle.position().add(carryVec);
+        }
+        return null;
+    }
+
+    public static Vector3d carryOffset(float yRot, LivingEntity carrier) {
+        HandSide offHand = MCUtil.getOppositeSide(carrier.getMainArm());
+        float width = carrier.getBbWidth();
+        Vector3d carryVec = new Vector3d(
+                width * (offHand == HandSide.LEFT ? 0.55 : -0.55),
+                carrier.getBbHeight() * 0.35,
+                width * 0.75);
+
+        carryVec = carryVec.yRot(-yRot * MathUtil.DEG_TO_RAD);
+
+        return carryVec;
+    }
+
+    public static boolean isCarriedTurtle(Entity passenger, Entity carrier) {
+        return passenger instanceof BodyPartEntity
+                && ((BodyPartEntity) passenger).getCarrier() == carrier;
+    }
+
+    // the shit below prevents the turtle from dismounting when the player gets into water
+    // (the actual logic for that in in LivingEntity#baseTick, and i ain't whipping out a mixin for that)
+    private byte stopRidingIsDueToWater;
+
+    private void bandAidPreTick() {
+        stopRidingIsDueToWater = 0;
+    }
+
+    @Override
+    public boolean isEyeInFluid(ITag<Fluid> tag) {
+        if (stopRidingIsDueToWater == 0 && tag == FluidTags.WATER) {
+            stopRidingIsDueToWater = 1;
+        }
+        return super.isEyeInFluid(tag);
+    }
+
+    @Override
+    public boolean canBreatheUnderwater() {
+        if (stopRidingIsDueToWater == 1) {
+            stopRidingIsDueToWater = 2;
+        }
+        return super.canBreatheUnderwater();
+    }
+
+    @Override
+    protected void onChangedBlock(BlockPos pos) {
+        stopRidingIsDueToWater = -1;
+        super.onChangedBlock(pos);
+    }
+
+    private boolean cancelStopRiding() {
+        return stopRidingIsDueToWater == 2;
     }
 
     static class GoToOwnerGoal extends Goal {

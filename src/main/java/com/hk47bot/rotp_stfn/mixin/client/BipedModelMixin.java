@@ -2,9 +2,11 @@ package com.hk47bot.rotp_stfn.mixin.client;
 
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
+import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
 import com.hk47bot.rotp_stfn.util.LayerInfo;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,6 +50,22 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
         setPartAndLayersVisibility(this.rightArm, !capability.isRightArmBlocked());
         setPartAndLayersVisibility(this.leftLeg, !capability.isLeftLegBlocked());
         setPartAndLayersVisibility(this.rightLeg, !capability.isRightLegBlocked());
+
+        for (Entity passenger : entity.getPassengers()) {
+            if (BodyPartEntity.isCarriedTurtle(passenger, entity)) {
+                switch (entity.getMainArm()) {
+                    case LEFT:
+                        rightArm.xRot = -(float)Math.PI / 10f;
+                        rightArm.zRot = 0;
+                        break;
+                    case RIGHT:
+                        leftArm.xRot = -(float)Math.PI / 10f;
+                        leftArm.zRot = 0;
+                        break;
+                }
+                break;
+            }
+        }
     }
 
     @Unique

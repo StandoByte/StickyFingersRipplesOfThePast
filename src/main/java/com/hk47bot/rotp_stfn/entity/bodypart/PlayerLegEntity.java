@@ -37,7 +37,7 @@ public class PlayerLegEntity extends BodyPartEntity {
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+    public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
         if (player == getOwner()) {
             player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
                 if (isRight()) {
@@ -47,6 +47,7 @@ public class PlayerLegEntity extends BodyPartEntity {
                 }
                 this.remove();
             });
+            return ActionResultType.SUCCESS;
         }
         return super.mobInteract(player, hand);
     }
