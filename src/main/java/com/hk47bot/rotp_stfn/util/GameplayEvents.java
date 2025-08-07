@@ -5,8 +5,13 @@ import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCap;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCapProvider;
 import com.hk47bot.rotp_stfn.init.InitEffects;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Pose;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -35,5 +40,14 @@ public class GameplayEvents {
             entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tickArms);
         }
         entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tickLegs);
+    }
+
+    @SubscribeEvent
+    public static void onSwimSizeSet(EntityEvent.Size event){
+        Entity entity = event.getEntity();
+        if (!(entity instanceof PlayerEntity) && entity instanceof LivingEntity && entity.getPose() == Pose.SWIMMING){
+            event.setNewSize(new EntitySize(entity.getBbWidth(), entity.getBbWidth(), true));
+            event.setNewEyeHeight(entity.getBbWidth() * 0.85F);
+        }
     }
 }

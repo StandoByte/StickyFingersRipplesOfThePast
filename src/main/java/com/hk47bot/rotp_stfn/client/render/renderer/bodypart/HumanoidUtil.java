@@ -39,7 +39,7 @@ public class HumanoidUtil {
         copy.render(matrixStack, buffer.getBuffer(RenderType.entityCutout(texture)), packedLight, OverlayTexture.NO_OVERLAY);
     }
 
-    public static <E extends Entity> void renderLeash(SimpleEntityRenderer renderer, BodyPartEntity p_229118_1_, float p_229118_2_, MatrixStack p_229118_3_, IRenderTypeBuffer p_229118_4_, E p_229118_5_) {
+    public static <E extends Entity> void renderLeash(BodyPartEntity p_229118_1_, float p_229118_2_, MatrixStack p_229118_3_, IRenderTypeBuffer p_229118_4_, E p_229118_5_) {
         p_229118_3_.pushPose();
         Vector3d vector3d = p_229118_5_.getRopeHoldPosition(p_229118_2_);
         double d0 = (double) (MathHelper.lerp(p_229118_2_, p_229118_1_.yBodyRot, p_229118_1_.yBodyRotO) * ((float) Math.PI / 180F)) + (Math.PI / 2D);
@@ -60,13 +60,17 @@ public class HumanoidUtil {
         float f6 = f * f4;
         BlockPos blockpos = new BlockPos(p_229118_1_.getEyePosition(p_229118_2_));
         BlockPos blockpos1 = new BlockPos(p_229118_5_.getEyePosition(p_229118_2_));
-        int i = renderer.getBlockLightLevel(p_229118_1_, blockpos);
-        int j = renderer.entityRenderDispatcher.getRenderer(p_229118_5_).getBlockLightLevel(p_229118_5_, blockpos1);
+        int i = HumanoidUtil.getBlockLightLevel(p_229118_1_, blockpos);
+        int j = HumanoidUtil.getBlockLightLevel(p_229118_5_, blockpos1);
         int k = p_229118_1_.level.getBrightness(LightType.SKY, blockpos);
         int l = p_229118_1_.level.getBrightness(LightType.SKY, blockpos1);
         renderSide(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.025F, 0.025F, f5, f6);
         renderSide(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.025F, 0.0F, f5, f6);
         p_229118_3_.popPose();
+    }
+
+    public static int getBlockLightLevel(Entity p_225624_1_, BlockPos p_225624_2_) {
+        return p_225624_1_.isOnFire() ? 15 : p_225624_1_.level.getBrightness(LightType.BLOCK, p_225624_2_);
     }
 
     public static void renderSide(IVertexBuilder p_229119_0_, Matrix4f p_229119_1_, float p_229119_2_, float p_229119_3_, float p_229119_4_, int p_229119_5_, int p_229119_6_, int p_229119_7_, int p_229119_8_, float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_) {

@@ -1,5 +1,6 @@
 package com.hk47bot.rotp_stfn.mixin.client;
 
+import com.github.standobyte.jojo.util.general.MathUtil;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
@@ -8,6 +9,7 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Pose;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -66,6 +68,21 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
                 break;
             }
         }
+        if (entity.getPose() == Pose.SWIMMING){
+            swimOffset(0, 22);
+            head.xRot = (headPitch + 45F) * MathUtil.DEG_TO_RAD;
+            body.xRot = 90 * MathUtil.DEG_TO_RAD;
+        }
+    }
+
+    @Unique
+    private void swimOffset(float x, float y){
+        head.setPos(head.x + x, y, head.z);
+        body.setPos(body.x + x, y, body.z);
+        leftArm.setPos(leftArm.x + x, y, leftArm.z);
+        rightArm.setPos(rightArm.x + x, y, rightArm.z);
+        leftLeg.setPos(leftLeg.x + x, y, leftLeg.z);
+        rightLeg.setPos(rightLeg.x + x, y, rightLeg.z);
     }
 
     @Unique

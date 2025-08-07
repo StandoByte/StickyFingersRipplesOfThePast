@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -32,6 +33,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -93,14 +95,15 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public void onPreRenderLiving(RenderLivingEvent.Pre event) {
-        EntityModel model = event.getRenderer().getModel();
+    public void onPreRenderLiving(RenderLivingEvent.Pre<? extends LivingEntity, EntityModel<? extends LivingEntity>> event) {
+        EntityModel<? extends LivingEntity> model = event.getRenderer().getModel();
         LivingEntity entity = event.getEntity();
         if (model instanceof BipedModel) {
+            BipedModel<? extends LivingEntity> bipedModel = (BipedModel<? extends LivingEntity>) model;
             Optional<EntityZipperCapability> capability = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
             if (capability.isPresent()){
-                if (capability.get().noLegs() && !(entity instanceof PlayerEntity)){
-                    event.getMatrixStack().translate(0.0D, -1.0D, 0.3D);
+                if (capability.get().noLegs()){
+                    bipedModel.body.y = -6F;
                 }
             }
         }
