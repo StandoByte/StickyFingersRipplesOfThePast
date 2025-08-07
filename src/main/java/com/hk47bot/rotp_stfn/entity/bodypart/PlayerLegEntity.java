@@ -66,8 +66,8 @@ public class PlayerLegEntity extends BodyPartEntity {
 
     @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
-        nbt.putBoolean("IsRight", entityData.get(IS_RIGHT));
         super.addAdditionalSaveData(nbt);
+        nbt.putBoolean("IsRight", entityData.get(IS_RIGHT));
     }
 
     public void setRight(boolean side) {
