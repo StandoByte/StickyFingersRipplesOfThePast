@@ -93,6 +93,8 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
 
             if (shouldClose) {
                 this.level.setBlock(this.getBlockPos(), state.setValue(OPEN, false), 3);
+                BlockPos linkedPos = StickyFingersZipperBlock2.getLinkedBlockPos(state, this.getBlockPos(), this.level);
+                this.level.setBlock(linkedPos, this.level.getBlockState(linkedPos).setValue(OPEN, false), 3);
                 this.autoCloseTimer = 0;
             }
         } else {
