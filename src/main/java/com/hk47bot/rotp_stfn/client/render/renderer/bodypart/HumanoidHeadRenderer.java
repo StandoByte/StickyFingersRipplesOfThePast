@@ -37,7 +37,7 @@ public class HumanoidHeadRenderer extends SimpleEntityRenderer<PlayerHeadEntity,
                     HumanoidUtil.renderPart(entity, humanoidModel.head, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, false, 0, 0, 0);
                     Entity leashHolder = entity.getLeashHolder();
                     if (leashHolder != null){
-                        HumanoidUtil.renderLeash(this, entity, partialTick, matrixStack, buffer, leashHolder);
+                        HumanoidUtil.renderLeash(entity, partialTick, matrixStack, buffer, leashHolder);
                     }
                 }
             }

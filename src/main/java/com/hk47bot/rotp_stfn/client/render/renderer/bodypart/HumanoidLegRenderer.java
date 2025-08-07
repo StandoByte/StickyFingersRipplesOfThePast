@@ -39,7 +39,7 @@ public class HumanoidLegRenderer extends SimpleEntityRenderer<PlayerLegEntity, P
                     HumanoidUtil.renderPart(entity, entity.isRight() ? humanoidModel.rightLeg : humanoidModel.leftLeg , matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, true, -2, -2, 2);
                     Entity leashHolder = entity.getLeashHolder();
                     if (leashHolder != null){
-                        HumanoidUtil.renderLeash(this, entity, packedLight, matrixStack, buffer, leashHolder);
+                        HumanoidUtil.renderLeash(entity, packedLight, matrixStack, buffer, leashHolder);
                     }
                 }
             }
