@@ -78,11 +78,10 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Override
     protected PathNavigator createNavigation(World world) {
-
         FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
-        flyingpathnavigator.setCanFloat(true); // idk for what this
-        flyingpathnavigator.setCanPassDoors(true); // no
+        flyingpathnavigator.setCanFloat(true);
+        flyingpathnavigator.setCanPassDoors(true);
         return flyingpathnavigator;
     }
 
@@ -140,12 +139,28 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     @Override
     public void tick() {
         super.tick();
+
         if (this.getOwner() == null) {
             this.remove();
             return;
         }
 
         if (!this.level.isClientSide()) {
+            if (isReturning) {
+                if (!(this.navigation instanceof FlyingPathNavigator)) {
+                    this.navigation = returnPathNavigator;
+                    this.moveControl = returnMovementController;
+                    this.setNoGravity(true);
+                }
+            }
+            else {
+                if (!(this.navigation instanceof GroundPathNavigator)) {
+                    this.navigation = groundPathNavigator;
+                    this.moveControl = groundMovementController;
+                    this.setNoGravity(false);
+                }
+            }
+
             if (this.lastTickNotified == -1) return;
 
             if (this.tickCount - this.lastTickNotified > 5) {
@@ -185,7 +200,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         if (!level.isClientSide() && getVehicle() == null) {
             entityData.set(IS_CARRIED, false);
         }
-        LivingEntity carrier = getCarrier(); // FIXME sometimes doesn't trigger on client (IS_CARRIED has already been synced to client)
+        LivingEntity carrier = getCarrier();
         if (carrier != null) {
             if (!MCUtil.itemHandFree(carrier.getItemInHand(Hand.OFF_HAND)) || carrier.isSpectator()) {
                 stopRiding();
@@ -197,6 +212,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
             }
         }
     }
+
 
     @Override
     public ActionResultType mobInteract(PlayerEntity player, Hand pHand) {

@@ -18,10 +18,18 @@ public abstract class ServerPlayNetHandlerMixin {
 
     @Inject(method = "handlePlayerAction", at = @At("HEAD"), cancellable = true)
     public void onItemSwapKey(CPlayerDiggingPacket packet, CallbackInfo ci) {
-        if (packet.getAction() == CPlayerDiggingPacket.Action.SWAP_ITEM_WITH_OFFHAND) {
+        if (packet.getAction() == CPlayerDiggingPacket.Action.SWAP_ITEM_WITH_OFFHAND ||
+                packet.getAction() == CPlayerDiggingPacket.Action.DROP_ITEM ||
+                packet.getAction() == CPlayerDiggingPacket.Action.DROP_ALL_ITEMS) { // todo: if we dropping the body part we should to do "knockback"
             for (Entity passenger : player.getPassengers()) {
                 if (BodyPartEntity.isCarriedTurtle(passenger, player)) {
                     passenger.stopRiding();
+
+                    if (packet.getAction() == CPlayerDiggingPacket.Action.DROP_ITEM ||
+                            packet.getAction() == CPlayerDiggingPacket.Action.DROP_ALL_ITEMS) {
+
+                        passenger.setDeltaMovement(player.getLookAngle().scale(1.2));
+                    }
                     ci.cancel();
                 }
             }
