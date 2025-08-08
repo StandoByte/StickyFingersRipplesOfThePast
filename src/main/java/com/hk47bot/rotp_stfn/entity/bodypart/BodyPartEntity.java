@@ -4,17 +4,20 @@ import com.github.standobyte.jojo.entity.IPassengerMixinReposition;
 import com.github.standobyte.jojo.util.general.MathUtil;
 import com.github.standobyte.jojo.util.mc.EntityOwnerResolver;
 import com.github.standobyte.jojo.util.mc.MCUtil;
+import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.util.StickyUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.monster.HuskEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -49,6 +52,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
+import java.util.UUID;
 
 public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalSpawnData, IFlyingAnimal, IPassengerMixinReposition {
     private static final DataParameter<Boolean> IS_RETURNING = EntityDataManager.defineId(BodyPartEntity.class, DataSerializers.BOOLEAN);
@@ -314,16 +318,29 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-        owner.writeNetwork(buffer);
+        buffer.writeUtf(getOwner().getUUID().toString());
     }
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-        owner.readNetwork(additionalData);
+        UUID ownerUUID = UUID.fromString(additionalData.readUtf());
+        RotpStickyFingersAddon.getLogger().info(MCUtil.getAllEntities(this.level));
+        for (Entity entity : MCUtil.getAllEntities(this.level)){
+            if (entity instanceof HuskEntity){
+                RotpStickyFingersAddon.getLogger().info(ownerUUID);
+                RotpStickyFingersAddon.getLogger().info(entity.getUUID());
+            }
+            if (entity instanceof LivingEntity && entity.getUUID().equals(ownerUUID)){
+                this.setOwner((LivingEntity) entity);
+                return;
+            }
+        }
+        RotpStickyFingersAddon.getLogger().info("no one found");
     }
 
     @Override
     public IPacket<?> getAddEntityPacket() {
+        RotpStickyFingersAddon.getLogger().info("packet sent");
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

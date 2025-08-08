@@ -60,8 +60,8 @@ public class PlayerArmEntity extends BodyPartEntity {
 
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
-        entityData.set(IS_RIGHT, nbt.getBoolean("IsRight"));
         super.readAdditionalSaveData(nbt);
+        entityData.set(IS_RIGHT, nbt.getBoolean("IsRight"));
     }
 
     @Override
