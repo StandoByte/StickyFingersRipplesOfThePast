@@ -40,7 +40,7 @@ public abstract class ServerPlayNetHandlerMixin {
 
                 if (action == CPlayerDiggingPacket.Action.DROP_ITEM ||
                         action == CPlayerDiggingPacket.Action.DROP_ALL_ITEMS) {
-                    carriedPart.setDeltaMovement(player.getLookAngle().scale(0.5));
+                    carriedPart.setDeltaMovement(player.getLookAngle().scale(1.2));
                 }
 
                 player.connection.send(new SSetSlotPacket(0, 36 + player.inventory.selected, player.getMainHandItem())); // костыли наше всё
