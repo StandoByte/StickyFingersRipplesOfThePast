@@ -4,12 +4,14 @@ import com.github.standobyte.jojo.util.general.MathUtil;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
 import com.hk47bot.rotp_stfn.util.LayerInfo;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
+import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -68,7 +70,7 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
                 break;
             }
         }
-        if (entity.getPose() == Pose.SWIMMING){
+        if (entity.getPose() == Pose.SWIMMING && !(entity instanceof PlayerEntity)){
             swimOffset(0, 22);
             head.xRot = (headPitch + 45F) * MathUtil.DEG_TO_RAD;
             body.xRot = 90 * MathUtil.DEG_TO_RAD;

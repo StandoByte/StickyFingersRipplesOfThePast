@@ -13,6 +13,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
+import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,6 +27,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.FlyingPathNavigator;
+import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.tags.FluidTags;
@@ -55,6 +57,12 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     private int lastTickNotified;
     protected GoToOwnerGoal goToOwnerGoal;
 
+    private PathNavigator groundPathNavigator = new GroundPathNavigator(this, this.level);
+    private MovementController groundMovementController = new MovementController(this);
+
+    private PathNavigator returnPathNavigator = new FlyingPathNavigator(this, this.level);
+    private MovementController returnMovementController = new FlyingMovementController(this, 70, true);
+
     public BodyPartEntity(EntityType<? extends BodyPartEntity> p_i48580_1_, World p_i48580_2_) {
         super(p_i48580_1_, p_i48580_2_);
         this.moveControl = new FlyingMovementController(this, 70, true);
@@ -70,6 +78,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Override
     protected PathNavigator createNavigation(World world) {
+
         FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true); // idk for what this
@@ -117,6 +126,18 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     }
 
     @Override
+    public PathNavigator getNavigation() {
+        if (isReturning){
+            this.moveControl = returnMovementController;
+            return returnPathNavigator;
+        }
+        else {
+            this.moveControl = groundMovementController;
+            return groundPathNavigator;
+        }
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if (this.getOwner() == null) {
@@ -155,6 +176,9 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                     });
                     this.remove();
                 }
+            }
+            else {
+                this.setNoGravity(false);
             }
         }
 
