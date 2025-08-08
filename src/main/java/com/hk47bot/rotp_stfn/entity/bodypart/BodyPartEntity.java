@@ -138,6 +138,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Override
     public void tick() {
+        bandAidPreTick();
         super.tick();
 
         if (this.getOwner() == null) {

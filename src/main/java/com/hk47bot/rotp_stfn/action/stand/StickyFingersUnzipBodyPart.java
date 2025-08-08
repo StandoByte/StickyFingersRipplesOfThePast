@@ -82,25 +82,15 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                         case TORSO_ARMS:
                             if (!capability.noArms()){
                                 boolean isRight = false;
-                                switch (targetEntity.getMainArm()) {
-                                    case RIGHT:
-                                        if (capability.isLeftArmBlocked()) {
-                                            capability.setRightArmBlocked(true);
-                                            isRight = true;
-                                        } else {
-                                            capability.setLeftArmBlocked(true);
-                                            isRight = false;
-                                        }
-                                        break;
-                                    case LEFT:
-                                        if (capability.isRightArmBlocked()) {
-                                            capability.setLeftArmBlocked(true);
-                                            isRight = false;
-                                        } else {
-                                            capability.setRightArmBlocked(true);
-                                            isRight = true;
-                                        }
-                                        break;
+                                if (!capability.isLeftArmBlocked()) {
+                                    capability.setLeftArmBlocked(true);
+                                }
+                                else if (!capability.isRightArmBlocked()) {
+                                    capability.setRightArmBlocked(true);
+                                    isRight = true;
+                                }
+                                else {
+                                    break;
                                 }
                                 PlayerArmEntity arm = new PlayerArmEntity(world, targetEntity, isRight);
                                 Vector3d position = targetEntity.position();
