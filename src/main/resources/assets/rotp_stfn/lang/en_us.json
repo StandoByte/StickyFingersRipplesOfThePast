@@ -23,5 +23,10 @@
   "action.rotp_stfn.sticky_fingers_zip_user_wounds": "Zip User Wounds",
   "action.rotp_stfn.sticky_fingers_zip_target_wounds": "Zip Target Wounds",
 
-  "effect.rotp_stfn.zip_wounds": "Zip Wounds"
+  "effect.rotp_stfn.zip_wounds": "Zip Wounds",
+  "effect.rotp_stfn.zipper": "Zipper",
+
+  "rotp_stfn.message.cant_pickup.no_arm": "You can't pick this up without an arm to hold it!",
+  "body_part.hint.release": "Press %s to put %s down",
+  "body_part.carry.offhand": "You need to free your off-hand to carry %s"
 }
