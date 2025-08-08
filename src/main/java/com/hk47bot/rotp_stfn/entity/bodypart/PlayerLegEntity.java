@@ -28,9 +28,9 @@ public class PlayerLegEntity extends BodyPartEntity {
         if (owner != null) {
             owner.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
                 if (isRight()) {
-                    cap.setRightArmId(this.getId());
+                    cap.setRightArmId(this.getUUID());
                 } else {
-                    cap.setLeftLegId(this.getId());
+                    cap.setLeftLegId(this.getUUID());
                 }
             });
         }

@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.ServerPlayNetHandler;
 import net.minecraft.network.play.client.CPlayerDiggingPacket;
+import net.minecraft.network.play.server.SSetSlotPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,20 +19,32 @@ public abstract class ServerPlayNetHandlerMixin {
 
     @Inject(method = "handlePlayerAction", at = @At("HEAD"), cancellable = true)
     public void onItemSwapKey(CPlayerDiggingPacket packet, CallbackInfo ci) {
-        if (packet.getAction() == CPlayerDiggingPacket.Action.SWAP_ITEM_WITH_OFFHAND ||
-                packet.getAction() == CPlayerDiggingPacket.Action.DROP_ITEM ||
-                packet.getAction() == CPlayerDiggingPacket.Action.DROP_ALL_ITEMS) { // todo: if we dropping the body part we should to do "knockback"
+        CPlayerDiggingPacket.Action action = packet.getAction();
+
+        if (action == CPlayerDiggingPacket.Action.SWAP_ITEM_WITH_OFFHAND ||
+                action == CPlayerDiggingPacket.Action.DROP_ITEM ||
+                action == CPlayerDiggingPacket.Action.DROP_ALL_ITEMS) {
+
+            Entity carriedPart = null;
             for (Entity passenger : player.getPassengers()) {
                 if (BodyPartEntity.isCarriedTurtle(passenger, player)) {
-                    passenger.stopRiding();
-
-                    if (packet.getAction() == CPlayerDiggingPacket.Action.DROP_ITEM ||
-                            packet.getAction() == CPlayerDiggingPacket.Action.DROP_ALL_ITEMS) {
-
-                        passenger.setDeltaMovement(player.getLookAngle().scale(1.2));
-                    }
-                    ci.cancel();
+                    carriedPart = passenger;
+                    break;
                 }
+            }
+
+            if (carriedPart != null) {
+                ci.cancel();
+
+                carriedPart.stopRiding();
+
+                if (action == CPlayerDiggingPacket.Action.DROP_ITEM ||
+                        action == CPlayerDiggingPacket.Action.DROP_ALL_ITEMS) {
+                    carriedPart.setDeltaMovement(player.getLookAngle().scale(0.5));
+                }
+
+                player.connection.send(new SSetSlotPacket(0, 36 + player.inventory.selected, player.getMainHandItem())); // костыли наше всё
+                player.connection.send(new SSetSlotPacket(0, 45, player.getOffhandItem()));
             }
         }
     }

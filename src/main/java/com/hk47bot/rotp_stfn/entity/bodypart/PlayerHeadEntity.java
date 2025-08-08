@@ -20,7 +20,7 @@ public class PlayerHeadEntity extends BodyPartEntity {
 
         if (owner != null) {
             owner.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
-                cap.setHeadId(this.getId());
+                cap.setHeadId(this.getUUID());
             });
         }
     }

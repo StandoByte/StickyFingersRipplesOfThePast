@@ -13,6 +13,9 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
+import net.minecraft.world.server.ServerWorld;
+
+import java.util.UUID;
 
 public class EntityZipperCapability {
     private final LivingEntity entity;
@@ -29,15 +32,15 @@ public class EntityZipperCapability {
     private boolean leftLegBlocked = false;
 
     @Getter
-    private int headId = -1;
+    private UUID headId = null;
     @Getter
-    private int leftArmId = -1;
+    private UUID leftArmId = null;
     @Getter
-    private int rightArmId = -1;
+    private UUID rightArmId = null;
     @Getter
-    private int rightLegId = -1;
+    private UUID rightLegId = null;
     @Getter
-    private int leftLegId = -1;
+    private UUID leftLegId = null;
 
     public EntityZipperCapability(LivingEntity entity) {
         this.entity = entity;
@@ -106,8 +109,8 @@ public class EntityZipperCapability {
             }
             entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 10, 10, false, false, false));
 
-            checkBodyPartEntity(leftLegId, () -> setLeftLegId(-1));
-            checkBodyPartEntity(rightLegId, () -> setRightLegId(-1));
+            checkBodyPartEntity(leftLegId, () -> setLeftLegId(null));
+            checkBodyPartEntity(rightLegId, () -> setRightLegId(null));
         }
     }
 
@@ -127,7 +130,7 @@ public class EntityZipperCapability {
                 itemEntity.setPickUpDelay(40);
                 entity.level.addFreshEntity(itemEntity);
             }
-            checkBodyPartEntity(leftArmId, () -> setLeftArmId(-1));
+            checkBodyPartEntity(leftArmId, () -> setLeftArmId(null));
         }
 
         if (isRightArmBlocked()) {
@@ -146,14 +149,17 @@ public class EntityZipperCapability {
                 entity.level.addFreshEntity(itemEntity);
             }
 
-            checkBodyPartEntity(rightArmId, () -> setRightArmId(-1));
+            checkBodyPartEntity(rightArmId, () -> setRightArmId(null));
         }
     }
 
-    private void checkBodyPartEntity(int id, Runnable trouble) {
-        if (id == -1) return;
+    private void checkBodyPartEntity(UUID id, Runnable trouble) {
+        if (id == null || entity.level.isClientSide()) {
+            return;
+        }
 
-        if (entity.level.getEntity(id) == null) {
+        ServerWorld serverLevel = (ServerWorld) entity.level;
+        if (serverLevel.getEntity(id) == null) {
             trouble.run();
         }
     }
@@ -166,11 +172,11 @@ public class EntityZipperCapability {
         nbt.putBoolean("LeftLeg", leftLegBlocked);
         nbt.putBoolean("HasHead", hasHead);
 
-        nbt.putInt("RightArmId", rightArmId);
-        nbt.putInt("LeftArmId", leftArmId);
-        nbt.putInt("RightLegId", rightLegId);
-        nbt.putInt("LeftLegId", leftLegId);
-        nbt.putInt("HeadId", headId);
+        if (rightArmId != null) nbt.putUUID("RightArmId", rightArmId);
+        if (leftArmId != null) nbt.putUUID("LeftArmId", leftArmId);
+        if (rightLegId != null) nbt.putUUID("RightLegId", rightLegId);
+        if (leftLegId != null) nbt.putUUID("LeftLegId", leftLegId);
+        if (headId != null) nbt.putUUID("HeadId", headId);
         return nbt;
     }
 
@@ -181,11 +187,11 @@ public class EntityZipperCapability {
         leftLegBlocked = nbt.getBoolean("LeftLeg");
         hasHead = nbt.getBoolean("HasHead");
 
-        rightArmId = nbt.getInt("RightArmId");
-        leftArmId = nbt.getInt("LeftArmId");
-        rightLegId = nbt.getInt("RightLegId");
-        leftLegId = nbt.getInt("LeftLegId");
-        headId = nbt.getInt("HeadId");
+        rightArmId = nbt.hasUUID("RightArmId") ? nbt.getUUID("RightArmId") : null;
+        leftArmId = nbt.hasUUID("LeftArmId") ? nbt.getUUID("LeftArmId") : null;
+        rightLegId = nbt.hasUUID("RightLegId") ? nbt.getUUID("RightLegId") : null;
+        leftLegId = nbt.hasUUID("LeftLegId") ? nbt.getUUID("LeftLegId") : null;
+        headId = nbt.hasUUID("HeadId") ? nbt.getUUID("HeadId") : null;
     }
 
     public void setHead(boolean hasHead) {
@@ -197,35 +203,35 @@ public class EntityZipperCapability {
 
     // fuckin ids
 
-    public void setHeadId(int headId) {
+    public void setHeadId(UUID headId) {
         this.headId = headId;
         if (entity != null) {
             syncData(entity);
         }
     }
 
-    public void setLeftArmId(int leftArmId) {
+    public void setLeftArmId(UUID leftArmId) {
         this.leftArmId = leftArmId;
         if (entity != null) {
             syncData(entity);
         }
     }
 
-    public void setRightArmId(int rightArmId) {
+    public void setRightArmId(UUID rightArmId) {
         this.rightArmId = rightArmId;
         if (entity != null) {
             syncData(entity);
         }
     }
 
-    public void setRightLegId(int rightLegId) {
+    public void setRightLegId(UUID rightLegId) {
         this.rightLegId = rightLegId;
         if (entity != null) {
             syncData(entity);
         }
     }
 
-    public void setLeftLegId(int leftLegId) {
+    public void setLeftLegId(UUID leftLegId) {
         this.leftLegId = leftLegId;
         if (entity != null) {
             syncData(entity);

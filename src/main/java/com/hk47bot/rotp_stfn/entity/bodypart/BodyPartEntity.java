@@ -38,6 +38,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.KeybindTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorldReader;
@@ -45,28 +46,30 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalSpawnData, IFlyingAnimal, IPassengerMixinReposition {
+    private static final DataParameter<Boolean> IS_RETURNING = EntityDataManager.defineId(BodyPartEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Boolean> IS_CARRIED = EntityDataManager.defineId(BodyPartEntity.class, DataSerializers.BOOLEAN);
     public EntityOwnerResolver owner = new EntityOwnerResolver();
-    private boolean isReturning = false;
+
     @Getter
     @Setter
     private int lastTickNotified;
     protected GoToOwnerGoal goToOwnerGoal;
 
-    private PathNavigator groundPathNavigator = new GroundPathNavigator(this, this.level);
-    private MovementController groundMovementController = new MovementController(this);
+    private final PathNavigator groundPathNavigator = new GroundPathNavigator(this, this.level);
+    private final MovementController groundMovementController = new MovementController(this);
 
-    private PathNavigator returnPathNavigator = new FlyingPathNavigator(this, this.level);
-    private MovementController returnMovementController = new FlyingMovementController(this, 70, true);
+    private final FlyingPathNavigator returnPathNavigator = new FlyingPathNavigator(this, this.level);
+    private final FlyingMovementController returnMovementController = new FlyingMovementController(this, 70, true);
 
     public BodyPartEntity(EntityType<? extends BodyPartEntity> p_i48580_1_, World p_i48580_2_) {
         super(p_i48580_1_, p_i48580_2_);
-        this.moveControl = new FlyingMovementController(this, 70, true);
-        this.navigation = new FlyingPathNavigator(this, p_i48580_2_);
+        this.moveControl = returnMovementController;
+        this.navigation = returnPathNavigator;
         this.setPathfindingMalus(PathNodeType.DANGER_FIRE, -1.0F);
     }
 
@@ -105,7 +108,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
         owner.loadNbt(nbt, "OwnerId");
-        this.isReturning = nbt.getBoolean("IsReturning");
+        this.setReturning(nbt.getBoolean("IsReturning"));
         entityData.set(IS_CARRIED, nbt.getBoolean("Carried"));
         super.readAdditionalSaveData(nbt);
     }
@@ -113,7 +116,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         owner.saveNbt(nbt, "OwnerId");
-        nbt.putBoolean("IsReturning", this.isReturning);
+        nbt.putBoolean("IsReturning", this.isReturning());
         nbt.putBoolean("Carried", isCarried());
         super.addAdditionalSaveData(nbt);
     }
@@ -122,15 +125,16 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(IS_CARRIED, false);
+        this.entityData.define(IS_RETURNING, false);
     }
 
+    @Nonnull
     @Override
     public PathNavigator getNavigation() {
-        if (isReturning){
+        if (isReturning()) {
             this.moveControl = returnMovementController;
             return returnPathNavigator;
-        }
-        else {
+        } else {
             this.moveControl = groundMovementController;
             return groundPathNavigator;
         }
@@ -141,23 +145,27 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         bandAidPreTick();
         super.tick();
 
-        if (this.getOwner() == null) {
+        // FIXME: Пофиксить рассинхрон на клиенте между owner'ом (хз как)
+
+        if (!this.level.isClientSide() && this.owner.getEntity(this.level) == null && this.tickCount % 40 == 0) {
             this.remove();
             return;
         }
 
         if (!this.level.isClientSide()) {
-            if (isReturning) {
+            if (isReturning()) {
                 if (!(this.navigation instanceof FlyingPathNavigator)) {
                     this.navigation = returnPathNavigator;
+                    this.navigation.stop();
                     this.moveControl = returnMovementController;
                     this.setNoGravity(true);
                 }
-            }
-            else {
+            } else {
                 if (!(this.navigation instanceof GroundPathNavigator)) {
                     this.navigation = groundPathNavigator;
+                    this.navigation.stop();
                     this.moveControl = groundMovementController;
+                    this.setJumping(false);
                     this.setNoGravity(false);
                 }
             }
@@ -165,13 +173,13 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
             if (this.lastTickNotified == -1) return;
 
             if (this.tickCount - this.lastTickNotified > 5) {
-                isReturning = false;
+                setReturning(false);
                 goToOwnerGoal.stop();
                 this.lastTickNotified = -1;
                 return;
             }
 
-            if (isReturning) {
+            if (isReturning()) {
                 if (this.isCarried()) {
                     stopRiding();
                 }
@@ -192,8 +200,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                     });
                     this.remove();
                 }
-            }
-            else {
+            } else {
                 this.setNoGravity(false);
             }
         }
@@ -203,7 +210,16 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         }
         LivingEntity carrier = getCarrier();
         if (carrier != null) {
-            if (!MCUtil.itemHandFree(carrier.getItemInHand(Hand.OFF_HAND)) || carrier.isSpectator()) {
+            boolean hasArmToPickup = carrier.getCapability(EntityZipperCapabilityProvider.CAPABILITY).map(cap -> {
+                HandSide offHandSide = carrier.getMainArm().getOpposite();
+                if (offHandSide == HandSide.LEFT) {
+                    return !cap.isLeftArmBlocked();
+                } else {
+                    return !cap.isRightArmBlocked();
+                }
+            }).orElse(true);
+
+            if (!MCUtil.itemHandFree(carrier.getItemInHand(Hand.OFF_HAND)) || carrier.isSpectator() || !hasArmToPickup) {
                 stopRiding();
             } else {
                 float headRotOffset = carrier.yBodyRot - this.yHeadRot;
@@ -214,24 +230,39 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         }
     }
 
-
     @Override
     public ActionResultType mobInteract(PlayerEntity player, Hand pHand) {
         ItemStack heldItem = player.getItemInHand(pHand);
         if (pHand == Hand.MAIN_HAND && !player.isShiftKeyDown() && !this.isPassenger() && !(heldItem.getItem() instanceof ShootableItem)) {
+
+            boolean hasArmToPickup = player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).map(cap -> {
+                HandSide offHandSide = player.getMainArm().getOpposite();
+                if (offHandSide == HandSide.LEFT) {
+                    return !cap.isLeftArmBlocked();
+                } else {
+                    return !cap.isRightArmBlocked();
+                }
+            }).orElse(true);
+
+            if (!hasArmToPickup) {
+                if (level.isClientSide()) {
+                    player.displayClientMessage(new TranslationTextComponent("rotp_stfn.message.cant_pickup.no_arm"), true);
+                }
+                return ActionResultType.FAIL;
+            }
+
             if (StickyUtil.isHandFree(player, Hand.OFF_HAND)) {
                 if (this.startRiding(player, true)) {
                     if (!level.isClientSide()) {
                         entityData.set(IS_CARRIED, true);
-                        player.displayClientMessage(new TranslationTextComponent("coco_jumbo.hint.release",
-                                new KeybindTextComponent("key.swapOffhand"), getDisplayName()), true);
+                        IFormattableTextComponent keybind = new KeybindTextComponent("key.swapOffhand");
+                        player.displayClientMessage(new TranslationTextComponent("body_part.hint.release", keybind, getDisplayName()), true);
                     }
                 }
                 return ActionResultType.sidedSuccess(this.level.isClientSide);
             } else {
                 if (level.isClientSide()) {
-                    player.displayClientMessage(new TranslationTextComponent("coco_jumbo.carry.offhand",
-                            getDisplayName()), true);
+                    player.displayClientMessage(new TranslationTextComponent("body_part.carry.offhand", getDisplayName()), true);
                 }
                 return ActionResultType.PASS;
             }
@@ -241,8 +272,16 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     }
 
     public void startReturning() {
-        this.isReturning = true;
+        this.setReturning(true);
         this.lastTickNotified = this.tickCount;
+    }
+
+    public boolean isReturning() {
+        return this.entityData.get(IS_RETURNING);
+    }
+
+    public void setReturning(boolean returning) {
+        this.entityData.set(IS_RETURNING, returning);
     }
 
     @Nullable
@@ -321,12 +360,6 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         if (IS_CARRIED.equals(key) && !entityData.get(IS_CARRIED)) {
             stopRiding();
         }
-    }
-
-    @Override
-    public boolean startRiding(Entity vehicle, boolean force) {
-        boolean res = super.startRiding(vehicle, force);
-        return res;
     }
 
     @Override
@@ -414,7 +447,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
         @Override
         public boolean canUse() {
-            if (!this.bodyPart.isReturning) {
+            if (!this.bodyPart.isReturning()) {
                 return false;
             }
             this.owner = this.bodyPart.getOwner();
@@ -426,7 +459,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
         @Override
         public boolean canContinueToUse() {
-            return this.bodyPart.isReturning && this.owner != null && this.owner.isAlive();
+            return this.bodyPart.isReturning() && this.owner != null && this.owner.isAlive();
         }
 
         @Override

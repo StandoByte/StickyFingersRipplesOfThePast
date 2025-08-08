@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class EntityZipperCapSyncPacket {
@@ -19,11 +20,11 @@ public class EntityZipperCapSyncPacket {
     private final boolean leftLegBlocked;
     private final boolean hasHead;
 
-    private final int headId;
-    private final int leftArmId;
-    private final int rightArmId;
-    private final int rightLegId;
-    private final int leftLegId;
+    private final UUID headId;
+    private final UUID leftArmId;
+    private final UUID rightArmId;
+    private final UUID rightLegId;
+    private final UUID leftLegId;
 
     public EntityZipperCapSyncPacket(
             int entityId,
@@ -33,11 +34,11 @@ public class EntityZipperCapSyncPacket {
             boolean rightLegBlocked,
             boolean hasHead,
 
-            int headId,
-            int leftArmId,
-            int rightArmId,
-            int leftLegId,
-            int rightLegId
+            UUID headId,
+            UUID leftArmId,
+            UUID rightArmId,
+            UUID leftLegId,
+            UUID rightLegId
     ) {
         this.entityId = entityId;
         this.leftArmBlocked = leftArmBlocked;
@@ -70,26 +71,57 @@ public class EntityZipperCapSyncPacket {
 
     public static class Handler implements IModPacketHandler<EntityZipperCapSyncPacket> {
         @Override
-        public void encode(EntityZipperCapSyncPacket entityZipperCapSyncPacket, PacketBuffer buf) {
-            buf.writeInt(entityZipperCapSyncPacket.entityId);
-            buf.writeBoolean(entityZipperCapSyncPacket.leftArmBlocked);
-            buf.writeBoolean(entityZipperCapSyncPacket.rightArmBlocked);
-            buf.writeBoolean(entityZipperCapSyncPacket.leftLegBlocked);
-            buf.writeBoolean(entityZipperCapSyncPacket.rightLegBlocked);
-            buf.writeBoolean(entityZipperCapSyncPacket.hasHead);
+        public void encode(EntityZipperCapSyncPacket packet, PacketBuffer buf) {
+            buf.writeInt(packet.entityId);
+            buf.writeBoolean(packet.leftArmBlocked);
+            buf.writeBoolean(packet.rightArmBlocked);
+            buf.writeBoolean(packet.leftLegBlocked);
+            buf.writeBoolean(packet.rightLegBlocked);
+            buf.writeBoolean(packet.hasHead);
 
-            buf.writeInt(entityZipperCapSyncPacket.headId);
-            buf.writeInt(entityZipperCapSyncPacket.leftArmId);
-            buf.writeInt(entityZipperCapSyncPacket.rightArmId);
-            buf.writeInt(entityZipperCapSyncPacket.rightLegId);
-            buf.writeInt(entityZipperCapSyncPacket.leftLegId);
+            buf.writeBoolean(packet.headId != null);
+            if (packet.headId != null) {
+                buf.writeUUID(packet.headId);
+            }
+
+            buf.writeBoolean(packet.leftArmId != null);
+            if (packet.leftArmId != null) {
+                buf.writeUUID(packet.leftArmId);
+            }
+
+            buf.writeBoolean(packet.rightArmId != null);
+            if (packet.rightArmId != null) {
+                buf.writeUUID(packet.rightArmId);
+            }
+
+            buf.writeBoolean(packet.rightLegId != null);
+            if (packet.rightLegId != null) {
+                buf.writeUUID(packet.rightLegId);
+            }
+
+            buf.writeBoolean(packet.leftLegId != null);
+            if (packet.leftLegId != null) {
+                buf.writeUUID(packet.leftLegId);
+            }
         }
 
         @Override
         public EntityZipperCapSyncPacket decode(PacketBuffer buf) {
-            return new EntityZipperCapSyncPacket(
-                    buf.readInt(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(),
-                    buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt());
+            int entityId = buf.readInt();
+            boolean leftArmBlocked = buf.readBoolean();
+            boolean rightArmBlocked = buf.readBoolean();
+            boolean leftLegBlocked = buf.readBoolean();
+            boolean rightLegBlocked = buf.readBoolean();
+            boolean hasHead = buf.readBoolean();
+
+            UUID headId = buf.readBoolean() ? buf.readUUID() : null;
+            UUID leftArmId = buf.readBoolean() ? buf.readUUID() : null;
+            UUID rightArmId = buf.readBoolean() ? buf.readUUID() : null;
+            UUID rightLegId = buf.readBoolean() ? buf.readUUID() : null;
+            UUID leftLegId = buf.readBoolean() ? buf.readUUID() : null;
+
+            return new EntityZipperCapSyncPacket(entityId, leftArmBlocked, rightArmBlocked, leftLegBlocked, rightLegBlocked, hasHead,
+                    headId, leftArmId, rightArmId, leftLegId, rightLegId);
         }
 
         @Override
