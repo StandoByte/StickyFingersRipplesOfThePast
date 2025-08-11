@@ -8,6 +8,7 @@
     "AbstractBlockStateMixin",
     "CDHealMixin",
     "EntityMixin",
+    "OwnerBoundProjectileEntityMixin",
     "ServerPlayNetHandlerMixin",
     "StandUtilMixin"
   ],
