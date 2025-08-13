@@ -112,6 +112,7 @@ public class InitStands {
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_PLACE_ZIPPER = ACTIONS.register("sticky_fingers_place_zipper",
             () -> new StickyFingersPlaceZipper(new StandAction.Builder()
+                    .holdType()
                     .standPose(StickyFingersPlaceZipper.STAND_POSE)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_TOGGLE_ZIPPER = ACTIONS.register("sticky_fingers_toggle_zipper",

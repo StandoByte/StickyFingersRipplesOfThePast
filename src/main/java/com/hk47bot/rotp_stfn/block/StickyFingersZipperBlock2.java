@@ -115,6 +115,18 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
         return shape;
     }
 
+    public static void placeSingleZipper(World world, BlockPos targetedBlockPos, Direction direction, LivingEntity placer){
+        if (!world.isClientSide()) {
+            BlockPos zipperPos1 = targetedBlockPos.relative(direction);
+            world.setBlockAndUpdate(zipperPos1, getZipperState(world, zipperPos1, InitBlocks.STICKY_FINGERS_ZIPPER.get().defaultBlockState().setValue(INITIAL_FACING, direction)));
+            setOwnerData(world, zipperPos1, placer);
+        }
+        else if (ClientUtil.canHearStands()) {
+            world.playLocalSound(targetedBlockPos.getX(), targetedBlockPos.getY(), targetedBlockPos.getZ(), InitSounds.ZIPPER_CREATE.get(),
+                    SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+        }
+    }
+
     public static void placeZippers(World world, BlockPos targetedBlockPos, Direction direction, LivingEntity placer) {
         if (!world.isClientSide()){
             BlockPos zipperPos1 = targetedBlockPos.relative(direction);
@@ -184,6 +196,7 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
         }
         return pos;
     }
+
 
     public static BlockState getZipperState(World world, BlockPos pos, BlockState state) {
         BlockState newState = state;

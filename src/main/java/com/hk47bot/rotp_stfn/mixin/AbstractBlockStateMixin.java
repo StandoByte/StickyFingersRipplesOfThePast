@@ -97,8 +97,5 @@ public abstract class AbstractBlockStateMixin {
         if (hasZippersAround(pos, world)){
             cir.setReturnValue(false);
         }
-        else {
-            cir.cancel();
-        }
     }
 }

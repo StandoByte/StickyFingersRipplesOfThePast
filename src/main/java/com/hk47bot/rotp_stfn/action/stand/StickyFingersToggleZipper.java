@@ -27,6 +27,7 @@ public class StickyFingersToggleZipper extends StandAction {
         if (target.getType() == ActionTarget.TargetType.BLOCK) {
             BlockPos targetedBlockPos = target.getBlockPos();
             BlockState targetedState = world.getBlockState(targetedBlockPos);
+            BlockPos linkedPos = StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world);
             BlockState linkedState = world.getBlockState(StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world));
             if (targetedState.getBlock() == InitBlocks.STICKY_FINGERS_ZIPPER.get()) {
                 if (!world.isClientSide()) {
@@ -34,8 +35,10 @@ public class StickyFingersToggleZipper extends StandAction {
                     JojoModUtil.sayVoiceLine(user, voiceline);
                     world.setBlockAndUpdate(targetedBlockPos,
                             targetedState.setValue(StickyFingersZipperBlock2.OPEN, !targetedState.getValue(StickyFingersZipperBlock2.OPEN)));
-                    world.setBlockAndUpdate(StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world),
-                            linkedState.setValue(StickyFingersZipperBlock2.OPEN, !targetedState.getValue(StickyFingersZipperBlock2.OPEN)));
+                    if (linkedPos != targetedBlockPos) {
+                        world.setBlockAndUpdate(StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world),
+                                linkedState.setValue(StickyFingersZipperBlock2.OPEN, !targetedState.getValue(StickyFingersZipperBlock2.OPEN)));
+                    }
                 } else if (ClientUtil.canHearStands()) {
                     SoundEvent sound = targetedState.getValue(StickyFingersZipperBlock2.OPEN) ? InitSounds.ZIPPER_OPEN.get() : InitSounds.ZIPPER_CLOSE.get();
                     world.playLocalSound(user.getX(), user.getY(0.5), user.getZ(), sound,

@@ -25,9 +25,7 @@ public class StickyFingersRemoveZipper extends StandAction {
         if (target.getType() == ActionTarget.TargetType.BLOCK) {
             BlockPos targetedBlockPos = target.getBlockPos();
             if (!(power.getHeldAction() instanceof StickyFingersPlaceZipper)
-                    && isBlockZipper(user.level, targetedBlockPos)
-                    && (isBlockZipper(user.level, targetedBlockPos.relative(target.getFace().getOpposite(), 2))
-                    || isBlockZipper(user.level, targetedBlockPos.relative(target.getFace().getOpposite(), 3)))) {
+                    && isBlockZipper(user.level, targetedBlockPos)) {
                 return ActionConditionResult.POSITIVE;
             }
         }
