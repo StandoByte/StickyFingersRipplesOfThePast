@@ -40,7 +40,7 @@
     "sounds": ["rotp_stfn:stand/unsummon", "rotp_stfn:stand/unsummon_2"]
   },
   "sticky_fingers_punch": {
-    "sounds": ["rotp_stfn:stand/swing_1"]
+    "sounds": ["rotp_stfn:stand/light_punch"]
   },
   "sticky_fingers_heavy_punch": {
     "sounds": ["rotp_stfn:stand/heavy_punch"]

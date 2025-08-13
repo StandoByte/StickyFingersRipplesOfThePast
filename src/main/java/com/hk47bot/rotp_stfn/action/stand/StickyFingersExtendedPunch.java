@@ -1,7 +1,9 @@
 package com.hk47bot.rotp_stfn.action.stand;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import  com.hk47bot.rotp_stfn.entity.projectile.ExtendedPunchEntity;
 import com.hk47bot.rotp_stfn.entity.stand.stands.StickyFingersEntity;
 import com.github.standobyte.jojo.action.ActionConditionResult;
@@ -11,6 +13,7 @@ import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 public class StickyFingersExtendedPunch extends StandEntityAction {
@@ -23,6 +26,11 @@ public class StickyFingersExtendedPunch extends StandEntityAction {
             return conditionMessage("stickyfingers_rightforearm");
         }
         return super.checkStandConditions(stand, power, target);
+    }
+
+    @Nonnull
+    protected ResourceLocation getIconTexturePath(@Nullable IStandPower power) {
+        return !power.getUser().isShiftKeyDown() ? super.getIconTexturePath(power) : new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "textures/action/sticky_fingers_extended_punch_pull.png");
     }
 
     @Override

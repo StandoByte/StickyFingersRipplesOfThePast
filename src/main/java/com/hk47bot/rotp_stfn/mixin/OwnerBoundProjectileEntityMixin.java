@@ -10,6 +10,7 @@ import com.hk47bot.rotp_stfn.util.StickyUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,18 +28,18 @@ public class OwnerBoundProjectileEntityMixin extends DamagingEntity {
     @Redirect(method = "ownerPosition", at = @At(value = "INVOKE", target = "Lcom/github/standobyte/jojo/entity/damaging/projectile/ownerbound/OwnerBoundProjectileEntity;getPos(Lnet/minecraft/entity/LivingEntity;FFF)Lnet/minecraft/util/math/vector/Vector3d;"))
     private Vector3d getEyePosition(OwnerBoundProjectileEntity instance, LivingEntity owner, float partialTick, float yRot, float xRot){
         OwnerBoundProjectileEntity projectile = (OwnerBoundProjectileEntity) (Object) this;
-        if (owner != null) {
-            EntityZipperCapability capability = owner.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
-            if (capability == null) return getPos(owner, partialTick, yRot, xRot);
+        EntityZipperCapability capability = owner.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+        if (capability == null) return getPos(owner, partialTick, yRot, xRot);
 
-            if (!capability.isHasHead() && capability.getHeadId() != null) {
-                Entity head = StickyUtil.getEntityByUUID(owner.level, capability.getHeadId());
-                if (head instanceof PlayerHeadEntity) {
-                    return head.getEyePosition(partialTick).add(getOwnerRelativeOffset());
-                }
+        if (!capability.isHasHead() && capability.getHeadId() != null) {
+            Entity head = StickyUtil.getEntityByUUID(owner.level, capability.getHeadId());
+            if (head instanceof PlayerHeadEntity) {
+                return head.getEyePosition(partialTick).add(getOwnerRelativeOffset());
             }
         }
-        return MCUtil.getEntityPosition(projectile, partialTick);
+        return getPos(owner, partialTick,
+                projectile.isBodyPart() ? MathHelper.lerp(partialTick, owner.yBodyRotO, owner.yBodyRot) : MathHelper.lerp(partialTick, owner.yRotO, owner.yRot),
+                MathHelper.lerp(partialTick, owner.xRotO, owner.xRot));
     }
     @Override
     public int ticksLifespan() {
