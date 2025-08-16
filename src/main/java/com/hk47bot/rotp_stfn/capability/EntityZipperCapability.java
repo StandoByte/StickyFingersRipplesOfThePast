@@ -1,8 +1,12 @@
 package com.hk47bot.rotp_stfn.capability;
 
+import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.hk47bot.rotp_stfn.init.InitStands;
 import com.hk47bot.rotp_stfn.network.AddonPackets;
 import com.hk47bot.rotp_stfn.network.EntityZipperCapSyncPacket;
+import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.item.ItemEntity;
@@ -19,6 +23,10 @@ import java.util.UUID;
 
 public class EntityZipperCapability {
     private final LivingEntity entity;
+
+    @Setter
+    @Getter
+    private boolean isInGround = false;
 
     @Getter
     private boolean hasHead = true;
@@ -153,6 +161,22 @@ public class EntityZipperCapability {
         }
     }
 
+    public void tickInGround(){
+        IStandPower.getStandPowerOptional(entity).ifPresent(power -> {
+            if (power.getType() == InitStands.STAND_STICKY_FINGERS.getStandType()) {
+                if (isInGround) power.consumeStamina(5F, true);
+                if (ZipperUtil.hasZippersAround(entity.blockPosition(), entity.level)) {
+                    setInGround(true);
+                } else if (ZipperUtil.isBlockFree(entity.level, entity.blockPosition())
+                        || power.getStamina() <= 0
+                        || ZipperUtil.isBlockZipper(entity.level, entity.blockPosition())) {
+                    setInGround(false);
+                }
+
+            }
+        });
+    }
+
     private void checkBodyPartEntity(UUID id, Runnable trouble) {
         if (id == null || entity.level.isClientSide()) {
             return;
@@ -166,6 +190,9 @@ public class EntityZipperCapability {
 
     public CompoundNBT toNBT() {
         CompoundNBT nbt = new CompoundNBT();
+
+        nbt.putBoolean("InGround", isInGround);
+
         nbt.putBoolean("RightArm", rightArmBlocked);
         nbt.putBoolean("LeftArm", leftArmBlocked);
         nbt.putBoolean("RightLeg", rightLegBlocked);
@@ -181,6 +208,8 @@ public class EntityZipperCapability {
     }
 
     public void fromNBT(CompoundNBT nbt) {
+        isInGround = nbt.getBoolean("InGround");
+
         rightArmBlocked = nbt.getBoolean("RightArm");
         leftArmBlocked = nbt.getBoolean("LeftArm");
         rightLegBlocked = nbt.getBoolean("RightLeg");

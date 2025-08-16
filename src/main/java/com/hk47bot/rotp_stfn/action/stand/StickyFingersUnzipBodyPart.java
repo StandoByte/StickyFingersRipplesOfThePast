@@ -11,6 +11,7 @@ import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.entity.stand.TargetHitPart;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.power.impl.stand.StandUtil;
+import com.github.standobyte.jojo.util.mc.damage.DamageUtil;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
@@ -35,7 +36,7 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
     protected ActionConditionResult checkSpecificConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         if (power.isActive()) {
             Entity targetEntity = target.getEntity();
-            if (targetEntity instanceof LivingEntity) {
+            if (targetEntity instanceof LivingEntity && !(targetEntity instanceof BodyPartEntity)) {
                 StandEntity standEntity = (StandEntity) power.getStandManifestation();
                 TargetHitPart hitPart = standEntity.getCurrentTask().map(task -> {
                     if (task.hasModifierAction(null)) {
@@ -65,10 +66,8 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                     }
                 } else if (triggerEffect) {
                     LivingEntity targetEntity = StandUtil.getStandUser((LivingEntity) entity);
-                    if (targetEntity instanceof BodyPartEntity){
-                        return;
-                    }
                     EntityZipperCapability capability = targetEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+                    BodyPartEntity partToKnockback = null;
                     switch (hitPart) {
                         case HEAD:
                             if (capability.isHasHead()) {
@@ -77,6 +76,7 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                                 Vector3d position = targetEntity.position().add(0, targetEntity.getBbHeight(), 0);
                                 head.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(head);
+                                partToKnockback = head;
                             }
                             break;
                         case TORSO_ARMS:
@@ -96,6 +96,7 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                                 Vector3d position = targetEntity.position();
                                 arm.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(arm);
+                                partToKnockback = arm;
                             }
                             break;
                         case LEGS:
@@ -129,12 +130,16 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                                 Vector3d position = targetEntity.position();
                                 leg.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(leg);
+                                partToKnockback = leg;
                             }
                             break;
                     }
                     IPunch punch = standEntity.getLastPunch();
                     float damageDealt = punch.getType() == ActionTarget.TargetType.ENTITY ? ((StandEntityPunch) punch).getDamageDealtToLiving() : 0;
                     targetEntity.setHealth(targetEntity.getHealth() + damageDealt * 0.5F);
+                    if (partToKnockback != null){
+                        DamageUtil.knockback(partToKnockback, 1.0F, userPower.getUser().yHeadRot);
+                    }
                 }
             }
         }

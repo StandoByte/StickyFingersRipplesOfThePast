@@ -237,23 +237,23 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
                         if ((neighborFaceDirections.contains(Direction.EAST))
                                 && (neighborFaceDirections.contains(Direction.WEST))
                                 && (neighborFaceDirections.contains(Direction.NORTH))) {
-                            result.setRotation(3);
+                            result.setRotation(1);
                         }
                         if ((neighborFaceDirections.contains(Direction.WEST))
                                 && (neighborFaceDirections.contains(Direction.SOUTH))
                                 && (neighborFaceDirections.contains(Direction.NORTH))) {
-                            if (direction == Direction.UP) result.setRotation(2);
+                            if (direction == Direction.UP) result.setRotation(4);
                             else if (direction == Direction.DOWN) result.setRotation(4);
                         }
                         if ((neighborFaceDirections.contains(Direction.EAST))
                                 && (neighborFaceDirections.contains(Direction.SOUTH))
                                 && (neighborFaceDirections.contains(Direction.WEST))) {
-                            result.setRotation(1);
+                            result.setRotation(3);
                         }
                         if ((neighborFaceDirections.contains(Direction.EAST))
                                 && (neighborFaceDirections.contains(Direction.SOUTH))
                                 && (neighborFaceDirections.contains(Direction.NORTH))) {
-                            if (direction == Direction.UP) result.setRotation(4);
+                            if (direction == Direction.UP) result.setRotation(2);
                             else if (direction == Direction.DOWN) result.setRotation(2);
                         }
                     }
@@ -296,23 +296,19 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
                     } else {
                         if ((neighborFaceDirections.contains(Direction.EAST))
                                 && (neighborFaceDirections.contains(Direction.NORTH))) {
-                            if (direction == Direction.UP) result.setRotation(3);
-                            else if (direction == Direction.DOWN) result.setRotation(2);
+                            result.setRotation(1);
                         }
                         if ((neighborFaceDirections.contains(Direction.EAST))
                                 && (neighborFaceDirections.contains(Direction.SOUTH))) {
-                            if (direction == Direction.UP) result.setRotation(4);
-                            else if (direction == Direction.DOWN) result.setRotation(1);
+                            result.setRotation(2);
                         }
                         if ((neighborFaceDirections.contains(Direction.SOUTH))
                                 && (neighborFaceDirections.contains(Direction.WEST))) {
-                            if (direction == Direction.UP) result.setRotation(1);
-                            else if (direction == Direction.DOWN) result.setRotation(4);
+                            result.setRotation(3);
                         }
                         if ((neighborFaceDirections.contains(Direction.WEST))
                                 && (neighborFaceDirections.contains(Direction.NORTH))) {
-                            if (direction == Direction.UP) result.setRotation(2);
-                            else if (direction == Direction.DOWN) result.setRotation(3);
+                            result.setRotation(4);
                         }
                     }
                     break;

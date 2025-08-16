@@ -32,17 +32,16 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderBlockOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -69,19 +68,50 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRenderBlockOverlay(RenderBlockOverlayEvent event) {
-        if (ZipperUtil.hasZippersAround(event.getBlockPos(), mc.level)) {
-            event.setCanceled(true);
-            renderEndSky(event);
-        }
+        PlayerEntity player = mc.player;
+        player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(zipperCap -> {
+            if (ZipperUtil.hasZippersAround(event.getBlockPos(), mc.level) || zipperCap.isInGround()) {
+                event.setCanceled(true);
+                renderEndSky(event);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void fogDensity(EntityViewRenderEvent.FogDensity event) {
+        PlayerEntity player = mc.player;
+
+        player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(zipperCap -> {
+            if ((ZipperUtil.hasZippersAround(player.blockPosition().above(), mc.level) || zipperCap.isInGround()) && !ZipperUtil.isBlockZipper(mc.level, player.blockPosition().above())) {
+                RotpStickyFingersAddon.getLogger().info(mc.level.getBlockState(player.blockPosition().above()).toString());
+                event.setDensity(0.4F);
+                event.setCanceled(true);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void fogColor(EntityViewRenderEvent.FogColors event) {
+        PlayerEntity player = mc.player;
+        player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(zipperCap -> {
+            if ((ZipperUtil.hasZippersAround(player.blockPosition().above(), mc.level) || zipperCap.isInGround()) && !ZipperUtil.isBlockZipper(mc.level, player.blockPosition().above())) {
+                int[] rgb = ClientUtil.rgbInt(0x9152B1);
+                event.setRed(rgb[0]/ 255.0F);
+                event.setGreen(rgb[1]/ 255.0F);
+                event.setBlue(rgb[2]/ 255.0F);
+            }
+        });
     }
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (mc.player == null || mc.level == null) return;
+        mc.player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(zipperCap -> {
+            if (ZipperUtil.hasZippersAround(mc.player.blockPosition(), mc.level) || zipperCap.isInGround()) {
+                mc.options.setCameraType(PointOfView.FIRST_PERSON);
+            }
+        });
 
-        if (ZipperUtil.hasZippersAround(mc.player.blockPosition(), mc.level)) {
-            mc.options.setCameraType(PointOfView.FIRST_PERSON);
-        }
     }
 
     @SubscribeEvent
@@ -134,14 +164,15 @@ public class ClientEvents {
         float red = (0.75f + RANDOM.nextFloat() * 0.05f) * 0.15F;
         float green = (0.35f + RANDOM.nextFloat() * 0.05f) * 0.15F;
         float blue = (0.90f + RANDOM.nextFloat() * 0.05f) * 0.15F;
+        float alpha = 0.5F;
         Matrix4f matrix4f = event.getMatrixStack().last().pose();
         RenderType enderSkyRenderType = StickyFingersZipperBlockRenderer.StickyFingersZipperRenderType.endPortalNoFog(0);
         IVertexBuilder skyBuffer = mc.renderBuffers().bufferSource().getBuffer(enderSkyRenderType);
         event.getMatrixStack().pushPose();
-        skyBuffer.vertex(matrix4f, -1.0F, -1.0F, -0.5F).color(red, green, blue, 1F).uv(4.0F, 4.0F).endVertex();
-        skyBuffer.vertex(matrix4f, 1.0F, -1.0F, -0.5F).color(red, green, blue, 1F).uv(0.0F, 4.0F).endVertex();
-        skyBuffer.vertex(matrix4f, 1.0F, 1.0F, -0.5F).color(red, green, blue, 1F).uv(0.0F, 0.0F).endVertex();
-        skyBuffer.vertex(matrix4f, -1.0F, 1.0F, -0.5F).color(red, green, blue, 1F).uv(4.0F, 0.0F).endVertex();
+        skyBuffer.vertex(matrix4f, -1.0F, -1.0F, -0.5F).color(red, green, blue, alpha).uv(4.0F, 4.0F).endVertex();
+        skyBuffer.vertex(matrix4f, 1.0F, -1.0F, -0.5F).color(red, green, blue, alpha).uv(0.0F, 4.0F).endVertex();
+        skyBuffer.vertex(matrix4f, 1.0F, 1.0F, -0.5F).color(red, green, blue, alpha).uv(0.0F, 0.0F).endVertex();
+        skyBuffer.vertex(matrix4f, -1.0F, 1.0F, -0.5F).color(red, green, blue, alpha).uv(4.0F, 0.0F).endVertex();
         event.getMatrixStack().popPose();
         for (int i = 1; i <= 16; i++) {
             red = (0.75f + RANDOM.nextFloat() * 0.05f) * 2.0F / (float)(19 - i);
@@ -151,10 +182,10 @@ public class ClientEvents {
             IVertexBuilder buffer = mc.renderBuffers().bufferSource().getBuffer(enderRenderType);
             RenderSystem.defaultBlendFunc();
             event.getMatrixStack().pushPose();
-            buffer.vertex(matrix4f, -1.0F, -1.0F, -0.5F).color(red, green, blue, 1F).uv(4.0F, 4.0F).endVertex();
-            buffer.vertex(matrix4f, 1.0F, -1.0F, -0.5F).color(red, green, blue, 1F).uv(0.0F, 4.0F).endVertex();
-            buffer.vertex(matrix4f, 1.0F, 1.0F, -0.5F).color(red, green, blue, 1F).uv(0.0F, 0.0F).endVertex();
-            buffer.vertex(matrix4f, -1.0F, 1.0F, -0.5F).color(red, green, blue, 1F).uv(4.0F, 0.0F).endVertex();
+            buffer.vertex(matrix4f, -1.0F, -1.0F, -0.5F).color(red, green, blue, alpha).uv(4.0F, 4.0F).endVertex();
+            buffer.vertex(matrix4f, 1.0F, -1.0F, -0.5F).color(red, green, blue, alpha).uv(0.0F, 4.0F).endVertex();
+            buffer.vertex(matrix4f, 1.0F, 1.0F, -0.5F).color(red, green, blue, alpha).uv(0.0F, 0.0F).endVertex();
+            buffer.vertex(matrix4f, -1.0F, 1.0F, -0.5F).color(red, green, blue, alpha).uv(4.0F, 0.0F).endVertex();
             event.getMatrixStack().popPose();
         }
         RenderSystem.disableBlend();

@@ -41,7 +41,7 @@ public class StickyFingersUnzipOpponent extends StandEntityHeavyAttack {
     @Override
     public StandEntityPunch punchEntity(StandEntity stand, Entity target, StandEntityDamageSource dmgSource) {
         double strength = stand.getAttackDamage();
-        return super.punchEntity(stand, target, dmgSource).damage(StandStatFormulas.getHeavyAttackDamage(strength)/2);
+        return super.punchEntity(stand, target, dmgSource).damage(StandStatFormulas.getHeavyAttackDamage(strength)/2).multiplyAddKnockback(0);
     }
 
     @Override

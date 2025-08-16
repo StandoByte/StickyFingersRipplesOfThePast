@@ -11,6 +11,7 @@ import com.hk47bot.rotp_stfn.capability.BlockZipperStorage;
 import com.hk47bot.rotp_stfn.capability.EntityZipperStorage;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCap;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCapProvider;
+import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
 import com.hk47bot.rotp_stfn.init.InitSounds;
 import net.minecraft.block.GlassBlock;
 import net.minecraft.entity.LivingEntity;
@@ -37,6 +38,9 @@ public class StickyFingersOpenStorageInTarget extends StandAction {
             ZipperStorageCap zipperStorageCap = world.getCapability(ZipperStorageCapProvider.CAPABILITY).orElse(null);
             switch (target.getType()) {
                 case ENTITY:
+                    if ((target.getEntity() instanceof BodyPartEntity)){
+                        break;
+                    }
                     EntityZipperStorage storage = zipperStorageCap.findEntityStorage(target.getEntity().getUUID(), (ServerPlayerEntity) user);
                     NetworkHooks.openGui((ServerPlayerEntity) user, storage);
                     break;

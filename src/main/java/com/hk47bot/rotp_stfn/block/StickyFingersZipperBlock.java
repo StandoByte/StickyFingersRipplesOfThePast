@@ -210,7 +210,7 @@ public class StickyFingersZipperBlock extends SixWayBlock implements IWaterLogga
 
     public static BlockPos getLinkedBlockPos(BlockState state, BlockPos pos, IWorld world){
         if (state.getBlock() instanceof StickyFingersZipperBlock){
-            return pos.relative(state.getValue(FACING).getOpposite(), StickyFingersPlaceZipper.isBlockFree((World) world, pos.relative(state.getValue(FACING).getOpposite(), 2)) ? 2 : 3);
+            return pos.relative(state.getValue(FACING).getOpposite(), ZipperUtil.isBlockFree((World) world, pos.relative(state.getValue(FACING).getOpposite(), 2)) ? 2 : 3);
         }
         return pos;
     }

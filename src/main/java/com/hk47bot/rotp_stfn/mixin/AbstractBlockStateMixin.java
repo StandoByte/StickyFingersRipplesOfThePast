@@ -1,24 +1,28 @@
 package com.hk47bot.rotp_stfn.mixin;
 
+import com.github.standobyte.jojo.capability.entity.PlayerUtilCap;
+import com.github.standobyte.jojo.capability.entity.PlayerUtilCapProvider;
+import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
+import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
+import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import net.minecraft.block.*;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.*;
 import net.minecraft.world.*;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.ServerWorldInfo;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2.OPEN;
 import static com.hk47bot.rotp_stfn.util.ZipperUtil.hasZippersAround;
 
 @Mixin(value = AbstractBlock.AbstractBlockState.class)
@@ -55,34 +59,28 @@ public abstract class AbstractBlockStateMixin {
         VoxelShape blockShape = getBlock().getCollisionShape(this.asState(), world, pos, context);
         try {
             if (!blockShape.isEmpty() && context instanceof EntitySelectionContext) {
-                if (hasZippersAround(pos, world)){
-                    VoxelShape shape = VoxelShapes.empty();
-                    BlockState upState = world.getBlockState(pos.above());
-                    BlockState downState = world.getBlockState(pos.below());
-                    BlockState northState = world.getBlockState(pos.north());
-                    BlockState southState = world.getBlockState(pos.south());
-                    BlockState westState = world.getBlockState(pos.west());
-                    BlockState eastState = world.getBlockState(pos.east());
-
-                    if (upState.getBlock() instanceof AirBlock) {
-                        shape = VoxelShapes.join(shape, VoxelShapes.box(0.0, 1, 0.0, 1, 0.99, 1), IBooleanFunction.OR);
-                    }
-                    if (downState.getBlock() instanceof AirBlock) {
-                        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 0.01, 1), IBooleanFunction.OR);
-                    }
-                    if (northState.getBlock() instanceof AirBlock) {
-                        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 1, 0.01), IBooleanFunction.OR);
-                    }
-                    if (southState.getBlock() instanceof AirBlock) {
-                        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 1, 1, 1, 0.99), IBooleanFunction.OR);
-                    }
-                    if (westState.getBlock() instanceof AirBlock) {
-                        shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 0.01, 1, 1), IBooleanFunction.OR);
-                    }
-                    if (eastState.getBlock() instanceof AirBlock) {
-                        shape = VoxelShapes.join(shape, VoxelShapes.box(1, 0, 0, 0.99, 1, 1), IBooleanFunction.OR);
-                    }
-                    info.setReturnValue(shape);
+                Entity entity = context.getEntity();
+                if (getBlock() instanceof StickyFingersZipperBlock2
+                        || asState().getDestroySpeed(world, pos) < 0
+                        || isBlockDoor(world, pos)){
+                    info.setReturnValue(blockShape);
+                }
+                else if (hasZippersAround(pos, world)){
+                    info.setReturnValue(createCollisionAdaptingShape(world, pos));
+                }
+                else if (entity instanceof PlayerEntity){
+                    PlayerEntity player = (PlayerEntity) entity;
+                    boolean isAbove = isAbove(entity, blockShape, pos, false);
+                    boolean doubleShift = player.getCapability(PlayerUtilCapProvider.CAPABILITY).map(
+                            PlayerUtilCap::getDoubleShiftPress).orElse(false);
+                    player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
+                        if (cap.isInGround() && (!isAbove || doubleShift)) {
+                            info.setReturnValue(createCollisionAdaptingShape(world, pos));
+                        }
+                    });
+                }
+                else {
+                    info.setReturnValue(blockShape);
                 }
             }
         }
@@ -90,6 +88,55 @@ public abstract class AbstractBlockStateMixin {
             RotpStickyFingersAddon.getLogger().info("Checking zippers for unloaded chunks:");
             info.setReturnValue(blockShape);
         }
+    }
+
+    @Unique
+    private boolean isAbove(Entity entity, VoxelShape shape, BlockPos pos, boolean defaultValue) {
+        return entity.getY() > (double)pos.getY() + shape.bounds().max(Direction.Axis.Y) - (entity.isOnGround() ? 8.05/16.0 : 0.0015);
+    }
+
+    @Unique
+    private VoxelShape createCollisionAdaptingShape(IBlockReader world, BlockPos pos){
+        VoxelShape shape = VoxelShapes.empty();
+
+        if (ZipperUtil.isBlockFree(world, pos.above()) && !isBlockDoor(world, pos, Direction.UP)) {
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0.0, 1, 0.0, 1, 0.99, 1), IBooleanFunction.OR);
+        }
+        if (ZipperUtil.isBlockFree(world, pos.below()) && !isBlockDoor(world, pos, Direction.DOWN)) {
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 0.01, 1), IBooleanFunction.OR);
+        }
+        if (ZipperUtil.isBlockFree(world, pos.north()) && !isBlockDoor(world, pos, Direction.NORTH)) {
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 1, 0.01), IBooleanFunction.OR);
+        }
+        if (ZipperUtil.isBlockFree(world, pos.south()) && !isBlockDoor(world, pos, Direction.SOUTH)) {
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 1, 1, 1, 0.99), IBooleanFunction.OR);
+        }
+        if (ZipperUtil.isBlockFree(world, pos.west()) && !isBlockDoor(world, pos, Direction.WEST)) {
+            shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 0.01, 1, 1), IBooleanFunction.OR);
+        }
+        if (ZipperUtil.isBlockFree(world, pos.east()) && !isBlockDoor(world, pos, Direction.EAST)) {
+            shape = VoxelShapes.join(shape, VoxelShapes.box(1, 0, 0, 0.99, 1, 1), IBooleanFunction.OR);
+        }
+        return shape;
+    }
+
+    @Unique
+    private static boolean isBlockDoor(IBlockReader world, BlockPos blockPos, Direction direction) {
+        return world.getBlockState(blockPos.relative(direction)).getBlock() instanceof DoorBlock
+                || world.getBlockState(blockPos.relative(direction)).getBlock() instanceof TrapDoorBlock
+                || (world.getBlockState(blockPos.relative(direction)).getBlock() instanceof StickyFingersZipperBlock2
+        && world.getBlockState(blockPos.relative(direction)).getValue(StickyFingersZipperBlock2.INITIAL_FACING) == direction);
+    }
+
+    @Unique
+    private static boolean isBlockDoor(IBlockReader world, BlockPos blockPos) {
+        return world.getBlockState(blockPos).getBlock() instanceof DoorBlock
+                || world.getBlockState(blockPos).getBlock() instanceof TrapDoorBlock;
+    }
+
+    @Unique
+    private static boolean checkFace(IBlockReader world, BlockPos blockPos, Direction direction) {
+        return world.getBlockState(blockPos.relative(direction)).isFaceSturdy(world, blockPos.relative(direction), direction.getOpposite());
     }
 
     @Inject(at = @At("HEAD"), method = "isSuffocating", cancellable = true)

@@ -1,10 +1,10 @@
 package com.hk47bot.rotp_stfn.block;
 
 import com.github.standobyte.jojo.client.ClientUtil;
-import com.hk47bot.rotp_stfn.action.stand.StickyFingersPlaceZipper;
 import com.hk47bot.rotp_stfn.init.InitBlocks;
 import com.hk47bot.rotp_stfn.init.InitSounds;
 import com.hk47bot.rotp_stfn.tileentities.StickyFingersZipperTileEntity;
+import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -30,8 +30,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.hk47bot.rotp_stfn.action.stand.StickyFingersPlaceZipper.isBlockFree;
 
 public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLoggable, ITileEntityProvider {
     public static final DirectionProperty INITIAL_FACING = BlockStateProperties.FACING;
@@ -133,7 +131,7 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
             world.setBlockAndUpdate(zipperPos1, getZipperState(world, zipperPos1, InitBlocks.STICKY_FINGERS_ZIPPER.get().defaultBlockState().setValue(INITIAL_FACING, direction)));
             setOwnerData(world, zipperPos1, placer);
 
-            if (!isBlockFree(world, targetedBlockPos.relative(direction.getOpposite()))) {
+            if (!ZipperUtil.isBlockFree(world, targetedBlockPos.relative(direction.getOpposite()))) {
                 BlockPos zipperPos2 = targetedBlockPos.relative(direction.getOpposite(), 2);
                 world.setBlockAndUpdate(zipperPos2, getZipperState(world, zipperPos2, InitBlocks.STICKY_FINGERS_ZIPPER.get().defaultBlockState().setValue(INITIAL_FACING, direction.getOpposite())));
                 setOwnerData(world, zipperPos2, placer);
@@ -168,6 +166,13 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
             return Blocks.AIR.defaultBlockState();
         }
         BlockState zipperState = getZipperState((World) world, pos, state);
+        BlockPos linkedZipperPos = StickyFingersZipperBlock2.getLinkedZipperBlockPos(state, pos, world);
+        BlockState linkedBlockState = world.getBlockState(linkedZipperPos);
+        if (linkedZipperPos != pos){
+            if (linkedBlockState.getValue(OPEN) != state.getValue(OPEN)) {
+                zipperState = getZipperState((World) world, pos, state).setValue(OPEN, linkedBlockState.getValue(OPEN));
+            }
+        }
         if (neighborState.getBlock() instanceof StickyFingersZipperBlock2) {
             if (neighborState.getValue(INITIAL_FACING) == state.getValue(INITIAL_FACING)) {
                 zipperState = getZipperState((World) world, pos, state).setValue(OPEN, neighborState.getValue(OPEN));
@@ -187,12 +192,14 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
     }
 
     public static BlockPos getLinkedBlockPos(BlockPos pos, IWorld world, Direction facing) {
-        return pos.relative(facing, StickyFingersPlaceZipper.isBlockFree((World) world, pos.relative(facing, 2)) ? 2 : 3);
+        return pos.relative(facing, ZipperUtil.isBlockFree(world, pos.relative(facing, 2)) ? 2 : 3);
     }
 
     public static BlockPos getLinkedZipperBlockPos(BlockState state, BlockPos pos, IWorld world) {
         if (state.getBlock() instanceof StickyFingersZipperBlock2) {
-            return pos.relative(state.getValue(INITIAL_FACING).getOpposite(), StickyFingersPlaceZipper.isBlockZipper((World) world, pos.relative(state.getValue(INITIAL_FACING).getOpposite(), 2)) ? 2 : 3);
+            return pos.relative(state.getValue(INITIAL_FACING).getOpposite(),
+                            ZipperUtil.isBlockZipper(world, pos.relative(state.getValue(INITIAL_FACING).getOpposite(), 2)) ? 2 :
+                            ZipperUtil.isBlockZipper(world, pos.relative(state.getValue(INITIAL_FACING).getOpposite(), 3)) ? 3 : 0);
         }
         return pos;
     }

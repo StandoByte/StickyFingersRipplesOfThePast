@@ -16,6 +16,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import static com.hk47bot.rotp_stfn.action.stand.StickyFingersRemoveZipper.getTargetedBlockPos;
+
 
 public class StickyFingersToggleZipper extends StandAction {
     public StickyFingersToggleZipper(StandAction.Builder builder) {
@@ -25,7 +27,7 @@ public class StickyFingersToggleZipper extends StandAction {
     @Override
     protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
         if (target.getType() == ActionTarget.TargetType.BLOCK) {
-            BlockPos targetedBlockPos = target.getBlockPos();
+            BlockPos targetedBlockPos = getTargetedBlockPos(target, user);
             BlockState targetedState = world.getBlockState(targetedBlockPos);
             BlockPos linkedPos = StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world);
             BlockState linkedState = world.getBlockState(StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world));
@@ -56,7 +58,7 @@ public class StickyFingersToggleZipper extends StandAction {
     @Override
     protected ActionConditionResult checkSpecificConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         if (target.getType() == ActionTarget.TargetType.BLOCK) {
-            BlockPos targetedBlockPos = target.getBlockPos();
+            BlockPos targetedBlockPos = getTargetedBlockPos(target, user);
             if (user.level.getBlockState(targetedBlockPos).getBlock() == InitBlocks.STICKY_FINGERS_ZIPPER.get()) {
                 return ActionConditionResult.POSITIVE;
             }

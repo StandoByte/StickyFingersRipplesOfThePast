@@ -1,10 +1,13 @@
 package com.hk47bot.rotp_stfn.util;
 
+import com.github.standobyte.jojo.util.mc.damage.StandDamageSource;
+import com.github.standobyte.jojo.util.mc.damage.StandEntityDamageSource;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCap;
 import com.hk47bot.rotp_stfn.capability.ZipperStorageCapProvider;
 import com.hk47bot.rotp_stfn.init.InitEffects;
+import com.hk47bot.rotp_stfn.init.InitStands;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.LivingEntity;
@@ -28,7 +31,10 @@ public class GameplayEvents {
     @SubscribeEvent
     public static void onEntityHurt(LivingHurtEvent event){
         LivingEntity entity = event.getEntityLiving();
-        if (entity.getEffect(InitEffects.ZIP_WOUNDS.get()) != null && event.getAmount() > 0) {
+        if (entity.getEffect(InitEffects.ZIP_WOUNDS.get()) != null
+                && event.getSource() instanceof StandEntityDamageSource
+                && ((StandEntityDamageSource)event.getSource()).getStandPower().getType() == InitStands.STAND_STICKY_FINGERS.getStandType()
+                && event.getAmount() > 0) {
             entity.removeEffect(InitEffects.ZIP_WOUNDS.get());
         }
     }
@@ -40,6 +46,7 @@ public class GameplayEvents {
             entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tickArms);
         }
         entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tickLegs);
+        entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tickInGround);
     }
 
     @SubscribeEvent

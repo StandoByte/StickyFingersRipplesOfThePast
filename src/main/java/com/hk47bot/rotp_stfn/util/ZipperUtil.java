@@ -2,8 +2,11 @@ package com.hk47bot.rotp_stfn.util;
 
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
+import net.minecraft.block.AirBlock;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
 import java.util.Arrays;
@@ -47,7 +50,9 @@ public class ZipperUtil {
         for (Direction direction : Direction.values()){
             if (world.getBlockState(pos.relative(direction)).getBlock() instanceof StickyFingersZipperBlock2
                     && (world.getBlockState(pos.relative(direction)).getValue(StickyFingersZipperBlock2.INITIAL_FACING) == direction)
-                    && world.getBlockState(pos.relative(direction)).getValue(StickyFingersZipperBlock.OPEN)){
+                    && world.getBlockState(pos.relative(direction)).getValue(StickyFingersZipperBlock.OPEN)
+                    && !(world.getBlockState(pos).getBlock() instanceof StickyFingersZipperBlock2)
+            ){
                 return true;
             }
         }
@@ -177,5 +182,16 @@ public class ZipperUtil {
 
         }
         return result;
+    }
+
+    public static boolean isBlockFree(IBlockReader world, BlockPos blockPos) {
+        return (world.getBlockState(blockPos).getBlock() instanceof AirBlock
+                || world.getBlockState(blockPos).getMaterial().isReplaceable()
+                || world.getBlockState(blockPos).getBlock().getCollisionShape(world.getBlockState(blockPos), world, blockPos, ISelectionContext.empty()).equals(VoxelShapes.empty())
+                && !isBlockZipper(world, blockPos));
+    }
+
+    public static boolean isBlockZipper(IBlockReader world, BlockPos blockPos) {
+        return world.getBlockState(blockPos).getBlock() instanceof StickyFingersZipperBlock2;
     }
 }

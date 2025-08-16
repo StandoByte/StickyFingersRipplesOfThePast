@@ -98,7 +98,7 @@ public class InitStands {
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_GET_INTO_MOB = ACTIONS.register("sticky_fingers_get_into_mob",
             () -> new StickyFingersGetInsideMob(new StandAction.Builder()
-                    .holdToFire(60, false)));
+                    .holdToFire(30, false)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_OPEN_STORAGE = ACTIONS.register("sticky_fingers_open_storage",
             () -> new StickyFingersOpenStorageInTarget(new StandAction.Builder()));
