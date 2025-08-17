@@ -24,7 +24,7 @@ import java.util.UUID;
 public class EntityZipperCapability {
     private final LivingEntity entity;
 
-    @Setter
+
     @Getter
     private boolean isInGround = false;
 
@@ -167,7 +167,7 @@ public class EntityZipperCapability {
                 if (isInGround) power.consumeStamina(5F, true);
                 if (ZipperUtil.hasZippersAround(entity.blockPosition(), entity.level)) {
                     setInGround(true);
-                } else if (ZipperUtil.isBlockFree(entity.level, entity.blockPosition())
+                } else if (ZipperUtil.isBlockFree(entity.level, entity.blockPosition().above())
                         || power.getStamina() <= 0
                         || ZipperUtil.isBlockZipper(entity.level, entity.blockPosition())) {
                     setInGround(false);
@@ -262,6 +262,12 @@ public class EntityZipperCapability {
 
     public void setLeftLegId(UUID leftLegId) {
         this.leftLegId = leftLegId;
+        if (entity != null) {
+            syncData(entity);
+        }
+    }
+    public void setInGround(boolean inGround) {
+        this.isInGround = inGround;
         if (entity != null) {
             syncData(entity);
         }

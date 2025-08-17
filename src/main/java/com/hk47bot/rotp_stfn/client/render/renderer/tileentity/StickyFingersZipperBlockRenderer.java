@@ -6,6 +6,7 @@ import com.hk47bot.rotp_stfn.block.ZipperFace;
 import com.hk47bot.rotp_stfn.tileentities.StickyFingersZipperTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
@@ -346,7 +347,7 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
             right_down2.visible = face.isRightUp();
             left_up2.visible = face.isLeftDown();
             left_down2.visible = face.isLeftUp();
-            north.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
+            north.render(stack, buffer.getBuffer(RenderType.entityCutout(this.getFaceTexture(zipper.getBlockState(), zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
         if (zipper.shouldRenderFace(Direction.SOUTH)){
             direction = Direction.SOUTH;
@@ -356,7 +357,7 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
             right_down.visible = face.isLeftUp();
             left_up.visible = face.isRightDown();
             left_down.visible = face.isRightUp();
-            south.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
+            south.render(stack, buffer.getBuffer(RenderType.entityCutout(this.getFaceTexture(zipper.getBlockState(), zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
         if (zipper.shouldRenderFace(Direction.EAST)){
             direction = Direction.EAST;
@@ -366,7 +367,7 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
             right_down3.visible = face.isLeftUp();
             left_up3.visible = face.isRightDown();
             left_down3.visible = face.isRightUp();
-            east.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
+            east.render(stack, buffer.getBuffer(RenderType.entityCutout(this.getFaceTexture(zipper.getBlockState(), zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
         if (zipper.shouldRenderFace(Direction.WEST)){
             direction = Direction.WEST;
@@ -376,7 +377,7 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
             right_down4.visible = face.isRightUp();
             left_up4.visible = face.isLeftDown();
             left_down4.visible = face.isLeftUp();
-            west.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
+            west.render(stack, buffer.getBuffer(RenderType.entityCutout(this.getFaceTexture(zipper.getBlockState(), zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
         if (zipper.shouldRenderFace(Direction.UP)){
             direction = Direction.UP;
@@ -386,7 +387,7 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
             right_down5.visible = face.isLeftUp();
             left_up5.visible = face.isRightDown();
             left_down5.visible = face.isRightUp();
-            up.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
+            up.render(stack, buffer.getBuffer(RenderType.entityCutout(this.getFaceTexture(zipper.getBlockState(), zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
         if (zipper.shouldRenderFace(Direction.DOWN)){
             direction = Direction.DOWN;
@@ -396,7 +397,7 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
             right_down6.visible = face.isRightUp();
             left_up6.visible = face.isLeftDown();
             left_down6.visible = face.isLeftUp();
-            down.render(stack, buffer.getBuffer(RenderType.entityCutout(zipper.getFaceTexture(zipper.getFaceValue(direction)))), packedLight, packedOverlay);
+            down.render(stack, buffer.getBuffer(RenderType.entityCutout(this.getFaceTexture(zipper.getBlockState(), zipper.getFaceValue(direction)))), packedLight, packedOverlay);
         }
     }
 
@@ -409,6 +410,46 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
     protected float getWhiteOverlayProgress(StickyFingersZipperTileEntity entity, float partialTick) {
         return entity.overlayTickCount > OVERLAY_TICKS ? 0 :
                 (OVERLAY_TICKS - MathHelper.clamp(entity.overlayTickCount + partialTick, 0.0F, OVERLAY_TICKS)) / OVERLAY_TICKS;
+    }
+
+    public ResourceLocation getFaceTexture(BlockState state, ZipperFace face) {
+        String type = "";
+        String rotation = "";
+        switch (face.getType()) {
+            case 0:
+                type = "diagonal";
+                break;
+            case 1:
+                type = "straight";
+                break;
+            case 2:
+                type = "corner";
+                break;
+            case 3:
+                type = "t";
+                break;
+            case 4:
+                type = "cross";
+                break;
+        }
+        switch (face.getRotation()) {
+            case 1:
+                if (face.getType() == 1) rotation = "horizontal";
+                else rotation = "1";
+                break;
+            case 2:
+                if (face.getType() == 1) rotation = "vertical";
+                else rotation = "2";
+                break;
+            case 3:
+                rotation = "3";
+                break;
+            case 4:
+                rotation = "4";
+                break;
+        }
+        return new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "textures/zipper/" + type + "/" + "zipper_" + type + (!type.equals("cross") && !type.equals("diagonal") ? "_" + rotation : "") + (state.getValue(OPEN) ? "_open" : "") + ".png");
+
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.init.InitEffects;
 import com.hk47bot.rotp_stfn.init.InitSounds;
 import net.minecraft.entity.LivingEntity;

@@ -9,6 +9,7 @@ import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandPose;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.mod.JojoModUtil;
+import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
@@ -44,10 +45,17 @@ public class StickyFingersPlaceZipper extends StandAction {
     @Override
     public Action<IStandPower> getVisibleAction(IStandPower power, ActionTarget target) {
         if (power.getHeldActionTicks() == 0) {
+            LivingEntity user = power.getUser();
             RayTraceResult rayTraceResult = JojoModUtil.rayTrace(power.getUser(), 5, null);
             if (rayTraceResult.getType() == RayTraceResult.Type.BLOCK) {
                 BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
                 BlockPos targetedBlockPos = getTargetedBlockPos(new ActionTarget(blockRayTraceResult.getBlockPos(), blockRayTraceResult.getDirection()), power.getUser());
+                EntityZipperCapability zipperCap = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+                if (zipperCap != null) {
+                    if (getTargetedFace(target, user) == Direction.DOWN && zipperCap.isInGround()) {
+                        targetedBlockPos = targetedBlockPos.below();
+                    }
+                }
                 if (ZipperUtil.isBlockZipper(power.getUser().level, targetedBlockPos)) {
                     return InitStands.STICKY_FINGERS_REMOVE_ZIPPER.get();
                 }
@@ -60,6 +68,12 @@ public class StickyFingersPlaceZipper extends StandAction {
     protected ActionConditionResult checkSpecificConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         if (target.getType() == ActionTarget.TargetType.BLOCK) {
             BlockPos targetedBlockPos = target.getBlockPos();
+            EntityZipperCapability zipperCap = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+            if (zipperCap != null) {
+                if (StickyFingersPlaceZipper.getTargetedFace(target, user) == Direction.DOWN && zipperCap.isInGround()) {
+                    targetedBlockPos = targetedBlockPos.below();
+                }
+            }
             if (ZipperUtil.isBlockZipper(user.level, targetedBlockPos)) {
                 return ActionConditionResult.NEGATIVE_CONTINUE_HOLD;
             }
@@ -72,11 +86,14 @@ public class StickyFingersPlaceZipper extends StandAction {
     protected void holdTick(World world, LivingEntity user, IStandPower power, int ticksHeld, ActionTarget target, boolean requirementsFulfilled) {
         BlockPos targetedBlockPos = target.getBlockPos();
         if (target.getType() == ActionTarget.TargetType.BLOCK){
-            BlockState targetedBlockState = user.level.getBlockState(targetedBlockPos);
-            BlockPos zipperBlockPos = targetedBlockPos.relative(getTargetedFace(target, user));
-            BlockPos linkedZipperBlockPos = StickyFingersZipperBlock2.getLinkedBlockPos(zipperBlockPos, user.level, getTargetedFace(target, user).getOpposite());
             EntityZipperCapability zipperCap = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
             if (zipperCap != null){
+                if (getTargetedFace(target, user) == Direction.DOWN && zipperCap.isInGround()){
+                    targetedBlockPos = targetedBlockPos.below();
+                }
+                BlockState targetedBlockState = user.level.getBlockState(targetedBlockPos);
+                BlockPos zipperBlockPos = targetedBlockPos.relative(getTargetedFace(target, user));
+                BlockPos linkedZipperBlockPos = StickyFingersZipperBlock2.getLinkedBlockPos(zipperBlockPos, user.level, getTargetedFace(target, user).getOpposite());
                 if (targetedBlockState.isFaceSturdy(user.level, targetedBlockPos, getTargetedFace(target, user))
                         && ZipperUtil.isBlockFree(user.level, zipperBlockPos)) {
                     if (!ZipperUtil.isBlockZipper(world, targetedBlockPos) && ticksHeld > 0) {
@@ -86,8 +103,8 @@ public class StickyFingersPlaceZipper extends StandAction {
                         }
                         else {
                             StickyFingersZipperBlock2.placeSingleZipper(world, targetedBlockPos, getTargetedFace(target, user), user);
-                            if (getTargetedFace(target, user).getAxis().isHorizontal() && zipperCap.isInGround() && (ZipperUtil.isBlockFree(world, targetedBlockPos.below()) || ZipperUtil.isBlockFree(world, targetedBlockPos.above()))){
-                                StickyFingersZipperBlock2.placeSingleZipper(world, ZipperUtil.isBlockFree(world, targetedBlockPos.below()) ? targetedBlockPos.below() : targetedBlockPos.above(), getTargetedFace(target, user), user);
+                            if (getTargetedFace(target, user).getAxis().isHorizontal() && zipperCap.isInGround() && (ZipperUtil.isBlockFree(world, zipperBlockPos.below()) || ZipperUtil.isBlockFree(world, zipperBlockPos.above()))){
+                                StickyFingersZipperBlock2.placeSingleZipper(world, ZipperUtil.isBlockFree(world, zipperBlockPos.below()) ? targetedBlockPos.below() : ZipperUtil.isBlockFree(world, zipperBlockPos.above()) ? targetedBlockPos.above() : targetedBlockPos, getTargetedFace(target, user), user);
                             }
                         }
                     }
@@ -98,7 +115,7 @@ public class StickyFingersPlaceZipper extends StandAction {
 
     public static Direction getTargetedFace(ActionTarget target, LivingEntity user){
         EntityZipperCapability zipperCap = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
-        if (zipperCap != null && zipperCap.isInGround()){
+        if (zipperCap != null && zipperCap.isInGround() && target.getType() == ActionTarget.TargetType.BLOCK){
             return target.getFace().getOpposite();
         }
 

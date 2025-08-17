@@ -10,6 +10,7 @@ import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.init.InitStands;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -29,6 +30,12 @@ public class StickyFingersRemoveZipper extends StandAction {
     protected ActionConditionResult checkSpecificConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         if (target.getType() == ActionTarget.TargetType.BLOCK) {
             BlockPos targetedBlockPos = getTargetedBlockPos(target, user);
+            EntityZipperCapability zipperCap = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+            if (zipperCap != null) {
+                if (StickyFingersPlaceZipper.getTargetedFace(target, user) == Direction.DOWN && zipperCap.isInGround()) {
+                    targetedBlockPos = targetedBlockPos.below();
+                }
+            }
             if (!(power.getHeldAction() instanceof StickyFingersPlaceZipper)
                     && isBlockZipper(user.level, targetedBlockPos)) {
                 return ActionConditionResult.POSITIVE;
@@ -42,8 +49,13 @@ public class StickyFingersRemoveZipper extends StandAction {
         if (!world.isClientSide()) {
             if (target.getType() == ActionTarget.TargetType.BLOCK) {
                 BlockPos targetedBlockPos = getTargetedBlockPos(target, user);
+                EntityZipperCapability zipperCap = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+                if (zipperCap != null) {
+                    if (getTargetedFace(target, user) == Direction.DOWN && zipperCap.isInGround()) {
+                        targetedBlockPos = targetedBlockPos.below();
+                    }
+                }
                 if (isBlockZipper(world, targetedBlockPos)) {
-                    EntityZipperCapability zipperCap = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
                     world.getBlockState(targetedBlockPos).getBlock().destroy(world, targetedBlockPos, world.getBlockState(targetedBlockPos));
                     if (getTargetedFace(target, user).getAxis().isHorizontal() && zipperCap.isInGround() && (ZipperUtil.isBlockZipper(world, targetedBlockPos.below()) || ZipperUtil.isBlockZipper(world, targetedBlockPos.above()))){
                         targetedBlockPos = ZipperUtil.isBlockZipper(world, targetedBlockPos.below()) ? targetedBlockPos.below() : targetedBlockPos.above();
@@ -57,7 +69,10 @@ public class StickyFingersRemoveZipper extends StandAction {
     public static BlockPos getTargetedBlockPos(ActionTarget target, LivingEntity user){
         EntityZipperCapability zipperCap = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
         if (zipperCap != null && zipperCap.isInGround()){
-            return target.getBlockPos().relative(target.getFace().getOpposite());
+            if (StickyFingersPlaceZipper.getTargetedFace(target, user) == Direction.DOWN && zipperCap.isInGround()) {
+                return target.getBlockPos().below();
+            }
+            return target.getBlockPos().relative(getTargetedFace(target, user));
         }
 
         return target.getBlockPos();

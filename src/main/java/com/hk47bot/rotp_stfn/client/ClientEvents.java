@@ -83,7 +83,6 @@ public class ClientEvents {
 
         player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(zipperCap -> {
             if ((ZipperUtil.hasZippersAround(player.blockPosition().above(), mc.level) || zipperCap.isInGround()) && !ZipperUtil.isBlockZipper(mc.level, player.blockPosition().above())) {
-                RotpStickyFingersAddon.getLogger().info(mc.level.getBlockState(player.blockPosition().above()).toString());
                 event.setDensity(0.4F);
                 event.setCanceled(true);
             }

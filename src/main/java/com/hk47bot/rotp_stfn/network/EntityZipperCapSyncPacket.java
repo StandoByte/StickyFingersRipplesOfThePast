@@ -14,6 +14,9 @@ import java.util.function.Supplier;
 
 public class EntityZipperCapSyncPacket {
     private final int entityId;
+
+    private final boolean isInGround;
+
     private final boolean leftArmBlocked;
     private final boolean rightArmBlocked;
     private final boolean rightLegBlocked;
@@ -28,6 +31,9 @@ public class EntityZipperCapSyncPacket {
 
     public EntityZipperCapSyncPacket(
             int entityId,
+
+            boolean isInGround,
+
             boolean leftArmBlocked,
             boolean rightArmBlocked,
             boolean leftLegBlocked,
@@ -41,6 +47,9 @@ public class EntityZipperCapSyncPacket {
             UUID rightLegId
     ) {
         this.entityId = entityId;
+
+        this.isInGround = isInGround;
+
         this.leftArmBlocked = leftArmBlocked;
         this.rightArmBlocked = rightArmBlocked;
         this.leftLegBlocked = leftLegBlocked;
@@ -56,6 +65,9 @@ public class EntityZipperCapSyncPacket {
 
     public EntityZipperCapSyncPacket(EntityZipperCapability capability) {
         this.entityId = capability.getEntityId();
+
+        this.isInGround = capability.isInGround();
+
         this.leftArmBlocked = capability.isLeftArmBlocked();
         this.rightArmBlocked = capability.isRightArmBlocked();
         this.leftLegBlocked = capability.isLeftLegBlocked();
@@ -73,6 +85,9 @@ public class EntityZipperCapSyncPacket {
         @Override
         public void encode(EntityZipperCapSyncPacket packet, PacketBuffer buf) {
             buf.writeInt(packet.entityId);
+
+            buf.writeBoolean(packet.isInGround);
+
             buf.writeBoolean(packet.leftArmBlocked);
             buf.writeBoolean(packet.rightArmBlocked);
             buf.writeBoolean(packet.leftLegBlocked);
@@ -108,6 +123,9 @@ public class EntityZipperCapSyncPacket {
         @Override
         public EntityZipperCapSyncPacket decode(PacketBuffer buf) {
             int entityId = buf.readInt();
+
+            boolean isInGround = buf.readBoolean();
+
             boolean leftArmBlocked = buf.readBoolean();
             boolean rightArmBlocked = buf.readBoolean();
             boolean leftLegBlocked = buf.readBoolean();
@@ -120,7 +138,7 @@ public class EntityZipperCapSyncPacket {
             UUID rightLegId = buf.readBoolean() ? buf.readUUID() : null;
             UUID leftLegId = buf.readBoolean() ? buf.readUUID() : null;
 
-            return new EntityZipperCapSyncPacket(entityId, leftArmBlocked, rightArmBlocked, leftLegBlocked, rightLegBlocked, hasHead,
+            return new EntityZipperCapSyncPacket(entityId, isInGround, leftArmBlocked, rightArmBlocked, leftLegBlocked, rightLegBlocked, hasHead,
                     headId, leftArmId, rightArmId, leftLegId, rightLegId);
         }
 
@@ -130,6 +148,9 @@ public class EntityZipperCapSyncPacket {
             if (entity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) entity;
                 livingEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(capability -> {
+
+                    capability.setInGround(entityZipperCapSyncPacket.isInGround);
+
                     capability.setLeftArmBlocked(entityZipperCapSyncPacket.leftArmBlocked);
                     capability.setRightArmBlocked(entityZipperCapSyncPacket.rightArmBlocked);
 

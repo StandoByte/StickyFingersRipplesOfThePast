@@ -10,7 +10,9 @@
     "EntityMixin",
     "OwnerBoundProjectileEntityMixin",
     "ServerPlayNetHandlerMixin",
-    "StandUtilMixin"
+    "StandTypeMixin",
+    "StandUtilMixin",
+    "client.ClDoubleShiftPressPacketMixin"
   ],
   "client": [
     "client.ArmorStandArmorModelMixin",

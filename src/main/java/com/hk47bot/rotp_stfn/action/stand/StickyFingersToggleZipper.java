@@ -7,10 +7,13 @@ import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.mod.JojoModUtil;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
+import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
+import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.init.InitBlocks;
 import com.hk47bot.rotp_stfn.init.InitSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -28,6 +31,12 @@ public class StickyFingersToggleZipper extends StandAction {
     protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
         if (target.getType() == ActionTarget.TargetType.BLOCK) {
             BlockPos targetedBlockPos = getTargetedBlockPos(target, user);
+            EntityZipperCapability zipperCap = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+            if (zipperCap != null) {
+                if (StickyFingersPlaceZipper.getTargetedFace(target, user) == Direction.DOWN && zipperCap.isInGround()) {
+                    targetedBlockPos = targetedBlockPos.below();
+                }
+            }
             BlockState targetedState = world.getBlockState(targetedBlockPos);
             BlockPos linkedPos = StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world);
             BlockState linkedState = world.getBlockState(StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world));
@@ -59,6 +68,12 @@ public class StickyFingersToggleZipper extends StandAction {
     protected ActionConditionResult checkSpecificConditions(LivingEntity user, IStandPower power, ActionTarget target) {
         if (target.getType() == ActionTarget.TargetType.BLOCK) {
             BlockPos targetedBlockPos = getTargetedBlockPos(target, user);
+            EntityZipperCapability zipperCap = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+            if (zipperCap != null) {
+                if (StickyFingersPlaceZipper.getTargetedFace(target, user) == Direction.DOWN && zipperCap.isInGround()) {
+                    targetedBlockPos = targetedBlockPos.below();
+                }
+            }
             if (user.level.getBlockState(targetedBlockPos).getBlock() == InitBlocks.STICKY_FINGERS_ZIPPER.get()) {
                 return ActionConditionResult.POSITIVE;
             }

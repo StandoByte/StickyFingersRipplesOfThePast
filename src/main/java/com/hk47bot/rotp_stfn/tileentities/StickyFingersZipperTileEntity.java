@@ -7,6 +7,7 @@ import com.hk47bot.rotp_stfn.block.ZipperFace;
 import com.hk47bot.rotp_stfn.init.InitTileEntities;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SixWayBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -86,9 +87,13 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
 
             if (this.ownerUUID != null) {
                 PlayerEntity owner = this.level.getPlayerByUUID(this.ownerUUID);
-                if (owner == null || owner.distanceToSqr(this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5) > MAX_DISTANCE_SQUARED) {
+                if (owner == null || owner.isDeadOrDying()) {
+                    this.getBlockState().getBlock().destroy(this.level, this.getBlockPos(), this.getBlockState());
+                }
+                else if (owner.distanceToSqr(this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5) > MAX_DISTANCE_SQUARED) {
                     shouldClose = true;
                 }
+
             }
 
             if (shouldClose) {
@@ -431,49 +436,6 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
                 || (world.getBlockState(pos3.relative(facing)).getBlock() instanceof StickyFingersZipperBlock2)
                 || (world.getBlockState(pos3.relative(facing.getOpposite())).getBlock() instanceof StickyFingersZipperBlock2));
 
-
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    public ResourceLocation getFaceTexture(ZipperFace face) {
-        BlockState state = this.getBlockState();
-        String type = "";
-        String rotation = "";
-        switch (face.getType()) {
-            case 0:
-                type = "diagonal";
-                break;
-            case 1:
-                type = "straight";
-                break;
-            case 2:
-                type = "corner";
-                break;
-            case 3:
-                type = "t";
-                break;
-            case 4:
-                type = "cross";
-                break;
-        }
-        switch (face.getRotation()) {
-            case 1:
-                if (face.getType() == 1) rotation = "horizontal";
-                else rotation = "1";
-                break;
-            case 2:
-                if (face.getType() == 1) rotation = "vertical";
-                else rotation = "2";
-                break;
-            case 3:
-                rotation = "3";
-                break;
-            case 4:
-                rotation = "4";
-                break;
-        }
-        return new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "textures/zipper/" + type + "/" + "zipper_" + type + (!type.equals("cross") && !type.equals("diagonal") ? "_" + rotation : "") + (state.getValue(OPEN) ? "_open" : "") + ".png");
 
     }
 
