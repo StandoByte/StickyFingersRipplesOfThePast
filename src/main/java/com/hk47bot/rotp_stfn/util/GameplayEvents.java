@@ -1,11 +1,11 @@
 package com.hk47bot.rotp_stfn.util;
 
-import com.github.standobyte.jojo.util.mc.damage.StandEntityDamageSource;
+import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.github.standobyte.jojo.util.mod.IPlayerPossess;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.capability.ZipperWorldCap;
 import com.hk47bot.rotp_stfn.capability.ZipperWorldCapProvider;
-import com.hk47bot.rotp_stfn.init.InitEffects;
 import com.hk47bot.rotp_stfn.init.InitStands;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
@@ -15,7 +15,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -28,13 +27,14 @@ public class GameplayEvents {
     }
 
     @SubscribeEvent
-    public static void onEntityHurt(LivingHurtEvent event){
-        LivingEntity entity = event.getEntityLiving();
-        if (entity.getEffect(InitEffects.ZIP_WOUNDS.get()) != null
-                && event.getSource() instanceof StandEntityDamageSource
-                && ((StandEntityDamageSource)event.getSource()).getStandPower().getType() == InitStands.STAND_STICKY_FINGERS.getStandType()
-                && event.getAmount() > 0) {
-            entity.removeEffect(InitEffects.ZIP_WOUNDS.get());
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        PlayerEntity player = event.player;
+        if (player instanceof IPlayerPossess && !player.level.isClientSide() && IStandPower.getStandPowerOptional(player).map(power -> power.getType() == InitStands.STAND_STICKY_FINGERS.getStandType()).orElse(false)) {
+            IPlayerPossess playerPossess = (IPlayerPossess) player;
+            Entity possessedEntity = playerPossess.jojoGetPossessedEntity();
+            if (possessedEntity instanceof LivingEntity && ((LivingEntity) possessedEntity).hurtDuration > 0) {
+                playerPossess.jojoPossessEntity(null, false, playerPossess.jojoGetPossessionContext());
+            }
         }
     }
 
