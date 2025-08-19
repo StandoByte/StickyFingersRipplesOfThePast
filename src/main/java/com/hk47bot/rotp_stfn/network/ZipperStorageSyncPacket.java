@@ -3,7 +3,7 @@ package com.hk47bot.rotp_stfn.network;
 import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.network.packets.IModPacketHandler;
 import com.hk47bot.rotp_stfn.capability.EntityZipperStorage;
-import com.hk47bot.rotp_stfn.capability.ZipperStorageCapProvider;
+import com.hk47bot.rotp_stfn.capability.ZipperWorldCapProvider;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -47,7 +47,7 @@ public class ZipperStorageSyncPacket {
         }
         @Override
         public void handle(ZipperStorageSyncPacket zipperStorageSyncPacket, Supplier<NetworkEvent.Context> ctx) {
-            ClientUtil.getClientPlayer().level.getCapability(ZipperStorageCapProvider.CAPABILITY).ifPresent(zipperStorageCap -> zipperStorageCap.setEntityStorages(zipperStorageSyncPacket.storages));
+            ClientUtil.getClientPlayer().level.getCapability(ZipperWorldCapProvider.CAPABILITY).ifPresent(zipperStorageCap -> zipperStorageCap.setEntityStorages(zipperStorageSyncPacket.storages));
         }
         @Override
         public Class<ZipperStorageSyncPacket> getPacketClass() {

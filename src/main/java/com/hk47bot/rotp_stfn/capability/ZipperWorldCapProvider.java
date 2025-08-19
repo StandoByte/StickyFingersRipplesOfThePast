@@ -8,13 +8,13 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class ZipperStorageCapProvider implements ICapabilitySerializable<INBT> {
-    @CapabilityInject(ZipperStorageCap.class)
-    public static Capability<ZipperStorageCap> CAPABILITY = null;
-    private LazyOptional<ZipperStorageCap> instance;
+public class ZipperWorldCapProvider implements ICapabilitySerializable<INBT> {
+    @CapabilityInject(ZipperWorldCap.class)
+    public static Capability<ZipperWorldCap> CAPABILITY = null;
+    private LazyOptional<ZipperWorldCap> instance;
 
-    public ZipperStorageCapProvider(World world) {
-        this.instance = LazyOptional.of(() -> new ZipperStorageCap(world));
+    public ZipperWorldCapProvider(World world) {
+        this.instance = LazyOptional.of(() -> new ZipperWorldCap(world));
     }
 
     @Override

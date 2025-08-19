@@ -4,13 +4,19 @@ import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
+import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
 import com.hk47bot.rotp_stfn.init.InitEffects;
 import com.hk47bot.rotp_stfn.init.InitSounds;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class StickyFingersZipUserWounds extends StandAction {
     public StickyFingersZipUserWounds(StandAction.Builder builder) {
@@ -19,6 +25,22 @@ public class StickyFingersZipUserWounds extends StandAction {
 
     @Override
     protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
+        EntityZipperCapability capability = user.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+        if (!capability.noArms()){
+            Random random = user.getRandom();
+            boolean isRight = false;
+            if (!capability.isLeftArmBlocked() && (random.nextBoolean() || capability.isRightArmBlocked())) {
+                capability.setLeftArmBlocked(true);
+            }
+            else if (!capability.isRightArmBlocked() && (random.nextBoolean() || capability.isLeftArmBlocked())) {
+                capability.setRightArmBlocked(true);
+                isRight = true;
+            }
+            PlayerArmEntity arm = new PlayerArmEntity(world, user, isRight);
+            Vector3d position = user.position();
+            arm.moveTo(position.x, position.y, position.z, user.yRot, user.xRot);
+            world.addFreshEntity(arm);
+        }
         user.addEffect(new EffectInstance(InitEffects.ZIP_WOUNDS.get(), 1200, 0, false, false, true));
         if (ClientUtil.canHearStands()) {
             world.playLocalSound(user.getX(), user.getY(0.5), user.getZ(), InitSounds.ZIPPER_CLOSE.get(),

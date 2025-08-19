@@ -1,10 +1,14 @@
 package com.hk47bot.rotp_stfn.capability;
 
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.init.InitStands;
 import com.hk47bot.rotp_stfn.network.AddonPackets;
-import com.hk47bot.rotp_stfn.network.ZipperStorageSyncPacket;
+import com.hk47bot.rotp_stfn.network.PacketToPacketPacket;
+import lombok.Setter;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -22,12 +26,18 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ZipperStorageCap {
+public class ZipperWorldCap {
     private final World world;
+
+    private boolean humanoidPacketSent = false;
+
     private ArrayList<BlockZipperStorage> blockStorages = new ArrayList<>();
+    @Setter
     private ArrayList<EntityZipperStorage> entityStorages = new ArrayList<>();
 
-    public ZipperStorageCap(World world) {
+    public ArrayList<EntityType> humanoidTypes = new ArrayList<>();
+
+    public ZipperWorldCap(World world) {
         this.world = world;
     }
 
@@ -86,20 +96,33 @@ public class ZipperStorageCap {
         return storage.get();
     }
 
-    public void setEntityStorages(ArrayList<EntityZipperStorage> storages){
-        this.entityStorages = storages;
+    public void syncHumanoids(ServerPlayerEntity player) {
+        if (!world.isClientSide() && !humanoidPacketSent) {
+            AddonPackets.sendToClient(new PacketToPacketPacket(), player);
+        }
+        humanoidPacketSent = true;
+        RotpStickyFingersAddon.getLogger().info("isClient {} types {}", world.isClientSide, humanoidTypes);
     }
 
-    public void syncData(PlayerEntity player) {
-        if (!player.level.isClientSide()) {
-            AddonPackets.sendToClient(new ZipperStorageSyncPacket(entityStorages), (ServerPlayerEntity) player);
-        }
+    public boolean isHumanoid(LivingEntity entity){
+        return humanoidTypes.contains(entity.getType());
     }
 
     public CompoundNBT toNBT(){
         CompoundNBT returnableNBT = new CompoundNBT();
         ListNBT entityStoragesNBT = new ListNBT();
         ListNBT blockStoragesNBT = new ListNBT();
+        ListNBT humanoidTypesNBT = new ListNBT();
+        int typeIndex = 0;
+        CompoundNBT typeListSize = new CompoundNBT();
+        typeListSize.putInt("TypeListSize", humanoidTypes.size());
+        humanoidTypesNBT.add(typeListSize);
+        for (EntityType type : humanoidTypes){
+            CompoundNBT typeNbt = new CompoundNBT();
+            typeNbt.putString("Type" + typeIndex, EntityType.getKey(type).toString());
+            typeIndex++;
+            humanoidTypesNBT.add(typeNbt);
+        }
         for (EntityZipperStorage entityZipperStorage : entityStorages){
             ListNBT storageNbt = new ListNBT();
             ListNBT compounds = new ListNBT();
@@ -122,12 +145,20 @@ public class ZipperStorageCap {
             storageNbt.add(blockZipperStorage.createTag());
             blockStoragesNBT.add(storageNbt);
         }
+        returnableNBT.put("HumanoidTypes", humanoidTypesNBT);
         returnableNBT.put("EntityStorages", entityStoragesNBT);
         returnableNBT.put("BlockStorages", blockStoragesNBT);
         return returnableNBT;
     }
 
     public void fromNBT(CompoundNBT nbt){
+        ListNBT humanoidTypesListNBT = (ListNBT) nbt.get("HumanoidTypes");
+        int listSize = ((CompoundNBT)humanoidTypesListNBT.get(0)).getInt("TypeListSize");
+        for (int i = 0; i < listSize; i++) {
+            String typeKey = ((CompoundNBT)humanoidTypesListNBT.get(i)).getString("Type" + i);
+            Optional<EntityType<?>> type = EntityType.byString(typeKey);
+            type.ifPresent(entityType -> humanoidTypes.add(entityType));
+        }
         ListNBT entityStorageListNBT = (ListNBT) nbt.get("EntityStorages");
         for (INBT inbt : entityStorageListNBT) {
             ListNBT storageNbt = (ListNBT)inbt;

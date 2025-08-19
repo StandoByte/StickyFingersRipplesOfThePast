@@ -1,15 +1,11 @@
 package com.hk47bot.rotp_stfn.init;
 
-import com.github.standobyte.jojo.JojoMod;
 import com.github.standobyte.jojo.action.Action;
 import com.github.standobyte.jojo.action.stand.*;
 import com.github.standobyte.jojo.entity.stand.StandEntityType;
 import com.github.standobyte.jojo.entity.stand.StandPose;
 import com.github.standobyte.jojo.entity.stand.TargetHitPart;
-import com.github.standobyte.jojo.entity.stand.stands.MagiciansRedEntity;
-import com.github.standobyte.jojo.init.ModSounds;
 import com.github.standobyte.jojo.init.power.stand.EntityStandRegistryObject;
-import com.github.standobyte.jojo.init.power.stand.ModStandsInit;
 import com.github.standobyte.jojo.power.impl.stand.StandInstance.StandPart;
 import com.github.standobyte.jojo.power.impl.stand.stats.StandStats;
 import com.github.standobyte.jojo.power.impl.stand.type.EntityStandType;
@@ -23,8 +19,6 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 import static com.github.standobyte.jojo.init.ModEntityTypes.ENTITIES;
-import static com.github.standobyte.jojo.init.power.ModCommonRegisters.ACTIONS;
-import static com.github.standobyte.jojo.init.power.stand.ModStandsInit.STAND_TYPES;
 
 public class InitStands {
     @SuppressWarnings("unchecked")
@@ -88,7 +82,7 @@ public class InitStands {
                     .standPerformDuration(25)
                     .cooldown(20, 60)
                     .ignoresPerformerStun()
-                    .resolveLevelToUnlock(3)
+                    .resolveLevelToUnlock(1)
                     .standOffsetFront()
                     .standPose(StandPose.RANGED_ATTACK)
                     .partsRequired(StandPart.ARMS)));
@@ -96,28 +90,34 @@ public class InitStands {
     public static final RegistryObject<StandEntityAction> STICKY_FINGERS_BLOCK = ACTIONS.register("sticky_fingers_block",
             () -> new StandEntityBlock());
 
-    public static final RegistryObject<StandAction> STICKY_FINGERS_GET_INTO_MOB = ACTIONS.register("sticky_fingers_get_into_mob",
+    public static final RegistryObject<StandAction> STICKY_FINGERS_HIDE_IN_MOB = ACTIONS.register("sticky_fingers_hide_in_mob",
             () -> new StickyFingersGetInsideMob(new StandAction.Builder()
+                    .resolveLevelToUnlock(3)
                     .holdToFire(30, false)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_OPEN_STORAGE = ACTIONS.register("sticky_fingers_open_storage",
-            () -> new StickyFingersOpenStorageInTarget(new StandAction.Builder()));
+            () -> new StickyFingersOpenStorageInTarget(new StandAction.Builder()
+                    .resolveLevelToUnlock(3)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_OPEN_INNER_STORAGE = ACTIONS.register("sticky_fingers_open_inner_storage",
             () -> new StickyFingersOpenStorageInUser(new StandAction.Builder()
+                    .resolveLevelToUnlock(4)
                     .shiftVariationOf(STICKY_FINGERS_OPEN_STORAGE)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_REMOVE_ZIPPER = ACTIONS.register("sticky_fingers_remove_zipper",
-            () -> new StickyFingersRemoveZipper(new StandAction.Builder()));
+            () -> new StickyFingersRemoveZipper(new StandAction.Builder()
+                    .resolveLevelToUnlock(2)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_PLACE_ZIPPER = ACTIONS.register("sticky_fingers_place_zipper",
             () -> new StickyFingersPlaceZipper(new StandAction.Builder()
+                    .resolveLevelToUnlock(2)
                     .holdType()
                     .standPose(StickyFingersPlaceZipper.STAND_POSE)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_TOGGLE_ZIPPER = ACTIONS.register("sticky_fingers_toggle_zipper",
             () -> new StickyFingersToggleZipper(new StandAction.Builder()
                     .shiftVariationOf(STICKY_FINGERS_PLACE_ZIPPER)
+                    .resolveLevelToUnlock(2)
                     .shiftVariationOf(STICKY_FINGERS_REMOVE_ZIPPER)
                     .partsRequired(StandPart.ARMS)));
 
@@ -141,7 +141,7 @@ public class InitStands {
                             )
                             .rightClickHotbar(
                                     STICKY_FINGERS_BLOCK.get(),
-                                    STICKY_FINGERS_GET_INTO_MOB.get(),
+                                    STICKY_FINGERS_HIDE_IN_MOB.get(),
                                     STICKY_FINGERS_PLACE_ZIPPER.get(),
                                     STICKY_FINGERS_OPEN_STORAGE.get(),
                                     STICKY_FINGERS_ZIP_USER_WOUNDS.get()

@@ -1,12 +1,15 @@
 package com.hk47bot.rotp_stfn.entity.bodypart;
 
+import com.github.standobyte.jojo.client.ClientUtil;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.init.InitEntities;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.UUIDCodec;
 import net.minecraft.world.World;
 
 public class PlayerHeadEntity extends BodyPartEntity {
@@ -35,5 +38,13 @@ public class PlayerHeadEntity extends BodyPartEntity {
             return ActionResultType.SUCCESS;
         }
         return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public void readSpawnData(PacketBuffer additionalData) {
+        super.readSpawnData(additionalData);
+        if (this.getOwner() == ClientUtil.getClientPlayer()){
+            ClientUtil.setCameraEntityPreventShaderSwitch(this);
+        }
     }
 }

@@ -113,6 +113,14 @@ public class ClientEvents {
 
     }
 
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onRenderHand(RenderHandEvent event) {
+        Entity entity = Minecraft.getInstance().getCameraEntity();
+        if (entity instanceof PlayerHeadEntity){
+            event.setCanceled(true);
+        }
+    }
+
     @SubscribeEvent
     public void onHeadInteract(PlayerInteractEvent.EntityInteract event){
         if (event.getTarget() instanceof PlayerHeadEntity){
@@ -122,6 +130,8 @@ public class ClientEvents {
             }
         }
     }
+
+
 
     @SubscribeEvent
     public void onPreRenderLiving(RenderLivingEvent.Pre<? extends LivingEntity, EntityModel<? extends LivingEntity>> event) {

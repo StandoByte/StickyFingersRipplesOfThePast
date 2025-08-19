@@ -1,11 +1,10 @@
 package com.hk47bot.rotp_stfn.util;
 
-import com.github.standobyte.jojo.util.mc.damage.StandDamageSource;
 import com.github.standobyte.jojo.util.mc.damage.StandEntityDamageSource;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
-import com.hk47bot.rotp_stfn.capability.ZipperStorageCap;
-import com.hk47bot.rotp_stfn.capability.ZipperStorageCapProvider;
+import com.hk47bot.rotp_stfn.capability.ZipperWorldCap;
+import com.hk47bot.rotp_stfn.capability.ZipperWorldCapProvider;
 import com.hk47bot.rotp_stfn.init.InitEffects;
 import com.hk47bot.rotp_stfn.init.InitStands;
 import net.minecraft.entity.Entity;
@@ -25,7 +24,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class GameplayEvents {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onWorldTick(TickEvent.WorldTickEvent event){
-        event.world.getCapability(ZipperStorageCapProvider.CAPABILITY).ifPresent(ZipperStorageCap::tick);
+        event.world.getCapability(ZipperWorldCapProvider.CAPABILITY).ifPresent(ZipperWorldCap::tick);
     }
 
     @SubscribeEvent

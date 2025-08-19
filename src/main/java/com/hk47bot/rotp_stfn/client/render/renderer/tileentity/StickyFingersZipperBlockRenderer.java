@@ -238,42 +238,6 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         setRotationAngle(right_down5, 0.0F, 0.0F, -3.1416F);
         right_down5.texOffs(0, 16).addBox(-1.5F, -1.5F, 0.17F, 3.0F, 3.0F, 0.0F, 0.0F, true);
 
-//        up = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        up.setPos(0.0F, 24.0F, 0.0F);
-//        up.texOffs(-16, 0).addBox(0.0F, -23.97F, 0.0F, 16.0F, 0.0F, 16.0F, 0.0F, false);
-//
-//        corners5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        corners5.setPos(8.0F, 0.0F, 8.0F);
-//        up.addChild(corners5);
-//
-//
-//        right_up5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        right_up5.setPos(-6.5F, -23.9F, -6.6F);
-//        corners5.addChild(right_up5);
-//        setRotationAngle(right_up5, 0.0F, -1.5708F, 0.0F);
-//        right_up5.texOffs(-3, 16).addBox(-1.4F, -0.07F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
-//
-//        left_up5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        left_up5.setPos(6.5F, -23.9F, -6.6F);
-//        corners5.addChild(left_up5);
-//        setRotationAngle(left_up5, 0.0F, 3.1416F, 0.0F);
-//        left_up5.texOffs(-3, 16).addBox(-1.5F, -0.07F, -1.6F, 3.0F, 0.0F, 3.0F, 0.0F, false);
-//
-//        left_down5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        left_down5.setPos(6.5F, -23.9F, 6.4F);
-//        corners5.addChild(left_down5);
-//        setRotationAngle(left_down5, 0.0F, 1.5708F, 0.0F);
-//        left_down5.texOffs(-3, 16).addBox(-1.6F, -0.07F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
-//
-//        right_down5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        right_down5.setPos(-6.5F, -23.9F, 6.4F);
-//        corners5.addChild(right_down5);
-//        right_down5.texOffs(-3, 16).addBox(-1.5F, -0.07F, -1.4F, 3.0F, 0.0F, 3.0F, 0.0F, false);
-
-//        down = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        down.setPos(0.0F, 24.0F, 0.0F);
-//        down.texOffs(-16, 0).addBox(0.0F, -8.03F, 0.0F, 16.0F, 0.0F, 16.0F, 0.0F, false);
-
         down = new ModelRenderer(texWidth, texHeight, 0, 0);
         down.setPos(8.0F, 7.97F, 8.0F);
         setRotationAngle(down, 1.5708F, 0.0F, 0.0F);
@@ -306,34 +270,6 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         corners6.addChild(right_down6);
         setRotationAngle(right_down6, 0.0F, 0.0F, -3.1416F);
         right_down6.texOffs(0, 16).addBox(-1.5F, -1.5F, -0.17F, 3.0F, 3.0F, 0.0F, 0.0F, true);
-
-//        corners6 = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        corners6.setPos(8.0F, 0.0F, 8.0F);
-//        down.addChild(corners6);
-//
-//
-//        right_up6 = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        right_up6.setPos(6.5F, -8.1F, -6.6F);
-//        corners6.addChild(right_up6);
-//        setRotationAngle(right_up6, 0.0F, 3.1416F, 0.0F);
-//        right_up6.texOffs(-3, 16).addBox(-1.5F, 0.07F, -1.6F, 3.0F, 0.0F, 3.0F, 0.0F, false);
-//
-//        left_up6 = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        left_up6.setPos(-6.5F, -8.1F, -6.6F);
-//        corners6.addChild(left_up6);
-//        setRotationAngle(left_up6, 0.0F, -1.5708F, 0.0F);
-//        left_up6.texOffs(-3, 16).addBox(-1.4F, 0.07F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
-//
-//        left_down6 = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        left_down6.setPos(-6.5F, -8.1F, 6.4F);
-//        corners6.addChild(left_down6);
-//        left_down6.texOffs(-3, 16).addBox(-1.5F, 0.07F, -1.4F, 3.0F, 0.0F, 3.0F, 0.0F, false);
-//
-//        right_down6 = new ModelRenderer(texWidth, texHeight, 0, 0);
-//        right_down6.setPos(6.5F, -8.1F, 6.4F);
-//        corners6.addChild(right_down6);
-//        setRotationAngle(right_down6, 0.0F, 1.5708F, 0.0F);
-//        right_down6.texOffs(-3, 16).addBox(-1.6F, 0.07F, -1.5F, 3.0F, 0.0F, 3.0F, 0.0F, false);
     }
 
     public void renderFaces(StickyFingersZipperTileEntity zipper, float partialTick, MatrixStack stack, IRenderTypeBuffer buffer, int packedLight, int packedOverlay){

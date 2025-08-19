@@ -1,6 +1,10 @@
 package com.hk47bot.rotp_stfn.capability;
 
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
 import com.hk47bot.rotp_stfn.init.InitStands;
 import com.hk47bot.rotp_stfn.network.AddonPackets;
 import com.hk47bot.rotp_stfn.network.EntityZipperCapSyncPacket;
@@ -121,6 +125,12 @@ public class EntityZipperCapability {
             checkBodyPartEntity(rightLegId, () -> setRightLegId(null));
         }
     }
+
+    public boolean isHandBlocked(Hand hand){
+        boolean isRightHanded = (entity.getMainArm() == HandSide.RIGHT) == (hand == Hand.MAIN_HAND);
+        return isRightHanded ? isRightArmBlocked() : isLeftArmBlocked();
+    }
+
 
     public void tickArms() {
         if (isLeftArmBlocked()) {
@@ -270,6 +280,17 @@ public class EntityZipperCapability {
         this.isInGround = inGround;
         if (entity != null) {
             syncData(entity);
+        }
+    }
+    public boolean isPartVisible(BodyPartEntity bodyPart) {
+        if (bodyPart instanceof PlayerHeadEntity){
+            return !isHasHead();
+        }
+        else if (bodyPart instanceof PlayerArmEntity){
+            return ((PlayerArmEntity) bodyPart).isRight() ? isRightArmBlocked() : isLeftArmBlocked();
+        }
+        else {
+            return ((PlayerLegEntity) bodyPart).isRight() ? isRightLegBlocked() : isLeftLegBlocked();
         }
     }
 }

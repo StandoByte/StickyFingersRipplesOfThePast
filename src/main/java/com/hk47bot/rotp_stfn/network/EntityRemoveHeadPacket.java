@@ -30,15 +30,7 @@ public class EntityRemoveHeadPacket {
         @Override
         public void handle(EntityRemoveHeadPacket entityZipperCapSyncPacket, Supplier<NetworkEvent.Context> ctx) {
             Entity head = ClientUtil.getEntityById(entityZipperCapSyncPacket.headEntityId);
-            RotpStickyFingersAddon.getLogger().info("keyword aboba");
-            RotpStickyFingersAddon.getLogger().info(entityZipperCapSyncPacket.headEntityId);
-            for (Entity entity : Minecraft.getInstance().level.entitiesForRendering()){
-                RotpStickyFingersAddon.getLogger().info("{} {}", entity.getName(), entity.getId());
-            }
-            RotpStickyFingersAddon.getLogger().info(head != null);
-            RotpStickyFingersAddon.getLogger().info(head instanceof PlayerHeadEntity);
-            RotpStickyFingersAddon.getLogger().info(((PlayerHeadEntity) head).getOwner() == Minecraft.getInstance().player);
-            if (head instanceof PlayerHeadEntity && ((PlayerHeadEntity) head).getOwner() == Minecraft.getInstance().player){
+            if (head instanceof PlayerHeadEntity){
                 ClientUtil.setCameraEntityPreventShaderSwitch(head);
             }
 

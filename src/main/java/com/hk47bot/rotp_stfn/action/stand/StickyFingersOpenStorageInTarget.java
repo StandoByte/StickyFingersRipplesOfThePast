@@ -4,16 +4,14 @@ import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.github.standobyte.jojo.util.mod.JojoModUtil;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import com.hk47bot.rotp_stfn.capability.BlockZipperStorage;
 import com.hk47bot.rotp_stfn.capability.EntityZipperStorage;
-import com.hk47bot.rotp_stfn.capability.ZipperStorageCap;
-import com.hk47bot.rotp_stfn.capability.ZipperStorageCapProvider;
+import com.hk47bot.rotp_stfn.capability.ZipperWorldCap;
+import com.hk47bot.rotp_stfn.capability.ZipperWorldCapProvider;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
 import com.hk47bot.rotp_stfn.init.InitSounds;
-import net.minecraft.block.GlassBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.SoundCategory;
@@ -35,13 +33,13 @@ public class StickyFingersOpenStorageInTarget extends StandAction {
     @Override
     protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
         if (!world.isClientSide() && user instanceof ServerPlayerEntity){
-            ZipperStorageCap zipperStorageCap = world.getCapability(ZipperStorageCapProvider.CAPABILITY).orElse(null);
+            ZipperWorldCap zipperWorldCap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
             switch (target.getType()) {
                 case ENTITY:
                     if ((target.getEntity() instanceof BodyPartEntity)){
                         break;
                     }
-                    EntityZipperStorage storage = zipperStorageCap.findEntityStorage(target.getEntity().getUUID(), (ServerPlayerEntity) user);
+                    EntityZipperStorage storage = zipperWorldCap.findEntityStorage(target.getEntity().getUUID(), (ServerPlayerEntity) user);
                     NetworkHooks.openGui((ServerPlayerEntity) user, storage);
                     break;
                 case BLOCK:
@@ -50,7 +48,7 @@ public class StickyFingersOpenStorageInTarget extends StandAction {
                     if (world.getBlockState(pos).getBlock() instanceof StickyFingersZipperBlock2){
                         pos = pos.relative(world.getBlockState(pos).getValue(INITIAL_FACING).getOpposite());
                     }
-                    BlockZipperStorage storage2 = zipperStorageCap.findBlockStorage(pos, (ServerPlayerEntity) user);
+                    BlockZipperStorage storage2 = zipperWorldCap.findBlockStorage(pos, (ServerPlayerEntity) user);
                     NetworkHooks.openGui((ServerPlayerEntity) user, storage2);
                     break;
                 default:

@@ -35,10 +35,7 @@ import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.HandSide;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.IFormattableTextComponent;
@@ -110,20 +107,22 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt) {
-        owner.loadNbt(nbt, "OwnerId");
-        this.setReturning(nbt.getBoolean("IsReturning"));
-        entityData.set(IS_CARRIED, nbt.getBoolean("Carried"));
-        super.readAdditionalSaveData(nbt);
-    }
-
-    @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
         owner.saveNbt(nbt, "OwnerId");
         nbt.putBoolean("IsReturning", this.isReturning());
         nbt.putBoolean("Carried", isCarried());
-        super.addAdditionalSaveData(nbt);
     }
+
+    @Override
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
+        owner.loadNbt(nbt, "OwnerId");
+        this.setReturning(nbt.getBoolean("IsReturning"));
+        entityData.set(IS_CARRIED, nbt.getBoolean("Carried"));
+    }
+
+
 
     @Override
     protected void defineSynchedData() {
@@ -318,30 +317,20 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-        buffer.writeUtf(getOwner().getUUID().toString());
-    }
-
-    @Override
-    public void readSpawnData(PacketBuffer additionalData) {
-        UUID ownerUUID = UUID.fromString(additionalData.readUtf());
-        RotpStickyFingersAddon.getLogger().info(MCUtil.getAllEntities(this.level));
-        for (Entity entity : MCUtil.getAllEntities(this.level)){
-            if (entity instanceof HuskEntity){
-                RotpStickyFingersAddon.getLogger().info(ownerUUID);
-                RotpStickyFingersAddon.getLogger().info(entity.getUUID());
-            }
-            if (entity instanceof LivingEntity && entity.getUUID().equals(ownerUUID)){
-                this.setOwner((LivingEntity) entity);
-                return;
-            }
-        }
-        RotpStickyFingersAddon.getLogger().info("no one found");
+        buffer.writeVarIntArray(UUIDCodec.uuidToIntArray(getOwner() != null ? getOwner().getUUID() : UUID.randomUUID()));
+        owner.writeNetwork(buffer);
     }
 
     @Override
     public IPacket<?> getAddEntityPacket() {
         RotpStickyFingersAddon.getLogger().info("packet sent");
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public void readSpawnData(PacketBuffer additionalData) {
+        setOwner(level.getPlayerByUUID(UUIDCodec.uuidFromIntArray(additionalData.readVarIntArray())));
+        owner.readNetwork(additionalData);
     }
 
     public boolean isCarried() {

@@ -6,6 +6,7 @@ import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
+import com.hk47bot.rotp_stfn.init.InitStands;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
@@ -74,7 +75,9 @@ public abstract class AbstractBlockStateMixin {
                     boolean doubleShift = player.getCapability(PlayerUtilCapProvider.CAPABILITY).map(
                             PlayerUtilCap::getDoubleShiftPress).orElse(false);
                     player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
-                        if (cap.isInGround() && (!isAbove || doubleShift)) {
+                        if (cap.isInGround() && (!isAbove || doubleShift)
+                                && IStandPower.getPlayerStandPower(player).getType() == InitStands.STAND_STICKY_FINGERS.getStandType()
+                                && IStandPower.getPlayerStandPower(player).getResolveLevel() == IStandPower.getPlayerStandPower(player).getMaxResolveLevel()) {
                             info.setReturnValue(createCollisionAdaptingShape(world, pos));
                         }
                     });

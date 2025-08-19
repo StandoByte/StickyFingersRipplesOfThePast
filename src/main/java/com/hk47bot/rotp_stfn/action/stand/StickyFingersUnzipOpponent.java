@@ -11,9 +11,12 @@ import com.github.standobyte.jojo.network.NetworkUtil;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.mc.MCUtil;
 import com.github.standobyte.jojo.util.mc.damage.StandEntityDamageSource;
+import com.hk47bot.rotp_stfn.init.InitEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -41,6 +44,10 @@ public class StickyFingersUnzipOpponent extends StandEntityHeavyAttack {
     @Override
     public StandEntityPunch punchEntity(StandEntity stand, Entity target, StandEntityDamageSource dmgSource) {
         double strength = stand.getAttackDamage();
+        if (target.getEntity() instanceof LivingEntity){
+            LivingEntity effectTarget = (LivingEntity) target.getEntity();
+            effectTarget.addEffect(new EffectInstance(InitEffects.ZIPPER.get()));
+        }
         return super.punchEntity(stand, target, dmgSource).damage(StandStatFormulas.getHeavyAttackDamage(strength)/2).multiplyAddKnockback(0);
     }
 
