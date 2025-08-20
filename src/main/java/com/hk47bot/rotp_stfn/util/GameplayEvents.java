@@ -32,7 +32,7 @@ public class GameplayEvents {
         if (player instanceof IPlayerPossess && !player.level.isClientSide() && IStandPower.getStandPowerOptional(player).map(power -> power.getType() == InitStands.STAND_STICKY_FINGERS.getStandType()).orElse(false)) {
             IPlayerPossess playerPossess = (IPlayerPossess) player;
             Entity possessedEntity = playerPossess.jojoGetPossessedEntity();
-            if (possessedEntity instanceof LivingEntity && ((LivingEntity) possessedEntity).hurtDuration > 0) {
+            if (possessedEntity instanceof LivingEntity && ((LivingEntity) possessedEntity).hurtTime > 0) {
                 playerPossess.jojoPossessEntity(null, false, playerPossess.jojoGetPossessionContext());
             }
         }

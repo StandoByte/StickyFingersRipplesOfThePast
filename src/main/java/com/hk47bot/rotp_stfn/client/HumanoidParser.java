@@ -33,12 +33,13 @@ public class HumanoidParser {
                         all.add(field.getName().toLowerCase());
                     }
                 }
-                if ((all.contains("head")
-                        && all.contains("body")
-                        && all.contains("leftarm")
-                        && all.contains("rightarm")
-                        && all.contains("leftleg")
-                        && all.contains("rightleg"))
+
+                if ((all.contains("field_191217_a")
+                        && all.contains("field_191218_b")
+                        && all.contains("field_191224_h")
+                        && all.contains("field_191223_g")
+                        && all.contains("field_217143_g")
+                        && all.contains("field_217144_h"))
                         || model instanceof BipedModel){
                     cap.humanoidTypes.add(type);
                 }
@@ -54,7 +55,7 @@ public class HumanoidParser {
             return tryToFindPartInModelClass(name, model, BipedModel.class);
         }
         else {
-            return tryToFindPartInModelClass(name, model, model.getClass());
+            return tryToFindPartInModelClass(name, model, model.getClass()) != null ? tryToFindPartInModelClass(name, model, model.getClass()) : tryToFindPartInModelClass(name, model, (Class<? extends EntityModel>) model.getClass().getSuperclass());
         }
     }
 

@@ -122,7 +122,8 @@ public class InitStands {
                     .partsRequired(StandPart.ARMS)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_ZIP_USER_WOUNDS = ACTIONS.register("sticky_fingers_zip_user_wounds",
-            () -> new StickyFingersZipUserWounds(new StandAction.Builder()));
+            () -> new StickyFingersZipUserWounds(new StandAction.Builder()
+                    .cooldown(10)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_ZIP_TARGET_WOUNDS = ACTIONS.register("sticky_fingers_zip_target_wounds",
             () -> new StickyFingersZipTargetWounds(new StandAction.Builder()

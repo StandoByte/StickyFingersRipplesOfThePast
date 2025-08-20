@@ -34,7 +34,7 @@ public class StickyFingersGetInsideMob extends StandAction {
             return ActionConditionResult.NEGATIVE;
         }
 
-        boolean checkboxes = targetEntity.getBbWidth() >= user.getBbWidth() && targetEntity.getBbHeight() >= user.getBbHeight();
+        boolean checkboxes = targetEntity.getBbWidth() >= user.getBbWidth() && targetEntity.getBbHeight() >= user.getBbHeight() * 0.9F;
 
         if (checkboxes) {
             return ActionConditionResult.POSITIVE;
