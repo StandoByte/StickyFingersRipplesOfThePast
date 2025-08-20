@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -36,7 +37,9 @@ public class HumanoidArmRenderer extends SimpleEntityRenderer<PlayerArmEntity, P
             ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
             EntityZipperCapability zipperCap = entity.getOwner().getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
             if (cap.isHumanoid(entity.getOwner()) && (zipperCap.isLeftArmBlocked() || zipperCap.isRightArmBlocked())){
-                HumanoidUtil.renderPart(entity, zipperCap, entity.isRight() ? HumanoidParser.getPartByName("rightarm", entityModel) : HumanoidParser.getPartByName("leftarm", entityModel), matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, true, -2, -2, 2);
+                ModelRenderer rightArm = HumanoidParser.getPartByName("rightarm", entityModel);
+                ModelRenderer leftArm = HumanoidParser.getPartByName("leftarm", entityModel);
+                HumanoidUtil.renderPart(entity, entity.isRight() ? rightArm : leftArm, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, true, -2, -2, 2);
                 Entity leashHolder = entity.getLeashHolder();
                 if (leashHolder != null){
                     HumanoidUtil.renderLeash(entity, packedLight, matrixStack, buffer, leashHolder);

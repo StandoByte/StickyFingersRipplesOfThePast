@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -30,17 +31,20 @@ public class HumanoidHeadRenderer extends SimpleEntityRenderer<PlayerHeadEntity,
     @Override
     protected void doRender(PlayerHeadEntity entity, PlayerHeadModel model, float partialTick, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
         final Minecraft mc = Minecraft.getInstance();
+        World world = ClientUtil.getClientWorld();
+        ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
         if (entity.getOwner() != null){
             LivingRenderer renderer = (LivingRenderer) mc.getEntityRenderDispatcher().getRenderer(entity.getOwner());
             EntityModel entityModel = renderer.getModel();
-            World world = ClientUtil.getClientWorld();
-            ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
-            EntityZipperCapability zipperCap = entity.getOwner().getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
-            if (cap.isHumanoid(entity.getOwner()) && !zipperCap.isHasHead()){
-                HumanoidUtil.renderPart(entity, zipperCap, HumanoidParser.getPartByName("head", entityModel), matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, false, 0, 0, 0);
-                Entity leashHolder = entity.getLeashHolder();
-                if (leashHolder != null){
-                    HumanoidUtil.renderLeash(entity, partialTick, matrixStack, buffer, leashHolder);
+            if (cap.isHumanoid(entity.getOwner())){
+                EntityZipperCapability zipperCap = entity.getOwner().getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+                ModelRenderer head = HumanoidParser.getPartByName("head", entityModel);
+                if (!zipperCap.isHasHead()){
+                    HumanoidUtil.renderPart(entity, head, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, false, 0, 0, 0);
+                    Entity leashHolder = entity.getLeashHolder();
+                    if (leashHolder != null){
+                        HumanoidUtil.renderLeash(entity, partialTick, matrixStack, buffer, leashHolder);
+                    }
                 }
             }
         }

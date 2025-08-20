@@ -317,7 +317,10 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-        buffer.writeVarIntArray(UUIDCodec.uuidToIntArray(getOwner() != null ? getOwner().getUUID() : UUID.randomUUID()));
+        buffer.writeBoolean(getOwner() != null && getOwner() instanceof PlayerEntity);
+        if (getOwner() != null && getOwner() instanceof PlayerEntity){
+            buffer.writeVarIntArray(UUIDCodec.uuidToIntArray(getOwner().getUUID()));
+        }
         owner.writeNetwork(buffer);
     }
 
@@ -329,7 +332,10 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-        setOwner(level.getPlayerByUUID(UUIDCodec.uuidFromIntArray(additionalData.readVarIntArray())));
+        boolean ownerIsPlayer = additionalData.readBoolean();
+        if (ownerIsPlayer){
+            setOwner(level.getPlayerByUUID(UUIDCodec.uuidFromIntArray(additionalData.readVarIntArray())));
+        }
         owner.readNetwork(additionalData);
     }
 

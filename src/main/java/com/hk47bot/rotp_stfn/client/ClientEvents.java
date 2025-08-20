@@ -5,6 +5,8 @@ import com.github.standobyte.jojo.mrpresident.CocoJumboTurtleEntity;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
+import com.hk47bot.rotp_stfn.capability.ZipperWorldCap;
+import com.hk47bot.rotp_stfn.capability.ZipperWorldCapProvider;
 import com.hk47bot.rotp_stfn.client.render.renderer.tileentity.StickyFingersZipperBlockRenderer;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
@@ -26,6 +28,7 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -39,6 +42,7 @@ import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.*;
@@ -135,14 +139,66 @@ public class ClientEvents {
 
     @SubscribeEvent
     public void onPreRenderLiving(RenderLivingEvent.Pre<? extends LivingEntity, EntityModel<? extends LivingEntity>> event) {
-        EntityModel<? extends LivingEntity> model = event.getRenderer().getModel();
+        EntityModel<? extends LivingEntity> entityModel = event.getRenderer().getModel();
         LivingEntity entity = event.getEntity();
-        if (model instanceof BipedModel) {
-            BipedModel<? extends LivingEntity> bipedModel = (BipedModel<? extends LivingEntity>) model;
-            Optional<EntityZipperCapability> capability = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
-            if (capability.isPresent()){
-                if (capability.get().noLegs()){
-                    bipedModel.body.y = -6F;
+        World world = ClientUtil.getClientWorld();
+        ZipperWorldCap worldCap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
+        if (worldCap != null && worldCap.isHumanoid(entity)) {
+            Optional<EntityZipperCapability> zipperCap = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
+            if (zipperCap.isPresent()){
+                ModelRenderer body = HumanoidParser.getPartByName("body", entityModel);
+                if (!(entityModel instanceof BipedModel)){
+                    ModelRenderer head = HumanoidParser.getPartByName("head", entityModel);
+                    ModelRenderer arms = HumanoidParser.getPartByName("arms", entityModel);
+
+                    ModelRenderer leftArm = HumanoidParser.getPartByName("leftarm", entityModel);
+                    ModelRenderer rightArm = HumanoidParser.getPartByName("rightarm", entityModel);
+                    ModelRenderer leftLeg = HumanoidParser.getPartByName("leftleg", entityModel);
+                    ModelRenderer rightLeg = HumanoidParser.getPartByName("rightleg", entityModel);
+                    if (arms != null){
+                        arms.visible = !zipperCap.get().noArms();
+                    }
+                    head.visible = zipperCap.get().isHasHead();
+                    leftArm.visible = !zipperCap.get().isLeftArmBlocked();
+                    rightArm.visible = !zipperCap.get().isRightArmBlocked();
+                    leftLeg.visible = !zipperCap.get().isLeftLegBlocked();
+                    rightLeg.visible = !zipperCap.get().isRightLegBlocked();
+                    if (zipperCap.get().noLegs()){
+                        body.y = 6F;
+                    }
+                }
+                else {
+                    if (zipperCap.get().noLegs()){
+                        body.y = -6F;
+                    }
+                }
+            }
+        }
+    }
+    @SubscribeEvent
+    public void onPostRenderLiving(RenderLivingEvent.Post<? extends LivingEntity, EntityModel<? extends LivingEntity>> event) {
+        EntityModel<? extends LivingEntity> entityModel = event.getRenderer().getModel();
+        LivingEntity entity = event.getEntity();
+        World world = ClientUtil.getClientWorld();
+        ZipperWorldCap worldCap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
+        if (worldCap != null && worldCap.isHumanoid(entity)) {
+            Optional<EntityZipperCapability> zipperCap = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
+            if (zipperCap.isPresent()){
+                if (!(entityModel instanceof BipedModel)){
+                    ModelRenderer head = HumanoidParser.getPartByName("head", entityModel);
+                    ModelRenderer leftArm = HumanoidParser.getPartByName("leftarm", entityModel);
+                    ModelRenderer rightArm = HumanoidParser.getPartByName("rightarm", entityModel);
+                    ModelRenderer leftLeg = HumanoidParser.getPartByName("leftleg", entityModel);
+                    ModelRenderer rightLeg = HumanoidParser.getPartByName("rightleg", entityModel);
+                    head.visible = zipperCap.get().isHasHead();
+                    leftArm.visible = !zipperCap.get().isLeftArmBlocked();
+                    rightArm.visible = !zipperCap.get().isRightArmBlocked();
+                    leftLeg.visible = !zipperCap.get().isLeftLegBlocked();
+                    rightLeg.visible = !zipperCap.get().isRightLegBlocked();
+                    if (zipperCap.get().noLegs()){
+                        ModelRenderer body = HumanoidParser.getPartByName("body", entityModel);
+                        body.y = 0F;
+                    }
                 }
             }
         }

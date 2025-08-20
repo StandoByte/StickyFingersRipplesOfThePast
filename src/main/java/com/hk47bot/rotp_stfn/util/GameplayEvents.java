@@ -55,5 +55,8 @@ public class GameplayEvents {
             event.setNewSize(new EntitySize(entity.getBbWidth(), entity.getBbWidth(), true));
             event.setNewEyeHeight(entity.getBbWidth() * 0.85F);
         }
+        else {
+            event.setNewSize(entity.getDimensions(Pose.STANDING), true);
+        }
     }
 }

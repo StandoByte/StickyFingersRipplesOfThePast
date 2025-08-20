@@ -115,6 +115,10 @@ public class EntityZipperCapability {
                 entity.setDeltaMovement(0, entity.hasEffect(Effects.LEVITATION) ? (0.05D * (double) (entity.getEffect(Effects.LEVITATION).getAmplifier() + 1) - entity.getDeltaMovement().y) * 0.2D : entity.getDeltaMovement().y, 0);
             }
         } else if (isLeftLegBlocked() || isRightLegBlocked()) {
+            entity.setSwimming(false);
+            if (!(entity instanceof PlayerEntity) && entity.getPose() == Pose.SWIMMING) {
+                entity.setPose(Pose.STANDING);
+            }
             if (entity instanceof PlayerEntity) {
                 PlayerEntity player = (PlayerEntity) entity;
                 player.abilities.flying = false;
@@ -284,13 +288,13 @@ public class EntityZipperCapability {
     }
     public boolean isPartVisible(BodyPartEntity bodyPart) {
         if (bodyPart instanceof PlayerHeadEntity){
-            return !isHasHead();
+            return isHasHead();
         }
         else if (bodyPart instanceof PlayerArmEntity){
-            return ((PlayerArmEntity) bodyPart).isRight() ? isRightArmBlocked() : isLeftArmBlocked();
+            return ((PlayerArmEntity) bodyPart).isRight() ? !isRightArmBlocked() : !isLeftArmBlocked();
         }
         else {
-            return ((PlayerLegEntity) bodyPart).isRight() ? isRightLegBlocked() : isLeftLegBlocked();
+            return ((PlayerLegEntity) bodyPart).isRight() ? !isRightLegBlocked() : !isLeftLegBlocked();
         }
     }
 }

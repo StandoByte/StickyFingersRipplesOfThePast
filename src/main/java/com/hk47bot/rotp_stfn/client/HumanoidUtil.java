@@ -21,26 +21,21 @@ import net.minecraft.world.LightType;
 
 public class HumanoidUtil<T extends LivingEntity> {
 
-    public static void renderPart(BodyPartEntity bodyPart, EntityZipperCapability ownerCap, ModelRenderer part, MatrixStack matrixStack, IRenderTypeBuffer buffer, ResourceLocation texture, int packedLight, float partialTick, boolean shouldRotate, float x, float y, float z) {
-        if (bodyPart.getOwner() != null){
-            part.visible = ownerCap.isPartVisible(bodyPart);
-            part.children.forEach(child -> child.visible = false);
-            ModelRenderer copy = part.createShallowCopy();
-            copy.cubes = part.cubes;
-            copy.children = part.children;
-            if (shouldRotate) {
-                copy.xRot = -90 * MathUtil.DEG_TO_RAD;
-            } else {
-                copy.xRot = 0;
-            }
-            copy.yRot = bodyPart.yRot * MathUtil.DEG_TO_RAD;
-            copy.zRot = 0;
-            copy.setPos(x, y, z);
-            for (ModelRenderer child : copy.children) {
-                child.render(matrixStack, buffer.getBuffer(RenderType.entityCutout(texture)), packedLight, LivingRenderer.getOverlayCoords(bodyPart.getOwner(), 0));
-            }
-            copy.render(matrixStack, buffer.getBuffer(RenderType.entityCutout(texture)), packedLight, LivingRenderer.getOverlayCoords(bodyPart.getOwner(), 0));
+    public static void renderPart(BodyPartEntity bodyPart, ModelRenderer part, MatrixStack matrixStack, IRenderTypeBuffer buffer, ResourceLocation texture, int packedLight, float partialTick, boolean shouldRotate, float x, float y, float z) {
+        part.visible = false;
+        ModelRenderer copy = part.createShallowCopy();
+        copy.cubes = part.cubes;
+        copy.children = part.children;
+        if (shouldRotate) {
+            copy.xRot = -90 * MathUtil.DEG_TO_RAD;
+        } else {
+            copy.xRot = 0;
         }
+        copy.yRot = bodyPart.yRot * MathUtil.DEG_TO_RAD;
+        copy.zRot = 0;
+        copy.setPos(x, y, z);
+        copy.render(matrixStack, buffer.getBuffer(RenderType.entityCutout(texture)), packedLight, LivingRenderer.getOverlayCoords(bodyPart.getOwner(), 0));
+
     }
 
     public static <E extends Entity> void renderLeash(BodyPartEntity p_229118_1_, float p_229118_2_, MatrixStack p_229118_3_, IRenderTypeBuffer p_229118_4_, E p_229118_5_) {
