@@ -6,6 +6,7 @@ import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.capability.ZipperWorldCap;
 import com.hk47bot.rotp_stfn.capability.ZipperWorldCapProvider;
+import com.hk47bot.rotp_stfn.init.InitEffects;
 import com.hk47bot.rotp_stfn.init.InitStands;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -38,6 +40,16 @@ public class GameplayEvents {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onEntityHurt(LivingHurtEvent event){
+        LivingEntity livingEntity = event.getEntityLiving();
+        if (!livingEntity.level.isClientSide()){
+            if (livingEntity.hasEffect(InitEffects.ZIP_WOUNDS.get()) && event.getAmount() > 2.0F){
+                livingEntity.removeEffect(InitEffects.ZIP_WOUNDS.get());
+            }
+        }
+    }
+
     @SubscribeEvent
     public static void onEntityTick(LivingEvent.LivingUpdateEvent event){
         LivingEntity entity = event.getEntityLiving();
@@ -51,12 +63,14 @@ public class GameplayEvents {
     @SubscribeEvent
     public static void onSwimSizeSet(EntityEvent.Size event){
         Entity entity = event.getEntity();
-        if (!(entity instanceof PlayerEntity) && entity instanceof LivingEntity && entity.getPose() == Pose.SWIMMING){
-            event.setNewSize(new EntitySize(entity.getBbWidth(), entity.getBbWidth(), true));
-            event.setNewEyeHeight(entity.getBbWidth() * 0.85F);
-        }
-        else {
-            event.setNewSize(entity.getDimensions(Pose.STANDING), true);
+        if (!(entity instanceof PlayerEntity)){
+            if (entity instanceof LivingEntity && entity.getPose() == Pose.SWIMMING){
+                event.setNewSize(new EntitySize(entity.getBbWidth(), entity.getBbWidth(), true));
+                event.setNewEyeHeight(entity.getBbWidth() * 0.85F);
+            }
+            else {
+                event.setNewSize(entity.getDimensions(Pose.STANDING), true);
+            }
         }
     }
 }

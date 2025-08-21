@@ -102,22 +102,22 @@ public abstract class AbstractBlockStateMixin {
     private VoxelShape createCollisionAdaptingShape(IBlockReader world, BlockPos pos){
         VoxelShape shape = VoxelShapes.empty();
 
-        if (ZipperUtil.isBlockFree(world, pos.above()) && !isBlockDoor(world, pos, Direction.UP)) {
+        if (ZipperUtil.isBlockFree(world, pos.above()) || isBlockDoor(world, pos, Direction.UP)) {
             shape = VoxelShapes.join(shape, VoxelShapes.box(0.0, 1, 0.0, 1, 0.99, 1), IBooleanFunction.OR);
         }
-        if (ZipperUtil.isBlockFree(world, pos.below()) && !isBlockDoor(world, pos, Direction.DOWN)) {
+        if (ZipperUtil.isBlockFree(world, pos.below()) || isBlockDoor(world, pos, Direction.DOWN)) {
             shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 0.01, 1), IBooleanFunction.OR);
         }
-        if (ZipperUtil.isBlockFree(world, pos.north()) && !isBlockDoor(world, pos, Direction.NORTH)) {
+        if (ZipperUtil.isBlockFree(world, pos.north()) || isBlockDoor(world, pos, Direction.NORTH)) {
             shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 1, 0.01), IBooleanFunction.OR);
         }
-        if (ZipperUtil.isBlockFree(world, pos.south()) && !isBlockDoor(world, pos, Direction.SOUTH)) {
+        if (ZipperUtil.isBlockFree(world, pos.south()) || isBlockDoor(world, pos, Direction.SOUTH)) {
             shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 1, 1, 1, 0.99), IBooleanFunction.OR);
         }
-        if (ZipperUtil.isBlockFree(world, pos.west()) && !isBlockDoor(world, pos, Direction.WEST)) {
+        if (ZipperUtil.isBlockFree(world, pos.west()) || isBlockDoor(world, pos, Direction.WEST)) {
             shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 0.01, 1, 1), IBooleanFunction.OR);
         }
-        if (ZipperUtil.isBlockFree(world, pos.east()) && !isBlockDoor(world, pos, Direction.EAST)) {
+        if (ZipperUtil.isBlockFree(world, pos.east()) || isBlockDoor(world, pos, Direction.EAST)) {
             shape = VoxelShapes.join(shape, VoxelShapes.box(1, 0, 0, 0.99, 1, 1), IBooleanFunction.OR);
         }
         return shape;
@@ -128,7 +128,7 @@ public abstract class AbstractBlockStateMixin {
         return world.getBlockState(blockPos.relative(direction)).getBlock() instanceof DoorBlock
                 || world.getBlockState(blockPos.relative(direction)).getBlock() instanceof TrapDoorBlock
                 || (world.getBlockState(blockPos.relative(direction)).getBlock() instanceof StickyFingersZipperBlock2
-        && world.getBlockState(blockPos.relative(direction)).getValue(StickyFingersZipperBlock2.INITIAL_FACING) == direction);
+        && world.getBlockState(blockPos.relative(direction)).getValue(StickyFingersZipperBlock2.INITIAL_FACING) != direction);
     }
 
     @Unique

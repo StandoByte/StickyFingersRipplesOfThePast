@@ -4,19 +4,21 @@ import com.github.standobyte.jojo.client.ClientUtil;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.ZipperWorldCap;
 import com.hk47bot.rotp_stfn.capability.ZipperWorldCapProvider;
+import cpw.mods.modlauncher.api.INameMappingService;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.entity.model.IllagerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class HumanoidParser {
     public static void updateHumanoidsList(ZipperWorldCap cap){
@@ -33,14 +35,14 @@ public class HumanoidParser {
                         all.add(field.getName().toLowerCase());
                     }
                 }
-
-                if ((all.contains("field_191217_a")
-                        && all.contains("field_191218_b")
-                        && all.contains("field_191224_h")
-                        && all.contains("field_191223_g")
-                        && all.contains("field_217143_g")
-                        && all.contains("field_217144_h"))
-                        || model instanceof BipedModel){
+                if ((all.contains("head")
+                        && all.contains("body")
+                        && all.contains("leftArm")
+                        && all.contains("rightArm")
+                        && all.contains("leftLeg")
+                        && all.contains("rightLeg"))
+                        || model instanceof BipedModel
+                        || model instanceof IllagerModel){
                     cap.humanoidTypes.add(type);
                 }
             }
@@ -52,7 +54,42 @@ public class HumanoidParser {
         World world = ClientUtil.getClientWorld();
         world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
         if (model instanceof BipedModel){
-            return tryToFindPartInModelClass(name, model, BipedModel.class);
+            switch (name){
+                case "head":
+                    return ((BipedModel) model).head;
+                case "body":
+                    return ((BipedModel) model).body;
+                case "rightArm":
+                    return ((BipedModel) model).rightArm;
+                case "leftArm":
+                    return ((BipedModel) model).leftArm;
+                case "rightLeg":
+                    return ((BipedModel) model).rightLeg;
+                case "leftLeg":
+                    return ((BipedModel) model).leftLeg;
+                default:
+                    return null;
+            }
+        }
+        else if (model instanceof IllagerModel){
+            switch (name){
+                case "head":
+                    return ((IllagerModel) model).head;
+                case "body":
+                    return ((IllagerModel) model).body;
+                case "rightArm":
+                    return ((IllagerModel) model).rightArm;
+                case "arms":
+                    return ((IllagerModel) model).arms;
+                case "leftArm":
+                    return ((IllagerModel) model).leftArm;
+                case "rightLeg":
+                    return ((IllagerModel) model).rightLeg;
+                case "leftLeg":
+                    return ((IllagerModel) model).leftLeg;
+                default:
+                    return null;
+            }
         }
         else {
             return tryToFindPartInModelClass(name, model, model.getClass()) != null ? tryToFindPartInModelClass(name, model, model.getClass()) : tryToFindPartInModelClass(name, model, (Class<? extends EntityModel>) model.getClass().getSuperclass());

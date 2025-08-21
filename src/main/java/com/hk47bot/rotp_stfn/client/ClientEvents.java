@@ -195,7 +195,7 @@ public class ClientEvents {
                     rightArm.visible = !zipperCap.get().isRightArmBlocked();
                     leftLeg.visible = !zipperCap.get().isLeftLegBlocked();
                     rightLeg.visible = !zipperCap.get().isRightLegBlocked();
-                    if (zipperCap.get().noLegs()){
+                    if (!zipperCap.get().noLegs()){
                         ModelRenderer body = HumanoidParser.getPartByName("body", entityModel);
                         body.y = 0F;
                     }

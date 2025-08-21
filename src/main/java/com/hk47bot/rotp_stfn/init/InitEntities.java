@@ -26,15 +26,15 @@ public class InitEntities {
                     .build(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "stfn_extended_punch").toString()));
 
     public static final RegistryObject<EntityType<PlayerHeadEntity>> PLAYER_HEAD = ENTITIES.register("player_head",
-            () -> EntityType.Builder.<PlayerHeadEntity>of(PlayerHeadEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F)
+            () -> EntityType.Builder.<PlayerHeadEntity>of(PlayerHeadEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F).noSummon()
                     .build(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "player_head").toString()));
 
     public static final RegistryObject<EntityType<PlayerArmEntity>> PLAYER_ARM = ENTITIES.register("player_arm",
-            () -> EntityType.Builder.<PlayerArmEntity>of(PlayerArmEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F)
+            () -> EntityType.Builder.<PlayerArmEntity>of(PlayerArmEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F).noSummon()
                     .build(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "player_arm").toString()));
 
     public static final RegistryObject<EntityType<PlayerLegEntity>> PLAYER_LEG = ENTITIES.register("player_leg",
-            () -> EntityType.Builder.<PlayerLegEntity>of(PlayerLegEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F)
+            () -> EntityType.Builder.<PlayerLegEntity>of(PlayerLegEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F).noSummon()
                     .build(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "player_leg").toString()));
 
     @SubscribeEvent

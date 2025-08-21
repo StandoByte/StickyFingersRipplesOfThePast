@@ -44,7 +44,6 @@ public class StickyFingersOpenStorageInTarget extends StandAction {
                     break;
                 case BLOCK:
                     BlockPos pos = target.getBlockPos();
-                    RotpStickyFingersAddon.getLogger().info(world.getBlockState(pos));
                     if (world.getBlockState(pos).getBlock() instanceof StickyFingersZipperBlock2){
                         pos = pos.relative(world.getBlockState(pos).getValue(INITIAL_FACING).getOpposite());
                     }

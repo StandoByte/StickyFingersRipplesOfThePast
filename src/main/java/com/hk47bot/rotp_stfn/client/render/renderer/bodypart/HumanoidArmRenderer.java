@@ -39,7 +39,13 @@ public class HumanoidArmRenderer extends SimpleEntityRenderer<PlayerArmEntity, P
             if (cap.isHumanoid(entity.getOwner()) && (zipperCap.isLeftArmBlocked() || zipperCap.isRightArmBlocked())){
                 ModelRenderer rightArm = HumanoidParser.getPartByName("rightarm", entityModel);
                 ModelRenderer leftArm = HumanoidParser.getPartByName("leftarm", entityModel);
-                HumanoidUtil.renderPart(entity, entity.isRight() ? rightArm : leftArm, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, true, -2, -2, 2);
+                if (rightArm != null && entity.isRight()){
+                    HumanoidUtil.renderPart(entity, rightArm, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, true, -2, -2, 2);
+                }
+                else if (leftArm != null){
+                    HumanoidUtil.renderPart(entity, leftArm, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, true, -2, -2, 2);
+
+                }
                 Entity leashHolder = entity.getLeashHolder();
                 if (leashHolder != null){
                     HumanoidUtil.renderLeash(entity, packedLight, matrixStack, buffer, leashHolder);

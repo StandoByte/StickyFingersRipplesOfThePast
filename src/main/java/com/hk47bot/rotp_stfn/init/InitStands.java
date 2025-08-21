@@ -123,10 +123,13 @@ public class InitStands {
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_ZIP_USER_WOUNDS = ACTIONS.register("sticky_fingers_zip_user_wounds",
             () -> new StickyFingersZipUserWounds(new StandAction.Builder()
-                    .cooldown(10)));
+                    .staminaCost(250)
+                    .cooldown(100)));
 
     public static final RegistryObject<StandAction> STICKY_FINGERS_ZIP_TARGET_WOUNDS = ACTIONS.register("sticky_fingers_zip_target_wounds",
             () -> new StickyFingersZipTargetWounds(new StandAction.Builder()
+                    .cooldown(100)
+                    .staminaCost(250)
                     .shiftVariationOf(STICKY_FINGERS_ZIP_USER_WOUNDS)));
 
     public static final EntityStandRegistryObject<EntityStandType<StandStats>, StandEntityType<StickyFingersEntity>> STAND_STICKY_FINGERS =

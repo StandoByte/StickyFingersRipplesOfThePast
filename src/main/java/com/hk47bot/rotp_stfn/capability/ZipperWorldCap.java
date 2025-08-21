@@ -101,7 +101,6 @@ public class ZipperWorldCap {
             AddonPackets.sendToClient(new PacketToPacketPacket(), player);
         }
         humanoidPacketSent = true;
-        RotpStickyFingersAddon.getLogger().info("isClient {} types {}", world.isClientSide, humanoidTypes);
     }
 
     public boolean isHumanoid(LivingEntity entity){
