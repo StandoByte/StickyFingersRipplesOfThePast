@@ -1,0 +1,36 @@
+{
+  "entity.rotp_stfn.sticky_fingers": "钢链手指",
+  "stand.rotp_stfn.sticky_fingers": "钢链手指",
+
+  "action.rotp_stfn.sticky_fingers_punch": "挥拳",
+  "action.rotp_stfn.sticky_fingers_barrage": "连打(阿里阿里阿里阿里!）",
+  "action.rotp_stfn.sticky_fingers_heavy_punch": "重拳",
+
+  "action.rotp_stfn.sticky_fingers_unzip_punch": "拆卸拳",
+  "action.rotp_stfn.sticky_fingers_unzip_head": "拆卸头部",
+  "action.rotp_stfn.sticky_fingers_unzip_arm": "拆卸手臂",
+  "action.rotp_stfn.sticky_fingers_unzip_leg": "拆卸腿部",
+
+  "action.rotp_stfn.sticky_fingers_extended_punch": "钢链飞拳",
+
+  "action.rotp_stfn.sticky_fingers_block": "防御",
+  "action.rotp_stfn.sticky_fingers_hide_in_mob": "藏进生物",
+  "action.rotp_stfn.sticky_fingers_open_storage": "拉链储物",
+  "action.rotp_stfn.sticky_fingers_open_inner_storage": "本体储物",
+  "action.rotp_stfn.sticky_fingers_remove_zipper": "移除拉链",
+  "action.rotp_stfn.sticky_fingers_place_zipper": "生成拉链",
+  "action.rotp_stfn.sticky_fingers_toggle_zipper": "打开拉链",
+  "action.rotp_stfn.sticky_fingers_zip_user_wounds": "拉链愈伤",
+  "action.rotp_stfn.sticky_fingers_zip_target_wounds": "治愈目标",
+
+  "effect.rotp_stfn.zip_wounds": "拉链愈合",
+  "effect.rotp_stfn.zipper": "拉链",
+
+  "rotp_stfn.message.cant_pickup.no_arm": "你无法在失去手臂的情况下做到这个!",
+  "body_part.hint.release": "按%s键放下%s",
+  "body_part.carry.offhand": "你需要空出你的副手才能拿起%s",
+  "entity.rotp_stfn.player_head": "被拆卸的头",
+  "entity.rotp_stfn.player_arm": "被拆卸的手臂",
+  "entity.rotp_stfn.player_leg": "被拆卸的腿",
+  "entity.rotp_stfn.stfn_extended_punch": "钢链手指的飞拳"
+}
