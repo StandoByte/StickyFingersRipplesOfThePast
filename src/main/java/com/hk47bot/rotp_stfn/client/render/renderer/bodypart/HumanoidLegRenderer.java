@@ -38,8 +38,8 @@ public class HumanoidLegRenderer extends SimpleEntityRenderer<PlayerLegEntity, P
             ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
             EntityZipperCapability zipperCap = entity.getOwner().getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
             if (cap.isHumanoid(entity.getOwner()) && (zipperCap.isLeftLegBlocked() || zipperCap.isRightLegBlocked())){
-                ModelRenderer rightLeg = HumanoidParser.getPartByName("rightleg", entityModel);
-                ModelRenderer leftLeg = HumanoidParser.getPartByName("leftleg", entityModel);
+                ModelRenderer rightLeg = HumanoidParser.getPartByName("rightLeg", entityModel);
+                ModelRenderer leftLeg = HumanoidParser.getPartByName("leftLeg", entityModel);
                 if (rightLeg != null && entity.isRight()){
                     HumanoidUtil.renderPart(entity, rightLeg, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, true, -2, -2, 2);
                 }

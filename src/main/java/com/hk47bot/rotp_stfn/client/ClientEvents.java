@@ -151,10 +151,10 @@ public class ClientEvents {
                     ModelRenderer head = HumanoidParser.getPartByName("head", entityModel);
                     ModelRenderer arms = HumanoidParser.getPartByName("arms", entityModel);
 
-                    ModelRenderer leftArm = HumanoidParser.getPartByName("leftarm", entityModel);
-                    ModelRenderer rightArm = HumanoidParser.getPartByName("rightarm", entityModel);
-                    ModelRenderer leftLeg = HumanoidParser.getPartByName("leftleg", entityModel);
-                    ModelRenderer rightLeg = HumanoidParser.getPartByName("rightleg", entityModel);
+                    ModelRenderer leftArm = HumanoidParser.getPartByName("leftArm", entityModel);
+                    ModelRenderer rightArm = HumanoidParser.getPartByName("rightArm", entityModel);
+                    ModelRenderer leftLeg = HumanoidParser.getPartByName("leftLeg", entityModel);
+                    ModelRenderer rightLeg = HumanoidParser.getPartByName("rightLeg", entityModel);
                     if (arms != null){
                         arms.visible = !zipperCap.get().noArms();
                     }
@@ -186,10 +186,10 @@ public class ClientEvents {
             if (zipperCap.isPresent()){
                 if (!(entityModel instanceof BipedModel)){
                     ModelRenderer head = HumanoidParser.getPartByName("head", entityModel);
-                    ModelRenderer leftArm = HumanoidParser.getPartByName("leftarm", entityModel);
-                    ModelRenderer rightArm = HumanoidParser.getPartByName("rightarm", entityModel);
-                    ModelRenderer leftLeg = HumanoidParser.getPartByName("leftleg", entityModel);
-                    ModelRenderer rightLeg = HumanoidParser.getPartByName("rightleg", entityModel);
+                    ModelRenderer leftArm = HumanoidParser.getPartByName("leftArm", entityModel);
+                    ModelRenderer rightArm = HumanoidParser.getPartByName("rightArm", entityModel);
+                    ModelRenderer leftLeg = HumanoidParser.getPartByName("leftLeg", entityModel);
+                    ModelRenderer rightLeg = HumanoidParser.getPartByName("rightLeg", entityModel);
                     head.visible = zipperCap.get().isHasHead();
                     leftArm.visible = !zipperCap.get().isLeftArmBlocked();
                     rightArm.visible = !zipperCap.get().isRightArmBlocked();

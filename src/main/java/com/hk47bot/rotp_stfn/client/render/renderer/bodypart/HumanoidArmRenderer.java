@@ -37,8 +37,8 @@ public class HumanoidArmRenderer extends SimpleEntityRenderer<PlayerArmEntity, P
             ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
             EntityZipperCapability zipperCap = entity.getOwner().getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
             if (cap.isHumanoid(entity.getOwner()) && (zipperCap.isLeftArmBlocked() || zipperCap.isRightArmBlocked())){
-                ModelRenderer rightArm = HumanoidParser.getPartByName("rightarm", entityModel);
-                ModelRenderer leftArm = HumanoidParser.getPartByName("leftarm", entityModel);
+                ModelRenderer rightArm = HumanoidParser.getPartByName("rightArm", entityModel);
+                ModelRenderer leftArm = HumanoidParser.getPartByName("leftArm", entityModel);
                 if (rightArm != null && entity.isRight()){
                     HumanoidUtil.renderPart(entity, rightArm, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, true, -2, -2, 2);
                 }
