@@ -15,10 +15,12 @@ public class StickyFingersUpdatedModel extends HumanoidStandModel<StickyFingersE
 
     @Override
     public void prepareMobModel(StickyFingersEntity entity, float walkAnimPos, float walkAnimSpeed, float partialTick) {
-        super.prepareMobModel(entity, walkAnimPos, walkAnimSpeed, partialTick);
-        if (rightForeArm != null && rightArmJoint != null) {
-            rightForeArm.visible = entity.hasForeArm();
-            rightArmJoint.visible = entity.hasShortForeArm();
+        if (entity != null){
+            super.prepareMobModel(entity, walkAnimPos, walkAnimSpeed, partialTick);
+            if (rightForeArm != null && rightArmJoint != null) {
+                rightForeArm.visible = entity.hasForeArm();
+                rightArmJoint.visible = entity.hasShortForeArm();
+            }
         }
     }
 }
