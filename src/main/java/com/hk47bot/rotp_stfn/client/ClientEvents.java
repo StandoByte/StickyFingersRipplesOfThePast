@@ -320,6 +320,11 @@ public class ClientEvents {
         entity.yHeadRotO = yaw;
 
         EntityRendererManager entityrenderermanager = Minecraft.getInstance().getEntityRenderDispatcher();
+
+
+        boolean renderHitboxes = entityrenderermanager.renderHitBoxes;
+        entityrenderermanager.renderHitBoxes = false;
+
         entityrenderermanager.overrideCameraOrientation(new Quaternion(0, 0, 0, 1));
         entityrenderermanager.setRenderShadow(false);
         IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
@@ -330,6 +335,8 @@ public class ClientEvents {
 
         irendertypebuffer$impl.endBatch();
         entityrenderermanager.setRenderShadow(true);
+
+        entityrenderermanager.renderHitBoxes = renderHitboxes;
 
         entity.yBodyRot = originalBodyYaw;
         entity.yRot = originalYaw;

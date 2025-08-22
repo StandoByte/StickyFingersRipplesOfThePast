@@ -10,14 +10,13 @@ import com.hk47bot.rotp_stfn.util.StickyUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
+import net.minecraft.entity.ai.controller.JumpController;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.monster.HuskEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -49,7 +48,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
-import java.util.UUID;
 
 public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalSpawnData, IFlyingAnimal, IPassengerMixinReposition {
     private static final DataParameter<Boolean> IS_RETURNING = EntityDataManager.defineId(BodyPartEntity.class, DataSerializers.BOOLEAN);
@@ -71,7 +69,38 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         super(p_i48580_1_, p_i48580_2_);
         this.moveControl = returnMovementController;
         this.navigation = returnPathNavigator;
+        this.jumpControl = new JumpController(this) {
+            @Override
+            public void jump() {
+                this.jump = false;
+            }
+
+            @Override
+            public void tick() {
+                this.jump = false;
+            }
+        };
         this.setPathfindingMalus(PathNodeType.DANGER_FIRE, -1.0F);
+    }
+
+    @Override
+    public JumpController getJumpControl() {
+        return new JumpController(this) {
+            @Override
+            public void jump() {
+                this.jump = false;
+            }
+
+            @Override
+            public void tick() {
+                this.jump = false;
+            }
+        };
+    }
+
+    @Override
+    protected float getJumpPower() {
+        return 0.0F;
     }
 
     @Override
@@ -122,8 +151,6 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         entityData.set(IS_CARRIED, nbt.getBoolean("Carried"));
     }
 
-
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -168,6 +195,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                     this.navigation = groundPathNavigator;
                     this.navigation.stop();
                     this.moveControl = groundMovementController;
+                    this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), 0);
                     this.setJumping(false);
                     this.setNoGravity(false);
                 }
