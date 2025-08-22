@@ -30,13 +30,13 @@ public class HumanoidArmRenderer extends SimpleEntityRenderer<PlayerArmEntity, P
     @Override
     protected void doRender(PlayerArmEntity entity, PlayerArmModel model, float partialTick, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
         final Minecraft mc = Minecraft.getInstance();
-        if (entity.getOwner() != null){
+        World world = ClientUtil.getClientWorld();
+        ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
+        if (entity.getOwner() != null && cap.isHumanoid(entity.getOwner())){
             LivingRenderer renderer = (LivingRenderer) mc.getEntityRenderDispatcher().getRenderer(entity.getOwner());
             EntityModel entityModel = renderer.getModel();
-            World world = ClientUtil.getClientWorld();
-            ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
             EntityZipperCapability zipperCap = entity.getOwner().getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
-            if (cap.isHumanoid(entity.getOwner()) && (zipperCap.isLeftArmBlocked() || zipperCap.isRightArmBlocked())){
+            if (zipperCap.isLeftArmBlocked() || zipperCap.isRightArmBlocked()){
                 ModelRenderer rightArm = HumanoidParser.getPartByName("rightArm", entityModel);
                 ModelRenderer leftArm = HumanoidParser.getPartByName("leftArm", entityModel);
                 if (rightArm != null && entity.isRight()){
@@ -44,7 +44,6 @@ public class HumanoidArmRenderer extends SimpleEntityRenderer<PlayerArmEntity, P
                 }
                 else if (leftArm != null){
                     HumanoidUtil.renderPart(entity, leftArm, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, true, -2, -2, 2);
-
                 }
                 Entity leashHolder = entity.getLeashHolder();
                 if (leashHolder != null){

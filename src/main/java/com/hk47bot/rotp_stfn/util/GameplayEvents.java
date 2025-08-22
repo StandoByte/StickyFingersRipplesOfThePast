@@ -63,14 +63,17 @@ public class GameplayEvents {
     @SubscribeEvent
     public static void onSwimSizeSet(EntityEvent.Size event){
         Entity entity = event.getEntity();
-        if (!(entity instanceof PlayerEntity)){
-            if (entity instanceof LivingEntity && entity.getPose() == Pose.SWIMMING){
-                event.setNewSize(new EntitySize(entity.getBbWidth(), entity.getBbWidth(), true));
-                event.setNewEyeHeight(entity.getBbWidth() * 0.85F);
+        entity.level.getCapability(ZipperWorldCapProvider.CAPABILITY).ifPresent(zipperWorldCap -> {
+            if (!(entity instanceof PlayerEntity) && entity instanceof LivingEntity){
+                if (zipperWorldCap.isHumanoid((LivingEntity) entity) && entity.getPose() == Pose.SWIMMING){
+                    event.setNewSize(new EntitySize(entity.getBbWidth(), entity.getBbWidth(), true));
+                    event.setNewEyeHeight(entity.getBbWidth() * 0.85F);
+                }
+                else {
+                    event.setNewSize(entity.getDimensions(Pose.STANDING), true);
+                }
             }
-            else {
-                event.setNewSize(entity.getDimensions(Pose.STANDING), true);
-            }
-        }
+        });
+
     }
 }
