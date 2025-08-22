@@ -10,6 +10,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
@@ -76,5 +77,13 @@ public class PlayerLegEntity extends BodyPartEntity {
 
     public boolean isRight() {
         return entityData.get(IS_RIGHT);
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        if (source == DamageSource.IN_WALL) {
+            return true;
+        }
+        return super.isInvulnerableTo(source);
     }
 }
