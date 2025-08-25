@@ -211,7 +211,7 @@ public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyF
         up.texOffs(0, 0).addBox(-8.0F, -8.0F, 8.0F, 16.0F, 16.0F, 0.0F, 0.0F, false);
 
         corners5 = new ModelRenderer(texWidth, texHeight, 0, 0);
-        corners5.setPos(8.0F, 0.0F, 8.0F);
+        corners5.setPos(0.0F, 16.0F, 0.03F);
         up.addChild(corners5);
 
 
