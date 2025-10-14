@@ -33,20 +33,22 @@ public class HumanoidHeadRenderer extends SimpleEntityRenderer<PlayerHeadEntity,
         final Minecraft mc = Minecraft.getInstance();
         World world = ClientUtil.getClientWorld();
         ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
-        if (entity.getOwner() != null){
+        if (entity.getOwner() != null && cap.isHumanoid(entity.getOwner())) {
             LivingRenderer renderer = (LivingRenderer) mc.getEntityRenderDispatcher().getRenderer(entity.getOwner());
+            renderer.scale(entity.getOwner(), matrixStack, partialTick);
             EntityModel entityModel = renderer.getModel();
-            if (cap.isHumanoid(entity.getOwner())){
-                EntityZipperCapability zipperCap = entity.getOwner().getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
-                ModelRenderer head = HumanoidParser.getPartByName("head", entityModel);
-                if (!zipperCap.isHasHead()){
-                    HumanoidUtil.renderPart(entity, head, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, false, 0, 0, 0);
-                    Entity leashHolder = entity.getLeashHolder();
-                    if (leashHolder != null){
-                        HumanoidUtil.renderLeash(entity, partialTick, matrixStack, buffer, leashHolder);
-                    }
+            EntityZipperCapability zipperCap = entity.getOwner().getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
+            ModelRenderer head = HumanoidParser.getPartByName("head", entityModel);
+            if (!zipperCap.isHasHead()){
+                HumanoidUtil.renderPart(entity, head, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, false, 0, 0, 0);
+                Entity leashHolder = entity.getLeashHolder();
+                if (leashHolder != null){
+                    HumanoidUtil.renderLeash(entity, partialTick, matrixStack, buffer, leashHolder);
                 }
             }
+        }
+        else {
+            super.doRender(entity, model, partialTick, matrixStack, buffer, packedLight);
         }
     }
 }

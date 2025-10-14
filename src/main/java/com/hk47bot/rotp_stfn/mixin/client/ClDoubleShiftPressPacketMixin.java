@@ -13,10 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ClDoubleShiftPressPacketMixin {
     @Inject(method = "sendOnPress", at = @At("RETURN"), cancellable = true)
     private static void doubleShiftForZipperWalk(PlayerEntity player, CallbackInfoReturnable<Boolean> cir){
-        cir.setReturnValue(player.isAlive()
+        if (player.isAlive()
                 && player.isOnGround()
                 && IStandPower.getPlayerStandPower(player).getType() == InitStands.STAND_STICKY_FINGERS.getStandType()
-                && IStandPower.getPlayerStandPower(player).getResolveLevel() == IStandPower.getPlayerStandPower(player).getMaxResolveLevel()
-        );
+                && IStandPower.getPlayerStandPower(player).getResolveLevel() == IStandPower.getPlayerStandPower(player).getMaxResolveLevel()){
+            cir.setReturnValue(true);
+        }
     }
 }

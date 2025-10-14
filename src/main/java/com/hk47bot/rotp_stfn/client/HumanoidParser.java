@@ -35,13 +35,13 @@ public class HumanoidParser {
                         all.add(field.getName().toLowerCase());
                     }
                 }
-                if ((all.contains("head")
+                if (/*(all.contains("head")
                         && all.contains("body")
                         && all.contains("leftArm")
                         && all.contains("rightArm")
                         && all.contains("leftLeg")
                         && all.contains("rightLeg"))
-                        || model instanceof BipedModel
+                        || */model instanceof BipedModel
                         || model instanceof IllagerModel){
                     cap.humanoidTypes.add(type);
                 }
@@ -102,7 +102,7 @@ public class HumanoidParser {
                 field.setAccessible(true);
                 try {
                     return (ModelRenderer) field.get(model);
-                } catch (IllegalAccessException e) {
+                } catch (Exception e) {
                     RotpStickyFingersAddon.getLogger().info("No {} was found in model", name);
                 }
             }

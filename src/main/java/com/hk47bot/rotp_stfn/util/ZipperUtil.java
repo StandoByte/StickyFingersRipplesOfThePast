@@ -3,6 +3,10 @@ package com.hk47bot.rotp_stfn.util;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import net.minecraft.block.AirBlock;
+import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.LavaFluid;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -185,10 +189,11 @@ public class ZipperUtil {
     }
 
     public static boolean isBlockFree(IBlockReader world, BlockPos blockPos) {
-        return (world.getBlockState(blockPos).getBlock() instanceof AirBlock
+        return ((world.getBlockState(blockPos).getBlock() instanceof AirBlock
                 || world.getBlockState(blockPos).getMaterial().isReplaceable()
-                || world.getBlockState(blockPos).getBlock().getCollisionShape(world.getBlockState(blockPos), world, blockPos, ISelectionContext.empty()).equals(VoxelShapes.empty())
-                && !isBlockZipper(world, blockPos));
+                || world.getBlockState(blockPos).getBlock().getCollisionShape(world.getBlockState(blockPos), world, blockPos, ISelectionContext.empty()).equals(VoxelShapes.empty()))
+                && !isBlockZipper(world, blockPos)
+                && !(world.getBlockState(blockPos).getFluidState().is(FluidTags.LAVA)));
     }
 
     public static boolean isBlockZipper(IBlockReader world, BlockPos blockPos) {

@@ -96,7 +96,7 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
     private void setPartAndLayersVisibility(ModelRenderer part, boolean visible) {
         if (part != null) {
             part.visible = visible;
-            part.children.forEach(child -> child.visible = visible);
+            part.children.forEach(child -> child.visible &= visible);
             rotp_stfn_layerMap.forEach((base, list) -> {
                 if (base.equals(part)) {
                     for (LayerInfo info : list) {

@@ -1,8 +1,10 @@
 package com.hk47bot.rotp_stfn.block;
 
 import com.github.standobyte.jojo.client.ClientUtil;
+import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.hk47bot.rotp_stfn.init.InitBlocks;
 import com.hk47bot.rotp_stfn.init.InitSounds;
+import com.hk47bot.rotp_stfn.init.InitStands;
 import com.hk47bot.rotp_stfn.tileentities.StickyFingersZipperTileEntity;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
 import net.minecraft.block.*;
@@ -111,6 +113,15 @@ public class StickyFingersZipperBlock2 extends SixWayBlock implements IWaterLogg
             shape = VoxelShapes.join(shape, VoxelShapes.box(1, 1, 1, 0, 0.99, 0), IBooleanFunction.OR);
         }
         return shape;
+    }
+
+    @Override
+    public boolean isLadder(BlockState state, IWorldReader world, BlockPos pos, LivingEntity entity) {
+//        if (entity != null){
+//            IStandPower power = IStandPower.getStandPowerOptional(entity).orElse(null);
+//            return power.getType() == InitStands.STAND_STICKY_FINGERS.getStandType();
+//        }
+        return super.isLadder(state, world, pos, entity);
     }
 
     public static void placeSingleZipper(World world, BlockPos targetedBlockPos, Direction direction, LivingEntity placer){

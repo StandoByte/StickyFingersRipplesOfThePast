@@ -1,6 +1,8 @@
 package com.hk47bot.rotp_stfn.capability;
 
+import com.github.standobyte.jojo.init.ModStatusEffects;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.github.standobyte.jojo.util.mc.MCUtil;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
 import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
@@ -21,13 +23,13 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.UUID;
 
 public class EntityZipperCapability {
     private final LivingEntity entity;
-
 
     @Getter
     private boolean isInGround = false;
@@ -53,6 +55,12 @@ public class EntityZipperCapability {
     private UUID rightLegId = null;
     @Getter
     private UUID leftLegId = null;
+
+    @Getter
+    private boolean wallClimbing = false;
+
+    @Getter
+    private BlockPos climbStartPos = BlockPos.ZERO;
 
     public EntityZipperCapability(LivingEntity entity) {
         this.entity = entity;
@@ -90,6 +98,20 @@ public class EntityZipperCapability {
         }
     }
 
+    public void setWallClimbing(boolean wallClimbing){
+        this.wallClimbing = wallClimbing;
+        if (entity != null) {
+            syncData(entity);
+        }
+    }
+
+    public void setClimbStartPos(BlockPos climbStartPos){
+        this.climbStartPos = climbStartPos;
+        if (entity != null) {
+            syncData(entity);
+        }
+    }
+
     public boolean noLegs() {
         return isLeftLegBlocked() && isRightLegBlocked();
     }
@@ -101,6 +123,17 @@ public class EntityZipperCapability {
     public void syncData(LivingEntity entity) {
         if (!entity.level.isClientSide()) {
             AddonPackets.sendToClientsTrackingAndSelf(new EntityZipperCapSyncPacket(this), entity);
+        }
+    }
+
+    public void tick(){
+        if (!entity.level.isClientSide()){
+            tickArms();
+        }
+        tickLegs();
+        tickInGround();
+        if (noArms() && noLegs() && !(entity instanceof PlayerEntity)){
+            entity.addEffect(new EffectInstance(ModStatusEffects.STUN.get(), 10, 10, false, false, false));
         }
     }
 
@@ -207,6 +240,8 @@ public class EntityZipperCapability {
 
         nbt.putBoolean("InGround", isInGround);
 
+        nbt.putBoolean("IsClimbingZipper", wallClimbing);
+
         nbt.putBoolean("RightArm", rightArmBlocked);
         nbt.putBoolean("LeftArm", leftArmBlocked);
         nbt.putBoolean("RightLeg", rightLegBlocked);
@@ -222,7 +257,10 @@ public class EntityZipperCapability {
     }
 
     public void fromNBT(CompoundNBT nbt) {
+
         isInGround = nbt.getBoolean("InGround");
+
+        wallClimbing = nbt.getBoolean("IsClimbingZipper");
 
         rightArmBlocked = nbt.getBoolean("RightArm");
         leftArmBlocked = nbt.getBoolean("LeftArm");

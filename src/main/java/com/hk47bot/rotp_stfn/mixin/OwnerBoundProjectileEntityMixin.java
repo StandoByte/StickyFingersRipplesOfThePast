@@ -2,6 +2,7 @@ package com.hk47bot.rotp_stfn.mixin;
 
 import com.github.standobyte.jojo.entity.damaging.DamagingEntity;
 import com.github.standobyte.jojo.entity.damaging.projectile.ownerbound.OwnerBoundProjectileEntity;
+import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.util.mc.MCUtil;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
@@ -15,6 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -23,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nullable;
 
 @Mixin(value = OwnerBoundProjectileEntity.class, remap = false)
-public class OwnerBoundProjectileEntityMixin extends DamagingEntity {
+public abstract class OwnerBoundProjectileEntityMixin extends DamagingEntity {
 
     public OwnerBoundProjectileEntityMixin(EntityType<? extends DamagingEntity> entityType, @Nullable LivingEntity owner, World world) {
         super(entityType, owner, world);
@@ -36,7 +38,7 @@ public class OwnerBoundProjectileEntityMixin extends DamagingEntity {
 
         if (!capability.isHasHead() && capability.getHeadId() != null) {
             Entity head = StickyUtil.getEntityByUUID(owner.level, capability.getHeadId());
-            if (head instanceof PlayerHeadEntity) {
+            if (head instanceof PlayerHeadEntity && !(owner instanceof StandEntity)) {
                 setRot(head.yRot, head.xRot);
                 return head.getEyePosition(partialTick).add(getOwnerRelativeOffset());
             }
@@ -58,22 +60,5 @@ public class OwnerBoundProjectileEntityMixin extends DamagingEntity {
                 }
             }
         }
-    }
-
-    @Override
-    public int ticksLifespan() {
-        return 0;
-    }
-    @Override
-    protected float getBaseDamage() {
-        return 0;
-    }
-    @Override
-    protected float getMaxHardnessBreakable() {
-        return 0;
-    }
-    @Override
-    public boolean standDamage() {
-        return false;
     }
 }

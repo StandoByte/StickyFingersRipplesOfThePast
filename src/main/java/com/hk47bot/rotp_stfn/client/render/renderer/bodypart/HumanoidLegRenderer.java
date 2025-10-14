@@ -31,13 +31,14 @@ public class HumanoidLegRenderer extends SimpleEntityRenderer<PlayerLegEntity, P
     @Override
     protected void doRender(PlayerLegEntity entity, PlayerLegModel model, float partialTick, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
         final Minecraft mc = Minecraft.getInstance();
-        if (entity.getOwner() != null){
+        World world = ClientUtil.getClientWorld();
+        ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
+        if (entity.getOwner() != null && cap.isHumanoid(entity.getOwner())){
             LivingRenderer renderer = (LivingRenderer) mc.getEntityRenderDispatcher().getRenderer(entity.getOwner());
+            renderer.scale(entity.getOwner(), matrixStack, partialTick);
             EntityModel entityModel = renderer.getModel();
-            World world = ClientUtil.getClientWorld();
-            ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
             EntityZipperCapability zipperCap = entity.getOwner().getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
-            if (cap.isHumanoid(entity.getOwner()) && (zipperCap.isLeftLegBlocked() || zipperCap.isRightLegBlocked())){
+            if (zipperCap.isLeftLegBlocked() || zipperCap.isRightLegBlocked()){
                 ModelRenderer rightLeg = HumanoidParser.getPartByName("rightLeg", entityModel);
                 ModelRenderer leftLeg = HumanoidParser.getPartByName("leftLeg", entityModel);
                 if (rightLeg != null && entity.isRight()){
@@ -45,12 +46,15 @@ public class HumanoidLegRenderer extends SimpleEntityRenderer<PlayerLegEntity, P
                 }
                 else if (leftLeg != null){
                     HumanoidUtil.renderPart(entity, leftLeg, matrixStack, buffer, renderer.getTextureLocation(entity.getOwner()), packedLight, partialTick, true, -2, -2, 2);
-
-                }                Entity leashHolder = entity.getLeashHolder();
+                }
+                Entity leashHolder = entity.getLeashHolder();
                 if (leashHolder != null){
                     HumanoidUtil.renderLeash(entity, packedLight, matrixStack, buffer, leashHolder);
                 }
             }
+        }
+        else {
+            super.doRender(entity, model, partialTick, matrixStack, buffer, packedLight);
         }
     }
 }

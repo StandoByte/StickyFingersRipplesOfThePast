@@ -37,6 +37,7 @@ public class AddonPackets {
         registerMessage(serverChannel, new EntityZipperCapSyncPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(serverChannel, new EntityRemoveHeadPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(serverChannel, new PacketToPacketPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        registerMessage(clientChannel, new ClStopZipperClimbPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_SERVER));
         registerMessage(clientChannel, new HeadRespawnPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_SERVER));
         registerMessage(clientChannel, new HumanoidListPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }

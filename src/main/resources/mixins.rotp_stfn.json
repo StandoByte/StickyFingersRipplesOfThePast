@@ -10,16 +10,19 @@
     "EntityMixin",
     "HandMixin",
     "OwnerBoundProjectileEntityMixin",
+    "PlayerEntityMixin",
     "ServerPlayNetHandlerMixin",
     "StandTypeMixin",
     "StandUtilMixin",
-    "client.ClDoubleShiftPressPacketMixin"
+    "client.ClDoubleShiftPressPacketMixin",
+    "client.KosmXWallClimbHandlerMixin"
   ],
   "client": [
     "client.ArmorStandArmorModelMixin",
     "client.BipedModelMixin",
     "client.ClientPlayerMixin",
     "client.GameRendererMixin",
+    "client.IllagerModelMixin",
     "client.ModelRendererMixin"
   ],
   "injectors": {

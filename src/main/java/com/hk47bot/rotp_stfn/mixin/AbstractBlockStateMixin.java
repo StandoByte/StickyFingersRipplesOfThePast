@@ -88,7 +88,6 @@ public abstract class AbstractBlockStateMixin {
             }
         }
         catch (Exception e){
-            RotpStickyFingersAddon.getLogger().info("Checking zippers for unloaded chunks:");
             info.setReturnValue(blockShape);
         }
     }

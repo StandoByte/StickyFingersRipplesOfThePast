@@ -53,11 +53,7 @@ public class GameplayEvents {
     @SubscribeEvent
     public static void onEntityTick(LivingEvent.LivingUpdateEvent event){
         LivingEntity entity = event.getEntityLiving();
-        if (!entity.level.isClientSide()){
-            entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tickArms);
-        }
-        entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tickLegs);
-        entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tickInGround);
+        entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(EntityZipperCapability::tick);
     }
 
     @SubscribeEvent

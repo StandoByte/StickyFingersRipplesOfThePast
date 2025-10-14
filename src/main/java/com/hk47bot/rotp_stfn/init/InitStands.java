@@ -126,6 +126,11 @@ public class InitStands {
                     .staminaCost(250)
                     .cooldown(100)));
 
+    public static final RegistryObject<StandAction> STICKY_FINGERS_CLIMB_ZIPPER = ACTIONS.register("sticky_fingers_climb_zipper",
+            () -> new StickyFingersClimbZipper(new StandAction.Builder()
+                    .staminaCost(250)
+                    .cooldown(100)));
+
     public static final RegistryObject<StandAction> STICKY_FINGERS_ZIP_TARGET_WOUNDS = ACTIONS.register("sticky_fingers_zip_target_wounds",
             () -> new StickyFingersZipTargetWounds(new StandAction.Builder()
                     .cooldown(100)
@@ -147,6 +152,7 @@ public class InitStands {
                                     STICKY_FINGERS_BLOCK.get(),
                                     STICKY_FINGERS_HIDE_IN_MOB.get(),
                                     STICKY_FINGERS_PLACE_ZIPPER.get(),
+                                    STICKY_FINGERS_CLIMB_ZIPPER.get(),
                                     STICKY_FINGERS_OPEN_STORAGE.get(),
                                     STICKY_FINGERS_ZIP_USER_WOUNDS.get()
                             )

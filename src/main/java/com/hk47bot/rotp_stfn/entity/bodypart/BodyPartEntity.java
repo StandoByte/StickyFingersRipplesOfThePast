@@ -345,26 +345,26 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
+        owner.writeNetwork(buffer);
         buffer.writeBoolean(getOwner() != null && getOwner() instanceof PlayerEntity);
         if (getOwner() != null && getOwner() instanceof PlayerEntity){
             buffer.writeVarIntArray(UUIDCodec.uuidToIntArray(getOwner().getUUID()));
         }
-        owner.writeNetwork(buffer);
     }
 
     @Override
     public IPacket<?> getAddEntityPacket() {
-        RotpStickyFingersAddon.getLogger().info("packet sent");
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
+        owner.readNetwork(additionalData);
         boolean ownerIsPlayer = additionalData.readBoolean();
         if (ownerIsPlayer){
             setOwner(level.getPlayerByUUID(UUIDCodec.uuidFromIntArray(additionalData.readVarIntArray())));
         }
-        owner.readNetwork(additionalData);
+        RotpStickyFingersAddon.getLogger().info(getOwner());
     }
 
     public boolean isCarried() {
