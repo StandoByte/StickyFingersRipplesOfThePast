@@ -9,6 +9,7 @@ import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.entity.stand.TargetHitPart;
+import com.github.standobyte.jojo.init.ModStatusEffects;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.power.impl.stand.StandUtil;
 import com.github.standobyte.jojo.util.mc.damage.DamageUtil;
@@ -121,7 +122,6 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
 //                                            leg.setRight(true);
                                         } else {
                                             capability.setLeftLegBlocked(true);
-                                            isRight = false;
 //                                            leg.setRight(false);
                                         }
                                         break;
@@ -129,7 +129,6 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                                         if (capability.isRightLegBlocked()) {
                                             capability.setLeftLegBlocked(true);
 //                                            leg.setRight(false);
-                                            isRight = false;
                                         } else {
                                             capability.setRightLegBlocked(true);
 //                                            leg.setRight(true)
