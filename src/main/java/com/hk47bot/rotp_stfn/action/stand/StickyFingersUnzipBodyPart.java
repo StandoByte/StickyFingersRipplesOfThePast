@@ -9,26 +9,20 @@ import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntityTask;
 import com.github.standobyte.jojo.entity.stand.TargetHitPart;
-import com.github.standobyte.jojo.init.ModStatusEffects;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.power.impl.stand.StandUtil;
 import com.github.standobyte.jojo.util.mc.damage.DamageUtil;
-import com.github.standobyte.jojo.util.mod.JojoModUtil;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.capability.ZipperWorldCap;
 import com.hk47bot.rotp_stfn.capability.ZipperWorldCapProvider;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedArmEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedHeadEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedLegEntity;
 import com.hk47bot.rotp_stfn.init.InitSounds;
-import com.hk47bot.rotp_stfn.network.AddonPackets;
-import com.hk47bot.rotp_stfn.network.EntityRemoveHeadPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -83,7 +77,7 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                         case HEAD:
                             if (capability.isHasHead()) {
                                 capability.setHead(false);
-                                PlayerHeadEntity head = new PlayerHeadEntity(world, targetEntity);
+                                UnzippedHeadEntity head = new UnzippedHeadEntity(world, targetEntity);
                                 Vector3d position = targetEntity.position().add(0, targetEntity.getBbHeight(), 0);
                                 head.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(head);
@@ -104,7 +98,7 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                                 else {
                                     break;
                                 }
-                                PlayerArmEntity arm = new PlayerArmEntity(world, targetEntity, isRight);
+                                UnzippedArmEntity arm = new UnzippedArmEntity(world, targetEntity, isRight);
                                 Vector3d position = targetEntity.position();
                                 arm.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(arm);
@@ -136,7 +130,7 @@ public class StickyFingersUnzipBodyPart extends StandEntityActionModifier {
                                         }
                                         break;
                                 }
-                                PlayerLegEntity leg = new PlayerLegEntity(world, targetEntity, isRight);
+                                UnzippedLegEntity leg = new UnzippedLegEntity(world, targetEntity, isRight);
                                 Vector3d position = targetEntity.position();
                                 leg.moveTo(position.x, position.y, position.z, targetEntity.yRot, targetEntity.xRot);
                                 world.addFreshEntity(leg);

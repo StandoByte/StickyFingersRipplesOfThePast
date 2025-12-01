@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.LightType;
 
 public class HumanoidUtil<T extends LivingEntity> {
@@ -48,6 +49,7 @@ public class HumanoidUtil<T extends LivingEntity> {
         double d3 = MathHelper.lerp(p_229118_2_, p_229118_1_.xo, p_229118_1_.getX()) + d1;
         double d4 = MathHelper.lerp(p_229118_2_, p_229118_1_.yo, p_229118_1_.getY()) + vector3d1.y;
         double d5 = MathHelper.lerp(p_229118_2_, p_229118_1_.zo, p_229118_1_.getZ()) + d2;
+        p_229118_3_.mulPose(Vector3f.XP.rotationDegrees(180));
         p_229118_3_.translate(d1, vector3d1.y, d2);
         float f = (float) (vector3d.x - d3);
         float f1 = (float) (vector3d.y - d4);
@@ -64,7 +66,7 @@ public class HumanoidUtil<T extends LivingEntity> {
         int k = p_229118_1_.level.getBrightness(LightType.SKY, blockpos);
         int l = p_229118_1_.level.getBrightness(LightType.SKY, blockpos1);
         renderSide(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.025F, 0.025F, f5, f6);
-        renderSide(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.025F, 0.0F, f5, f6);
+        renderSide(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.025F, 0.025F, f5, f6);
         p_229118_3_.popPose();
     }
 

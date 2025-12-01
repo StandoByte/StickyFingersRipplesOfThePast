@@ -170,6 +170,18 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         }
     }
 
+    private boolean isOwnerInvulnerableTo(DamageSource source){
+        return owner.getEntity(level) != null && owner.getEntity(level).isInvulnerableTo(source);
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        if (isOwnerInvulnerableTo(source)) {
+            return true;
+        }
+        return super.isInvulnerableTo(source);
+    }
+
     @Override
     public void tick() {
         bandAidPreTick();
@@ -219,13 +231,13 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                 LivingEntity ownerEntity = getOwner();
                 if (this.distanceToSqr(ownerEntity.position()) <= 2) {
                     ownerEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
-                        if (this instanceof PlayerArmEntity) {
-                            if (((PlayerArmEntity) this).isRight()) cap.setRightArmBlocked(false);
+                        if (this instanceof UnzippedArmEntity) {
+                            if (((UnzippedArmEntity) this).isRight()) cap.setRightArmBlocked(false);
                             else cap.setLeftArmBlocked(false);
-                        } else if (this instanceof PlayerLegEntity) {
-                            if (((PlayerLegEntity) this).isRight()) cap.setRightLegBlocked(false);
+                        } else if (this instanceof UnzippedLegEntity) {
+                            if (((UnzippedLegEntity) this).isRight()) cap.setRightLegBlocked(false);
                             else cap.setLeftLegBlocked(false);
-                        } else if (this instanceof PlayerHeadEntity) {
+                        } else if (this instanceof UnzippedHeadEntity) {
                             cap.setHead(true);
                         }
                     });
@@ -317,7 +329,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Nullable
     public LivingEntity getOwner() {
-        return owner.getEntityLiving(this.level);
+        return owner != null ? owner.getEntityLiving(this.level) : null;
     }
 
     @Override

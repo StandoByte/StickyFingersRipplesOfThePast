@@ -1,13 +1,9 @@
 package com.hk47bot.rotp_stfn.mixin.client;
 
-import com.github.standobyte.jojo.client.render.entity.layerrenderer.HamonMasterExtraLayer;
-import com.github.standobyte.jojo.client.render.entity.model.mob.HamonMasterModel;
 import com.github.standobyte.jojo.util.general.MathUtil;
-import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
 import com.hk47bot.rotp_stfn.util.LayerInfo;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
@@ -15,6 +11,7 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
+import net.minecraft.entity.monster.DrownedEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,20 +41,18 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
         findLayerParts(model);
         Optional<EntityZipperCapability> capabilityOpt = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
         if (!capabilityOpt.isPresent()) return;
-        EntityZipperCapability capability = capabilityOpt.get();
-
-        setPartAndLayersVisibility(this.head, capability.isHasHead());
-        setPartAndLayersVisibility(this.hat, capability.isHasHead());
-        setPartAndLayersVisibility(this.leftArm, !capability.isLeftArmBlocked());
-        setPartAndLayersVisibility(this.rightArm, !capability.isRightArmBlocked());
-        setPartAndLayersVisibility(this.leftLeg, !capability.isLeftLegBlocked());
-        setPartAndLayersVisibility(this.rightLeg, !capability.isRightLegBlocked());
+        setLayerVisibility(model.head, capabilityOpt.get().isHasHead() || capabilityOpt.get().isShouldAddHead());
+        setLayerVisibility(model.hat, capabilityOpt.get().isHasHead());
+        setLayerVisibility(model.leftArm, !capabilityOpt.get().isLeftArmBlocked());
+        setLayerVisibility(model.rightArm, !capabilityOpt.get().isRightArmBlocked());
+        setLayerVisibility(model.leftLeg, !capabilityOpt.get().isLeftLegBlocked());
+        setLayerVisibility(model.rightLeg, !capabilityOpt.get().isRightLegBlocked());
         if (model instanceof PlayerModel){
             PlayerModel<T> playerModel = (PlayerModel<T>) model;
-            setPartAndLayersVisibility(playerModel.leftSleeve, !capability.isLeftArmBlocked());
-            setPartAndLayersVisibility(playerModel.rightSleeve, !capability.isRightArmBlocked());
-            setPartAndLayersVisibility(playerModel.leftPants, !capability.isLeftLegBlocked());
-            setPartAndLayersVisibility(playerModel.rightPants, !capability.isRightLegBlocked());
+            setLayerVisibility(playerModel.leftSleeve, !capabilityOpt.get().isLeftArmBlocked());
+            setLayerVisibility(playerModel.rightSleeve, !capabilityOpt.get().isRightArmBlocked());
+            setLayerVisibility(playerModel.leftPants, !capabilityOpt.get().isLeftLegBlocked());
+            setLayerVisibility(playerModel.rightPants, !capabilityOpt.get().isRightLegBlocked());
         }
 
         for (Entity passenger : entity.getPassengers()) {
@@ -93,15 +88,14 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
     }
 
     @Unique
-    private void setPartAndLayersVisibility(ModelRenderer part, boolean visible) {
+    private void setLayerVisibility(ModelRenderer part, boolean visible) {
         if (part != null) {
             part.visible = visible;
-            part.children.forEach(child -> child.visible &= visible);
+            part.children.forEach(child -> child.visible = visible);
             rotp_stfn_layerMap.forEach((base, list) -> {
                 if (base.equals(part)) {
                     for (LayerInfo info : list) {
                         info.layer.visible = visible;
-//                        RotpStickyFingersAddon.getLogger().info("Layer field '{}' visibility = {}", info.fieldName, visible);
                     }
                 }
             });

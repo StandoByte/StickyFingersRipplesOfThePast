@@ -1,13 +1,13 @@
 package com.hk47bot.rotp_stfn.client.render.model.bodypart;
 
 import com.github.standobyte.jojo.util.general.MathUtil;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedLegEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
-public class PlayerLegModel extends EntityModel<PlayerLegEntity> {
+public class PlayerLegModel extends EntityModel<UnzippedLegEntity> {
     public ModelRenderer rightLeg;
     public ModelRenderer leftLeg;
     public final ModelRenderer leftPants;
@@ -31,7 +31,7 @@ public class PlayerLegModel extends EntityModel<PlayerLegEntity> {
     }
 
     @Override
-    public void setupAnim(PlayerLegEntity entity, float walkAnimPos, float walkAnimSpeed, float ticks, float yRotationOffset, float xRotation) {
+    public void setupAnim(UnzippedLegEntity entity, float walkAnimPos, float walkAnimSpeed, float ticks, float yRotationOffset, float xRotation) {
         rightLeg.xRot = (xRotation + 90) * MathUtil.DEG_TO_RAD;
         leftLeg.xRot = (xRotation + 90) * MathUtil.DEG_TO_RAD;
     }

@@ -14,8 +14,7 @@
     "ServerPlayNetHandlerMixin",
     "StandTypeMixin",
     "StandUtilMixin",
-    "client.ClDoubleShiftPressPacketMixin",
-    "client.KosmXWallClimbHandlerMixin"
+    "client.ClDoubleShiftPressPacketMixin"
   ],
   "client": [
     "client.ArmorStandArmorModelMixin",

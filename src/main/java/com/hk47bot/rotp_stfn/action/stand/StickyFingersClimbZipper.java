@@ -4,32 +4,24 @@ import com.github.standobyte.jojo.action.ActionConditionResult;
 import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.capability.entity.living.LivingWallClimbing;
-import com.github.standobyte.jojo.client.InputHandler;
 import com.github.standobyte.jojo.network.PacketManager;
 import com.github.standobyte.jojo.network.packets.fromclient.ClStopWallClimbPacket;
-import com.github.standobyte.jojo.power.impl.nonstand.INonStandPower;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.mc.CollisionUtil;
-import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
+import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.network.AddonPackets;
 import com.hk47bot.rotp_stfn.network.ClStopZipperClimbPacket;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FlowingFluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.KeybindTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -53,7 +45,7 @@ public class StickyFingersClimbZipper extends StandAction {
             Direction blockFace = target.getFace();
             Vector3d vecToBlock = Vector3d.atLowerCornerOf(blockFace.getOpposite().getNormal()).scale(0.5);
             Vector3d collide = collide(user, user.getBoundingBox(), vecToBlock, true);
-            if (!collide.equals(vecToBlock)) {
+            if (!collide.equals(vecToBlock) && user.level.getBlockState(target.getBlockPos()).getBlock() instanceof StickyFingersZipperBlock) {
                 return ActionConditionResult.POSITIVE;
             }
         }
@@ -97,7 +89,7 @@ public class StickyFingersClimbZipper extends StandAction {
             if (player.isLocalPlayer()) {
                 AxisAlignedBB axisalignedbb = player.getBoundingBox();
                 BlockPos blockpos = new BlockPos(axisalignedbb.minX + 0.001D, axisalignedbb.minY + 0.001D, axisalignedbb.minZ + 0.001D);
-                BlockPos blockpos1 = new BlockPos(axisalignedbb.maxX - 0.001D, axisalignedbb.maxY - 0.001D, axisalignedbb.maxZ - 0.001D);
+                BlockPos blockpos1 = new BlockPos(axisalignedbb.maxX - 0.001D, (axisalignedbb.maxY - 0.001D) - (0.5 * axisalignedbb.getYsize()), axisalignedbb.maxZ - 0.001D);
                 BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
                 if (player.level.hasChunksAt(blockpos, blockpos1)) {
                     for (int i = blockpos.getX(); i <= blockpos1.getX(); ++i) {

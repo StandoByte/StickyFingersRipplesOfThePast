@@ -6,7 +6,7 @@ import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.client.ClientUtil;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.mod.JojoModUtil;
-import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
+import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.init.InitBlocks;
@@ -40,11 +40,11 @@ public class StickyFingersToggleZipper extends StandAction {
             BlockState targetedState = world.getBlockState(targetedBlockPos);
             if (targetedState.getBlock() == InitBlocks.STICKY_FINGERS_ZIPPER.get()) {
                 if (!world.isClientSide()) {
-                    SoundEvent voiceline = targetedState.getValue(StickyFingersZipperBlock2.OPEN) ? InitSounds.BRUNO_ZIP.get() : InitSounds.BRUNO_UNZIP.get();
+                    SoundEvent voiceline = targetedState.getValue(StickyFingersZipperBlock.OPEN) ? InitSounds.BRUNO_ZIP.get() : InitSounds.BRUNO_UNZIP.get();
                     JojoModUtil.sayVoiceLine(user, voiceline);
                     toggleZipper(world, targetedBlockPos, targetedState);
                 } else if (ClientUtil.canHearStands()) {
-                    SoundEvent sound = targetedState.getValue(StickyFingersZipperBlock2.OPEN) ? InitSounds.ZIPPER_OPEN.get() : InitSounds.ZIPPER_CLOSE.get();
+                    SoundEvent sound = targetedState.getValue(StickyFingersZipperBlock.OPEN) ? InitSounds.ZIPPER_OPEN.get() : InitSounds.ZIPPER_CLOSE.get();
                     world.playLocalSound(user.getX(), user.getY(0.5), user.getZ(), sound,
                             SoundCategory.NEUTRAL, 1.0F, 1.0F, false);
                 }
@@ -53,13 +53,13 @@ public class StickyFingersToggleZipper extends StandAction {
     }
 
     public static void toggleZipper(World world, BlockPos targetedBlockPos, BlockState targetedState){
-        BlockPos linkedPos = StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world);
-        BlockState linkedState = world.getBlockState(StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world));
+        BlockPos linkedPos = StickyFingersZipperBlock.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world);
+        BlockState linkedState = world.getBlockState(StickyFingersZipperBlock.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world));
         world.setBlockAndUpdate(targetedBlockPos,
-                targetedState.setValue(StickyFingersZipperBlock2.OPEN, !targetedState.getValue(StickyFingersZipperBlock2.OPEN)));
+                targetedState.setValue(StickyFingersZipperBlock.OPEN, !targetedState.getValue(StickyFingersZipperBlock.OPEN)));
         if (linkedPos != targetedBlockPos) {
-            world.setBlockAndUpdate(StickyFingersZipperBlock2.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world),
-                    linkedState.setValue(StickyFingersZipperBlock2.OPEN, !targetedState.getValue(StickyFingersZipperBlock2.OPEN)));
+            world.setBlockAndUpdate(StickyFingersZipperBlock.getLinkedZipperBlockPos(targetedState, targetedBlockPos, world),
+                    linkedState.setValue(StickyFingersZipperBlock.OPEN, !targetedState.getValue(StickyFingersZipperBlock.OPEN)));
         }
     }
 

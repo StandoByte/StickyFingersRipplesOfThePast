@@ -33,7 +33,6 @@ public class AddonPackets {
                 .networkProtocolVersion(() -> PROTOCOL_VERSION)
                 .simpleChannel();
         packetIndex = 0;
-        registerMessage(serverChannel, new ZipperStorageSyncPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(serverChannel, new EntityZipperCapSyncPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(serverChannel, new EntityRemoveHeadPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(serverChannel, new PacketToPacketPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));

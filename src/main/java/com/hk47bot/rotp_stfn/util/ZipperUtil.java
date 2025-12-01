@@ -1,11 +1,7 @@
 package com.hk47bot.rotp_stfn.util;
 
 import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
-import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
 import net.minecraft.block.AirBlock;
-import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.LavaFluid;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -52,10 +48,10 @@ public class ZipperUtil {
     }
     public static boolean hasZippersAround(BlockPos pos, IBlockReader world){
         for (Direction direction : Direction.values()){
-            if (world.getBlockState(pos.relative(direction)).getBlock() instanceof StickyFingersZipperBlock2
-                    && (world.getBlockState(pos.relative(direction)).getValue(StickyFingersZipperBlock2.INITIAL_FACING) == direction)
+            if (world.getBlockState(pos.relative(direction)).getBlock() instanceof StickyFingersZipperBlock
+                    && (world.getBlockState(pos.relative(direction)).getValue(StickyFingersZipperBlock.INITIAL_FACING) == direction)
                     && world.getBlockState(pos.relative(direction)).getValue(StickyFingersZipperBlock.OPEN)
-                    && !(world.getBlockState(pos).getBlock() instanceof StickyFingersZipperBlock2)
+                    && !(world.getBlockState(pos).getBlock() instanceof StickyFingersZipperBlock)
             ){
                 return true;
             }
@@ -197,6 +193,6 @@ public class ZipperUtil {
     }
 
     public static boolean isBlockZipper(IBlockReader world, BlockPos blockPos) {
-        return world.getBlockState(blockPos).getBlock() instanceof StickyFingersZipperBlock2;
+        return world.getBlockState(blockPos).getBlock() instanceof StickyFingersZipperBlock;
     }
 }

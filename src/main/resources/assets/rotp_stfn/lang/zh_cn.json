@@ -2,6 +2,8 @@
   "entity.rotp_stfn.sticky_fingers": "钢链手指",
   "stand.rotp_stfn.sticky_fingers": "钢链手指",
 
+  "block.rotp_stfn.sticky_fingers_zipper": "拉链",
+
   "action.rotp_stfn.sticky_fingers_punch": "挥拳",
   "action.rotp_stfn.sticky_fingers_barrage": "连打(阿里阿里阿里阿里!）",
   "action.rotp_stfn.sticky_fingers_heavy_punch": "重拳",
@@ -20,11 +22,12 @@
   "action.rotp_stfn.sticky_fingers_remove_zipper": "移除拉链",
   "action.rotp_stfn.sticky_fingers_place_zipper": "生成拉链",
   "action.rotp_stfn.sticky_fingers_toggle_zipper": "打开拉链",
+  "action.rotp_stfn.sticky_fingers_climb_zipper": "爬拉链",
   "action.rotp_stfn.sticky_fingers_zip_user_wounds": "拉链愈伤",
   "action.rotp_stfn.sticky_fingers_zip_target_wounds": "治愈目标",
 
   "effect.rotp_stfn.zip_wounds": "拉链愈合",
-  "effect.rotp_stfn.zipper": "拉链",
+  "effect.rotp_stfn.zipper": "解压",
 
   "rotp_stfn.message.cant_pickup.no_arm": "你无法在失去手臂的情况下做到这个!",
   "body_part.hint.release": "按%s键放下%s",

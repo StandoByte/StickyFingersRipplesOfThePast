@@ -1,6 +1,7 @@
 package com.hk47bot.rotp_stfn.capability;
 
 import com.hk47bot.rotp_stfn.container.EntityZipperContainer;
+import lombok.Getter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 public class EntityZipperStorage extends Inventory implements INamedContainerProvider {
 
+    @Getter
     private final UUID mobUUID;
     private final ITextComponent name;
 
@@ -34,9 +36,6 @@ public class EntityZipperStorage extends Inventory implements INamedContainerPro
     @Override
     public Container createMenu(int id, PlayerInventory inventory, PlayerEntity player) {
         return new EntityZipperContainer(id, inventory, this);
-    }
-    public UUID getMobUUID() {
-        return mobUUID;
     }
 
     public ListNBT createTag() {

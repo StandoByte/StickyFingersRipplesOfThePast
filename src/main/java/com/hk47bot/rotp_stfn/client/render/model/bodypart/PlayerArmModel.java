@@ -1,13 +1,13 @@
 package com.hk47bot.rotp_stfn.client.render.model.bodypart;
 
 import com.github.standobyte.jojo.util.general.MathUtil;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedArmEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
-public class PlayerArmModel extends EntityModel<PlayerArmEntity> {
+public class PlayerArmModel extends EntityModel<UnzippedArmEntity> {
     public ModelRenderer rightArm;
     public ModelRenderer leftArm;
     public ModelRenderer rightSleeve;
@@ -35,7 +35,7 @@ public class PlayerArmModel extends EntityModel<PlayerArmEntity> {
     }
 
     @Override
-    public void setupAnim(PlayerArmEntity entity, float walkAnimPos, float walkAnimSpeed, float ticks, float yRotationOffset, float xRotation) {
+    public void setupAnim(UnzippedArmEntity entity, float walkAnimPos, float walkAnimSpeed, float ticks, float yRotationOffset, float xRotation) {
         rightArm.xRot = (xRotation + 90) * MathUtil.DEG_TO_RAD;
         leftArm.xRot = (xRotation + 90) * MathUtil.DEG_TO_RAD;
     }

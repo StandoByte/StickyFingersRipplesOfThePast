@@ -3,11 +3,9 @@ package com.hk47bot.rotp_stfn.mixin;
 import com.github.standobyte.jojo.entity.damaging.DamagingEntity;
 import com.github.standobyte.jojo.entity.damaging.projectile.ownerbound.OwnerBoundProjectileEntity;
 import com.github.standobyte.jojo.entity.stand.StandEntity;
-import com.github.standobyte.jojo.util.mc.MCUtil;
-import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedHeadEntity;
 import com.hk47bot.rotp_stfn.util.StickyUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,7 +14,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -38,7 +35,7 @@ public abstract class OwnerBoundProjectileEntityMixin extends DamagingEntity {
 
         if (!capability.isHasHead() && capability.getHeadId() != null) {
             Entity head = StickyUtil.getEntityByUUID(owner.level, capability.getHeadId());
-            if (head instanceof PlayerHeadEntity && !(owner instanceof StandEntity)) {
+            if (head instanceof UnzippedHeadEntity && !(owner instanceof StandEntity)) {
                 setRot(head.yRot, head.xRot);
                 return head.getEyePosition(partialTick).add(getOwnerRelativeOffset());
             }
@@ -55,7 +52,7 @@ public abstract class OwnerBoundProjectileEntityMixin extends DamagingEntity {
             EntityZipperCapability capability = owner.getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
             if (capability != null && !capability.isHasHead() && capability.getHeadId() != null) {
                 Entity head = StickyUtil.getEntityByUUID(owner.level, capability.getHeadId());
-                if (head instanceof PlayerHeadEntity) {
+                if (head instanceof UnzippedHeadEntity) {
                     setRot(head.yRot, head.xRot);
                 }
             }

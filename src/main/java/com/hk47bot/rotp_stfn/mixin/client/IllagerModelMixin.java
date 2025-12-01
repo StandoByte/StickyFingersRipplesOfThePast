@@ -26,9 +26,9 @@ public class IllagerModelMixin {
         illager.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(zipperCap -> {
             AbstractIllagerEntity.ArmPose abstractillagerentity$armpose = illager.getArmPose();
             boolean flag = abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CROSSED;
-            this.arms.visible = flag && !zipperCap.noArms();
-            this.leftArm.visible = !flag && !zipperCap.isLeftArmBlocked();
-            this.rightArm.visible = !flag && !zipperCap.isRightArmBlocked();
+            this.arms.visible &= flag && !zipperCap.noArms();
+            this.leftArm.visible &= !flag && !zipperCap.isLeftArmBlocked();
+            this.rightArm.visible &= !flag && !zipperCap.isRightArmBlocked();
         });
     }
 }

@@ -1,15 +1,7 @@
 package com.hk47bot.rotp_stfn.mixin;
 
-import com.github.standobyte.jojo.action.non_stand.VampirismSpaceRipperStingyEyes;
-import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
-import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
-import com.hk47bot.rotp_stfn.util.StickyUtil;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

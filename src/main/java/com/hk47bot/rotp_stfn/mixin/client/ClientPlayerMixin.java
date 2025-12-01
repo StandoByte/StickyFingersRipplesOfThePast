@@ -1,7 +1,7 @@
 package com.hk47bot.rotp_stfn.mixin.client;
 
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedHeadEntity;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -24,7 +24,7 @@ public class ClientPlayerMixin extends AbstractClientPlayerEntity {
     @Inject(method = "isControlledCamera", at = @At(value = "RETURN"), cancellable = true)
     private void isHeadControllingCamera(CallbackInfoReturnable<Boolean> cir){
         Minecraft minecraft = Minecraft.getInstance();
-        cir.setReturnValue(minecraft.getCameraEntity() instanceof PlayerHeadEntity || minecraft.getCameraEntity() == this);
+        cir.setReturnValue(minecraft.getCameraEntity() instanceof UnzippedHeadEntity || minecraft.getCameraEntity() == this);
     }
     @Inject(method = "suffocatesAt(Lnet/minecraft/util/math/BlockPos;)Z", at = @At(value = "HEAD"), cancellable = true)
     private void cancelSuffocationOnPos(BlockPos pos, CallbackInfoReturnable<Boolean> cir){

@@ -14,15 +14,15 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class PlayerArmEntity extends BodyPartEntity {
-    protected static final DataParameter<Boolean> IS_RIGHT = EntityDataManager.defineId(PlayerArmEntity.class, DataSerializers.BOOLEAN);
+public class UnzippedLegEntity extends BodyPartEntity {
+    protected static final DataParameter<Boolean> IS_RIGHT = EntityDataManager.defineId(UnzippedLegEntity.class, DataSerializers.BOOLEAN);
 
-    public PlayerArmEntity(EntityType<? extends PlayerArmEntity> p_i48580_1_, World p_i48580_2_) {
+    public UnzippedLegEntity(EntityType<? extends UnzippedLegEntity> p_i48580_1_, World p_i48580_2_) {
         super(p_i48580_1_, p_i48580_2_);
     }
 
-    public PlayerArmEntity(World world, LivingEntity owner, boolean isRight) {
-        super(InitEntities.PLAYER_ARM.get(), world);
+    public UnzippedLegEntity(World world, LivingEntity owner, boolean isRight) {
+        super(InitEntities.PLAYER_LEG.get(), world);
         this.setOwner(owner);
         this.setRight(isRight);
 
@@ -31,7 +31,7 @@ public class PlayerArmEntity extends BodyPartEntity {
                 if (isRight()) {
                     cap.setRightArmId(this.getUUID());
                 } else {
-                    cap.setLeftArmId(this.getUUID());
+                    cap.setLeftLegId(this.getUUID());
                 }
             });
         }
@@ -42,9 +42,9 @@ public class PlayerArmEntity extends BodyPartEntity {
         if (player == getOwner()) {
             player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
                 if (isRight()) {
-                    cap.setRightArmBlocked(false);
+                    cap.setRightLegBlocked(false);
                 } else {
-                    cap.setLeftArmBlocked(false);
+                    cap.setLeftLegBlocked(false);
                 }
                 this.remove();
             });
@@ -61,8 +61,8 @@ public class PlayerArmEntity extends BodyPartEntity {
 
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
-        super.readAdditionalSaveData(nbt);
         entityData.set(IS_RIGHT, nbt.getBoolean("IsRight"));
+        super.readAdditionalSaveData(nbt);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class PlayerArmEntity extends BodyPartEntity {
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        if (source == DamageSource.IN_WALL) {
+        if (source == DamageSource.IN_WALL || source == DamageSource.DROWN) {
             return true;
         }
         return super.isInvulnerableTo(source);

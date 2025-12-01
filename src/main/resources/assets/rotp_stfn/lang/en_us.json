@@ -2,6 +2,8 @@
   "entity.rotp_stfn.sticky_fingers": "Sticky Fingers",
   "stand.rotp_stfn.sticky_fingers": "Sticky Fingers",
 
+  "block.rotp_stfn.sticky_fingers_zipper": "Zipper",
+
   "action.rotp_stfn.sticky_fingers_punch": "Punch",
   "action.rotp_stfn.sticky_fingers_barrage": "Barrage",
   "action.rotp_stfn.sticky_fingers_heavy_punch": "Heavy Punch",
@@ -20,11 +22,12 @@
   "action.rotp_stfn.sticky_fingers_remove_zipper": "Remove Zipper",
   "action.rotp_stfn.sticky_fingers_place_zipper": "Place Zipper",
   "action.rotp_stfn.sticky_fingers_toggle_zipper": "Toggle Zipper",
+  "action.rotp_stfn.sticky_fingers_climb_zipper": "Climb Zipper",
   "action.rotp_stfn.sticky_fingers_zip_user_wounds": "Zip User Wounds",
   "action.rotp_stfn.sticky_fingers_zip_target_wounds": "Zip Target Wounds",
 
   "effect.rotp_stfn.zip_wounds": "Zip Wounds",
-  "effect.rotp_stfn.zipper": "Zipper",
+  "effect.rotp_stfn.zipper": "Unzipped",
 
   "rotp_stfn.message.cant_pickup.no_arm": "You can't pick this up without an arm to hold it!",
   "body_part.hint.release": "Press %s to put %s down",

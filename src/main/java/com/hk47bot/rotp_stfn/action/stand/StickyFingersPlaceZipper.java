@@ -9,8 +9,7 @@ import com.github.standobyte.jojo.entity.stand.StandEntity;
 import com.github.standobyte.jojo.entity.stand.StandPose;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
 import com.github.standobyte.jojo.util.mod.JojoModUtil;
-import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
-import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
+import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.init.InitStands;
@@ -93,18 +92,18 @@ public class StickyFingersPlaceZipper extends StandAction {
                 }
                 BlockState targetedBlockState = user.level.getBlockState(targetedBlockPos);
                 BlockPos zipperBlockPos = targetedBlockPos.relative(getTargetedFace(target, user));
-                BlockPos linkedZipperBlockPos = StickyFingersZipperBlock2.getLinkedBlockPos(zipperBlockPos, user.level, getTargetedFace(target, user).getOpposite());
+                BlockPos linkedZipperBlockPos = StickyFingersZipperBlock.getLinkedBlockPos(zipperBlockPos, user.level, getTargetedFace(target, user).getOpposite());
                 if (targetedBlockState.isFaceSturdy(user.level, targetedBlockPos, getTargetedFace(target, user))
                         && ZipperUtil.isBlockFree(user.level, zipperBlockPos)) {
                     if (!ZipperUtil.isBlockZipper(world, targetedBlockPos) && ticksHeld > 0) {
                         if (user.level.getBlockState(linkedZipperBlockPos.relative(getTargetedFace(target, user))).isFaceSturdy(user.level, linkedZipperBlockPos.relative(getTargetedFace(target, user)), getTargetedFace(target, user).getOpposite())
                                 && ZipperUtil.isBlockFree(user.level, linkedZipperBlockPos)){
-                            StickyFingersZipperBlock2.placeZippers(world, targetedBlockPos, getTargetedFace(target, user), user);
+                            StickyFingersZipperBlock.placeZippers(world, targetedBlockPos, getTargetedFace(target, user), user);
                         }
                         else {
-                            StickyFingersZipperBlock2.placeSingleZipper(world, targetedBlockPos, getTargetedFace(target, user), user);
+                            StickyFingersZipperBlock.placeSingleZipper(world, targetedBlockPos, getTargetedFace(target, user), user);
                             if (getTargetedFace(target, user).getAxis().isHorizontal() && zipperCap.isInGround() && (ZipperUtil.isBlockFree(world, zipperBlockPos.below()) || ZipperUtil.isBlockFree(world, zipperBlockPos.above()))){
-                                StickyFingersZipperBlock2.placeSingleZipper(world, ZipperUtil.isBlockFree(world, zipperBlockPos.below()) ? targetedBlockPos.below() : ZipperUtil.isBlockFree(world, zipperBlockPos.above()) ? targetedBlockPos.above() : targetedBlockPos, getTargetedFace(target, user), user);
+                                StickyFingersZipperBlock.placeSingleZipper(world, ZipperUtil.isBlockFree(world, zipperBlockPos.below()) ? targetedBlockPos.below() : ZipperUtil.isBlockFree(world, zipperBlockPos.above()) ? targetedBlockPos.above() : targetedBlockPos, getTargetedFace(target, user), user);
                             }
                         }
                     }

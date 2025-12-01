@@ -26,7 +26,7 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 import static com.github.standobyte.jojo.client.ClientUtil.setRotationAngle;
-import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2.OPEN;
+import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock.OPEN;
 
 public class StickyFingersZipperBlockRenderer extends TileEntityRenderer<StickyFingersZipperTileEntity> {
     private final ModelRenderer north;

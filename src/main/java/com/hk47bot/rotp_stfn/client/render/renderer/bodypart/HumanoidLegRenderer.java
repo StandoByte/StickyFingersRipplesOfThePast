@@ -9,27 +9,25 @@ import com.hk47bot.rotp_stfn.capability.ZipperWorldCapProvider;
 import com.hk47bot.rotp_stfn.client.HumanoidParser;
 import com.hk47bot.rotp_stfn.client.HumanoidUtil;
 import com.hk47bot.rotp_stfn.client.render.model.bodypart.PlayerLegModel;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedLegEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
-public class HumanoidLegRenderer extends SimpleEntityRenderer<PlayerLegEntity, PlayerLegModel> {
+public class HumanoidLegRenderer extends SimpleEntityRenderer<UnzippedLegEntity, PlayerLegModel> {
     public HumanoidLegRenderer(EntityRendererManager renderManager) {
         super(renderManager, new PlayerLegModel(), DefaultPlayerSkin.getDefaultSkin());
     }
 
     @Override
-    protected void doRender(PlayerLegEntity entity, PlayerLegModel model, float partialTick, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
+    protected void doRender(UnzippedLegEntity entity, PlayerLegModel model, float partialTick, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
         final Minecraft mc = Minecraft.getInstance();
         World world = ClientUtil.getClientWorld();
         ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
@@ -52,9 +50,6 @@ public class HumanoidLegRenderer extends SimpleEntityRenderer<PlayerLegEntity, P
                     HumanoidUtil.renderLeash(entity, packedLight, matrixStack, buffer, leashHolder);
                 }
             }
-        }
-        else {
-            super.doRender(entity, model, partialTick, matrixStack, buffer, packedLight);
         }
     }
 }

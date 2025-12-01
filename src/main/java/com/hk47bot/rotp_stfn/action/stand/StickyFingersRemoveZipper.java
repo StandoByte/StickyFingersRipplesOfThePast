@@ -4,7 +4,7 @@ import com.github.standobyte.jojo.action.ActionConditionResult;
 import com.github.standobyte.jojo.action.ActionTarget;
 import com.github.standobyte.jojo.action.stand.StandAction;
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
-import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
+import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.init.InitStands;
@@ -84,6 +84,6 @@ public class StickyFingersRemoveZipper extends StandAction {
     }
 
     public static boolean isBlockZipper(World world, BlockPos blockPos) {
-        return world.getBlockState(blockPos).getBlock() instanceof StickyFingersZipperBlock2;
+        return world.getBlockState(blockPos).getBlock() instanceof StickyFingersZipperBlock;
     }
 }

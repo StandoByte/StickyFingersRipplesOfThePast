@@ -18,8 +18,6 @@ import com.hk47bot.rotp_stfn.entity.stand.stands.StickyFingersEntity;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
-import static com.github.standobyte.jojo.init.ModEntityTypes.ENTITIES;
-
 public class InitStands {
     @SuppressWarnings("unchecked")
     public static final DeferredRegister<Action<?>> ACTIONS = DeferredRegister.create(
@@ -168,7 +166,7 @@ public class InitStands {
                             .addOst(InitSounds.STICKY_FINGERS_OST)
                             .build(),
 
-                    ENTITIES,
+                    InitEntities.ENTITIES,
                     () -> new StandEntityType<StickyFingersEntity>(StickyFingersEntity::new, 0.65F, 1.95F)
                             .summonSound(InitSounds.STICKY_FINGERS_SUMMON)
                             .unsummonSound(InitSounds.STICKY_FINGERS_UNSUMMON))

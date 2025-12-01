@@ -46,7 +46,7 @@ public class StickyFingersUnzipOpponent extends StandEntityHeavyAttack {
         double strength = stand.getAttackDamage();
         if (target.getEntity() instanceof LivingEntity){
             LivingEntity effectTarget = (LivingEntity) target.getEntity();
-            effectTarget.addEffect(new EffectInstance(InitEffects.ZIPPER.get()));
+            effectTarget.addEffect(new EffectInstance(InitEffects.ZIPPER.get(), 100));
         }
         return super.punchEntity(stand, target, dmgSource).damage(StandStatFormulas.getHeavyAttackDamage(strength)/2).multiplyAddKnockback(0);
     }

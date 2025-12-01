@@ -2,9 +2,9 @@ package com.hk47bot.rotp_stfn.init;
 
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerLegEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedArmEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedHeadEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedLegEntity;
 import com.hk47bot.rotp_stfn.entity.projectile.ExtendedPunchEntity;
 
 import net.minecraft.entity.EntityClassification;
@@ -25,16 +25,16 @@ public class InitEntities {
             () -> EntityType.Builder.<ExtendedPunchEntity>of(ExtendedPunchEntity::new, EntityClassification.MISC).sized(0.25F, 0.25F).noSummon().noSave().setUpdateInterval(20)
                     .build(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "stfn_extended_punch").toString()));
 
-    public static final RegistryObject<EntityType<PlayerHeadEntity>> PLAYER_HEAD = ENTITIES.register("player_head",
-            () -> EntityType.Builder.<PlayerHeadEntity>of(PlayerHeadEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F).noSummon()
+    public static final RegistryObject<EntityType<UnzippedHeadEntity>> PLAYER_HEAD = ENTITIES.register("player_head",
+            () -> EntityType.Builder.<UnzippedHeadEntity>of(UnzippedHeadEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F).noSummon()
                     .build(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "player_head").toString()));
 
-    public static final RegistryObject<EntityType<PlayerArmEntity>> PLAYER_ARM = ENTITIES.register("player_arm",
-            () -> EntityType.Builder.<PlayerArmEntity>of(PlayerArmEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F).noSummon()
+    public static final RegistryObject<EntityType<UnzippedArmEntity>> PLAYER_ARM = ENTITIES.register("player_arm",
+            () -> EntityType.Builder.<UnzippedArmEntity>of(UnzippedArmEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F).noSummon()
                     .build(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "player_arm").toString()));
 
-    public static final RegistryObject<EntityType<PlayerLegEntity>> PLAYER_LEG = ENTITIES.register("player_leg",
-            () -> EntityType.Builder.<PlayerLegEntity>of(PlayerLegEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F).noSummon()
+    public static final RegistryObject<EntityType<UnzippedLegEntity>> PLAYER_LEG = ENTITIES.register("player_leg",
+            () -> EntityType.Builder.<UnzippedLegEntity>of(UnzippedLegEntity::new, EntityClassification.MISC).sized(0.6F, 0.6F).noSummon()
                     .build(new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "player_leg").toString()));
 
     @SubscribeEvent
