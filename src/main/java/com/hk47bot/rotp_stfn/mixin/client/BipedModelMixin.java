@@ -4,13 +4,14 @@ import com.github.standobyte.jojo.util.general.MathUtil;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerArmEntity;
 import com.hk47bot.rotp_stfn.util.LayerInfo;
 import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Pose;
+import net.minecraft.entity.monster.DrownedEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,28 +33,27 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
     @Shadow public ModelRenderer rightLeg;
     @Shadow public ModelRenderer leftLeg;
 
-    @Unique private boolean rotp_stfn_layersSearched = false;
     @Unique private final Map<ModelRenderer, List<LayerInfo>> rotp_stfn_layerMap = new HashMap<>();
 
     @Inject(method = "setupAnim(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     private void rotp_stfn_universalVisibility(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
         BipedModel<T> model = (BipedModel<T>) (Object) this;
-
-        if (!rotp_stfn_layersSearched) {
-            findLayerParts(model);
-            rotp_stfn_layersSearched = true;
-        }
-
+        findLayerParts(model);
         Optional<EntityZipperCapability> capabilityOpt = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
         if (!capabilityOpt.isPresent()) return;
-        EntityZipperCapability capability = capabilityOpt.get();
-
-        setPartAndLayersVisibility(this.head, capability.isHasHead());
-        setPartAndLayersVisibility(this.hat, capability.isHasHead());
-        setPartAndLayersVisibility(this.leftArm, !capability.isLeftArmBlocked());
-        setPartAndLayersVisibility(this.rightArm, !capability.isRightArmBlocked());
-        setPartAndLayersVisibility(this.leftLeg, !capability.isLeftLegBlocked());
-        setPartAndLayersVisibility(this.rightLeg, !capability.isRightLegBlocked());
+        setLayerVisibility(model.head, capabilityOpt.get().isHasHead() || capabilityOpt.get().isShouldAddHead());
+        setLayerVisibility(model.hat, capabilityOpt.get().isHasHead());
+        setLayerVisibility(model.leftArm, !capabilityOpt.get().isLeftArmBlocked());
+        setLayerVisibility(model.rightArm, !capabilityOpt.get().isRightArmBlocked());
+        setLayerVisibility(model.leftLeg, !capabilityOpt.get().isLeftLegBlocked());
+        setLayerVisibility(model.rightLeg, !capabilityOpt.get().isRightLegBlocked());
+        if (model instanceof PlayerModel){
+            PlayerModel<T> playerModel = (PlayerModel<T>) model;
+            setLayerVisibility(playerModel.leftSleeve, !capabilityOpt.get().isLeftArmBlocked());
+            setLayerVisibility(playerModel.rightSleeve, !capabilityOpt.get().isRightArmBlocked());
+            setLayerVisibility(playerModel.leftPants, !capabilityOpt.get().isLeftLegBlocked());
+            setLayerVisibility(playerModel.rightPants, !capabilityOpt.get().isRightLegBlocked());
+        }
 
         for (Entity passenger : entity.getPassengers()) {
             if (BodyPartEntity.isCarriedTurtle(passenger, entity)) {
@@ -88,7 +88,7 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
     }
 
     @Unique
-    private void setPartAndLayersVisibility(ModelRenderer part, boolean visible) {
+    private void setLayerVisibility(ModelRenderer part, boolean visible) {
         if (part != null) {
             part.visible = visible;
             part.children.forEach(child -> child.visible = visible);
@@ -96,7 +96,6 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
                 if (base.equals(part)) {
                     for (LayerInfo info : list) {
                         info.layer.visible = visible;
-//                        RotpStickyFingersAddon.getLogger().info("Layer field '{}' visibility = {}", info.fieldName, visible);
                     }
                 }
             });
@@ -111,18 +110,17 @@ public abstract class BipedModelMixin<T extends LivingEntity> {
                 try {
                     field.setAccessible(true);
                     all.add((ModelRenderer) field.get(model));
-                } catch (IllegalAccessException ignored) {}
+                } catch (IllegalAccessException ignored) {
+                }
             }
         }
 
-        List<ModelRenderer> base = Arrays.asList(head, hat, body, rightArm, leftArm, rightLeg, leftLeg);
-        all.removeAll(base);
         all.removeAll(Collections.singleton(null));
 
-        linkLayer(this.leftArm, all, "leftSleeve", "arm", "sleeve");
-        linkLayer(this.rightArm, all, "rightSleeve", "arm", "sleeve");
-        linkLayer(this.leftLeg, all, "leftPants", "leg", "pant");
-        linkLayer(this.rightLeg, all, "rightPants", "leg", "pant");
+        linkLayer(this.leftArm, all, "leftSleeve", "leftArm");
+        linkLayer(this.rightArm, all, "rightSleeve", "rightArm");
+        linkLayer(this.leftLeg, all, "leftPants", "leftLeg");
+        linkLayer(this.rightLeg, all, "rightPants", "rightLeg");
         linkLayer(this.body, all, "body", "jacket", "body");
     }
 

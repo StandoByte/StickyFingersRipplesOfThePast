@@ -7,6 +7,7 @@ import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.UUID;
@@ -14,6 +15,12 @@ import java.util.function.Supplier;
 
 public class EntityZipperCapSyncPacket {
     private final int entityId;
+
+    private final boolean isInGround;
+
+    private final boolean isWallClimbing;
+    private final BlockPos climbStartPos;
+
     private final boolean leftArmBlocked;
     private final boolean rightArmBlocked;
     private final boolean rightLegBlocked;
@@ -28,6 +35,12 @@ public class EntityZipperCapSyncPacket {
 
     public EntityZipperCapSyncPacket(
             int entityId,
+
+            boolean isInGround,
+
+            boolean isWallClimbing,
+            BlockPos climbStartPos,
+
             boolean leftArmBlocked,
             boolean rightArmBlocked,
             boolean leftLegBlocked,
@@ -41,6 +54,12 @@ public class EntityZipperCapSyncPacket {
             UUID rightLegId
     ) {
         this.entityId = entityId;
+
+        this.isInGround = isInGround;
+
+        this.isWallClimbing = isWallClimbing;
+        this.climbStartPos = climbStartPos;
+
         this.leftArmBlocked = leftArmBlocked;
         this.rightArmBlocked = rightArmBlocked;
         this.leftLegBlocked = leftLegBlocked;
@@ -56,6 +75,12 @@ public class EntityZipperCapSyncPacket {
 
     public EntityZipperCapSyncPacket(EntityZipperCapability capability) {
         this.entityId = capability.getEntityId();
+
+        this.isInGround = capability.isInGround();
+
+        this.isWallClimbing = capability.isWallClimbing();
+        this.climbStartPos = capability.getClimbStartPos();
+
         this.leftArmBlocked = capability.isLeftArmBlocked();
         this.rightArmBlocked = capability.isRightArmBlocked();
         this.leftLegBlocked = capability.isLeftLegBlocked();
@@ -73,6 +98,14 @@ public class EntityZipperCapSyncPacket {
         @Override
         public void encode(EntityZipperCapSyncPacket packet, PacketBuffer buf) {
             buf.writeInt(packet.entityId);
+
+            buf.writeBoolean(packet.isInGround);
+
+            buf.writeBoolean(packet.isWallClimbing);
+            buf.writeInt(packet.climbStartPos.getX());
+            buf.writeInt(packet.climbStartPos.getY());
+            buf.writeInt(packet.climbStartPos.getZ());
+
             buf.writeBoolean(packet.leftArmBlocked);
             buf.writeBoolean(packet.rightArmBlocked);
             buf.writeBoolean(packet.leftLegBlocked);
@@ -108,6 +141,12 @@ public class EntityZipperCapSyncPacket {
         @Override
         public EntityZipperCapSyncPacket decode(PacketBuffer buf) {
             int entityId = buf.readInt();
+
+            boolean isInGround = buf.readBoolean();
+
+            boolean isWallClimbing = buf.readBoolean();
+            BlockPos climbStartPos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+
             boolean leftArmBlocked = buf.readBoolean();
             boolean rightArmBlocked = buf.readBoolean();
             boolean leftLegBlocked = buf.readBoolean();
@@ -120,7 +159,7 @@ public class EntityZipperCapSyncPacket {
             UUID rightLegId = buf.readBoolean() ? buf.readUUID() : null;
             UUID leftLegId = buf.readBoolean() ? buf.readUUID() : null;
 
-            return new EntityZipperCapSyncPacket(entityId, leftArmBlocked, rightArmBlocked, leftLegBlocked, rightLegBlocked, hasHead,
+            return new EntityZipperCapSyncPacket(entityId, isInGround, isWallClimbing, climbStartPos, leftArmBlocked, rightArmBlocked, leftLegBlocked, rightLegBlocked, hasHead,
                     headId, leftArmId, rightArmId, leftLegId, rightLegId);
         }
 
@@ -130,6 +169,12 @@ public class EntityZipperCapSyncPacket {
             if (entity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) entity;
                 livingEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(capability -> {
+
+                    capability.setInGround(entityZipperCapSyncPacket.isInGround);
+
+                    capability.setWallClimbing(entityZipperCapSyncPacket.isWallClimbing);
+                    capability.setClimbStartPos(entityZipperCapSyncPacket.climbStartPos);
+
                     capability.setLeftArmBlocked(entityZipperCapSyncPacket.leftArmBlocked);
                     capability.setRightArmBlocked(entityZipperCapSyncPacket.rightArmBlocked);
 

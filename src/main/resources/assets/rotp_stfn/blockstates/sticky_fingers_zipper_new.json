@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "waterlogged=false": { "model": "rotp_stfn:block/zipper/none" },
-    "waterlogged=true":  { "model": "rotp_stfn:block/zipper/none" }
-  }
-}

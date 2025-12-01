@@ -1,7 +1,7 @@
 package com.hk47bot.rotp_stfn.item;
 
 import com.github.standobyte.jojo.util.mod.JojoModUtil;
-import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
+import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.block.ZipperFace;
 import com.hk47bot.rotp_stfn.tileentities.StickyFingersZipperTileEntity;
 import net.minecraft.client.Minecraft;
@@ -30,7 +30,7 @@ public class ZipperDebugItem extends Item {
             RayTraceResult rayTraceResult = JojoModUtil.rayTrace(player, 5, null);
             if (rayTraceResult instanceof BlockRayTraceResult){
                 BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
-                if (world.getBlockState(blockRayTraceResult.getBlockPos()).getBlock() instanceof StickyFingersZipperBlock2){
+                if (world.getBlockState(blockRayTraceResult.getBlockPos()).getBlock() instanceof StickyFingersZipperBlock){
                     chat.addMessage(ITextComponent.nullToEmpty(blockRayTraceResult.getBlockPos().toString()));
                     for (ZipperFace face : ((StickyFingersZipperTileEntity)world.getBlockEntity(blockRayTraceResult.getBlockPos())).FACES){
                         chat.addMessage(ITextComponent.nullToEmpty("-----------------------------------------------------"));

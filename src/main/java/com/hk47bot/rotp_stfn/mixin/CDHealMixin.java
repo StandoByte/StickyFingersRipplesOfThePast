@@ -40,11 +40,11 @@ public abstract class CDHealMixin {
         EntityZipperCapability capability = optCap.get();
         // FIXME: Пофиксить то, что в капабилке как будто "забывается" че у него именно за парты есть. Мб кстати из-за клиента)))
 
-        handleBodyPartReturn(world, entity, capability.getHeadId(), PlayerHeadEntity.class);
-        handleBodyPartReturn(world, entity, capability.getLeftArmId(), PlayerArmEntity.class);
-        handleBodyPartReturn(world, entity, capability.getRightArmId(), PlayerArmEntity.class);
-        handleBodyPartReturn(world, entity, capability.getLeftLegId(), PlayerLegEntity.class);
-        handleBodyPartReturn(world, entity, capability.getRightLegId(), PlayerLegEntity.class);
+        handleBodyPartReturn(world, entity, capability.getHeadId(), UnzippedHeadEntity.class);
+        handleBodyPartReturn(world, entity, capability.getLeftArmId(), UnzippedArmEntity.class);
+        handleBodyPartReturn(world, entity, capability.getRightArmId(), UnzippedArmEntity.class);
+        handleBodyPartReturn(world, entity, capability.getLeftLegId(), UnzippedLegEntity.class);
+        handleBodyPartReturn(world, entity, capability.getRightLegId(), UnzippedLegEntity.class);
     }
 
     @Unique

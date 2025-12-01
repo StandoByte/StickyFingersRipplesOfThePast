@@ -10,18 +10,19 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class PlayerLegEntity extends BodyPartEntity {
-    protected static final DataParameter<Boolean> IS_RIGHT = EntityDataManager.defineId(PlayerLegEntity.class, DataSerializers.BOOLEAN);
+public class UnzippedArmEntity extends BodyPartEntity {
+    protected static final DataParameter<Boolean> IS_RIGHT = EntityDataManager.defineId(UnzippedArmEntity.class, DataSerializers.BOOLEAN);
 
-    public PlayerLegEntity(EntityType<? extends PlayerLegEntity> p_i48580_1_, World p_i48580_2_) {
+    public UnzippedArmEntity(EntityType<? extends UnzippedArmEntity> p_i48580_1_, World p_i48580_2_) {
         super(p_i48580_1_, p_i48580_2_);
     }
 
-    public PlayerLegEntity(World world, LivingEntity owner, boolean isRight) {
-        super(InitEntities.PLAYER_LEG.get(), world);
+    public UnzippedArmEntity(World world, LivingEntity owner, boolean isRight) {
+        super(InitEntities.PLAYER_ARM.get(), world);
         this.setOwner(owner);
         this.setRight(isRight);
 
@@ -30,7 +31,7 @@ public class PlayerLegEntity extends BodyPartEntity {
                 if (isRight()) {
                     cap.setRightArmId(this.getUUID());
                 } else {
-                    cap.setLeftLegId(this.getUUID());
+                    cap.setLeftArmId(this.getUUID());
                 }
             });
         }
@@ -41,9 +42,9 @@ public class PlayerLegEntity extends BodyPartEntity {
         if (player == getOwner()) {
             player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
                 if (isRight()) {
-                    cap.setRightLegBlocked(false);
+                    cap.setRightArmBlocked(false);
                 } else {
-                    cap.setLeftLegBlocked(false);
+                    cap.setLeftArmBlocked(false);
                 }
                 this.remove();
             });
@@ -60,8 +61,8 @@ public class PlayerLegEntity extends BodyPartEntity {
 
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
-        entityData.set(IS_RIGHT, nbt.getBoolean("IsRight"));
         super.readAdditionalSaveData(nbt);
+        entityData.set(IS_RIGHT, nbt.getBoolean("IsRight"));
     }
 
     @Override
@@ -76,5 +77,13 @@ public class PlayerLegEntity extends BodyPartEntity {
 
     public boolean isRight() {
         return entityData.get(IS_RIGHT);
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        if (source == DamageSource.IN_WALL || source == DamageSource.DROWN) {
+            return true;
+        }
+        return super.isInvulnerableTo(source);
     }
 }

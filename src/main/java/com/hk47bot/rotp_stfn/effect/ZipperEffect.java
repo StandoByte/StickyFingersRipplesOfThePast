@@ -20,7 +20,7 @@ public class ZipperEffect extends Effect {
         LivingEntity livingEntity = event.getEntityLiving();
         if (!livingEntity.level.isClientSide()){
             if (livingEntity.hasEffect(InitEffects.ZIPPER.get())){
-                event.setAmount(event.getAmount() * 2);
+                event.setAmount(event.getAmount() * 1.5F);
             }
         }
     }

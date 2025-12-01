@@ -10,14 +10,13 @@ import com.hk47bot.rotp_stfn.util.StickyUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
+import net.minecraft.entity.ai.controller.JumpController;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.monster.HuskEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -35,10 +34,7 @@ import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.HandSide;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.IFormattableTextComponent;
@@ -52,7 +48,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
-import java.util.UUID;
 
 public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalSpawnData, IFlyingAnimal, IPassengerMixinReposition {
     private static final DataParameter<Boolean> IS_RETURNING = EntityDataManager.defineId(BodyPartEntity.class, DataSerializers.BOOLEAN);
@@ -74,7 +69,38 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         super(p_i48580_1_, p_i48580_2_);
         this.moveControl = returnMovementController;
         this.navigation = returnPathNavigator;
+        this.jumpControl = new JumpController(this) {
+            @Override
+            public void jump() {
+                this.jump = false;
+            }
+
+            @Override
+            public void tick() {
+                this.jump = false;
+            }
+        };
         this.setPathfindingMalus(PathNodeType.DANGER_FIRE, -1.0F);
+    }
+
+    @Override
+    public JumpController getJumpControl() {
+        return new JumpController(this) {
+            @Override
+            public void jump() {
+                this.jump = false;
+            }
+
+            @Override
+            public void tick() {
+                this.jump = false;
+            }
+        };
+    }
+
+    @Override
+    protected float getJumpPower() {
+        return 0.0F;
     }
 
     @Override
@@ -110,19 +136,19 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt) {
-        owner.loadNbt(nbt, "OwnerId");
-        this.setReturning(nbt.getBoolean("IsReturning"));
-        entityData.set(IS_CARRIED, nbt.getBoolean("Carried"));
-        super.readAdditionalSaveData(nbt);
-    }
-
-    @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
         owner.saveNbt(nbt, "OwnerId");
         nbt.putBoolean("IsReturning", this.isReturning());
         nbt.putBoolean("Carried", isCarried());
-        super.addAdditionalSaveData(nbt);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
+        owner.loadNbt(nbt, "OwnerId");
+        this.setReturning(nbt.getBoolean("IsReturning"));
+        entityData.set(IS_CARRIED, nbt.getBoolean("Carried"));
     }
 
     @Override
@@ -142,6 +168,18 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
             this.moveControl = groundMovementController;
             return groundPathNavigator;
         }
+    }
+
+    private boolean isOwnerInvulnerableTo(DamageSource source){
+        return owner.getEntity(level) != null && owner.getEntity(level).isInvulnerableTo(source);
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        if (isOwnerInvulnerableTo(source)) {
+            return true;
+        }
+        return super.isInvulnerableTo(source);
     }
 
     @Override
@@ -169,6 +207,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                     this.navigation = groundPathNavigator;
                     this.navigation.stop();
                     this.moveControl = groundMovementController;
+                    this.moveControl.setWantedPosition(this.getX(), this.getY(), this.getZ(), 0);
                     this.setJumping(false);
                     this.setNoGravity(false);
                 }
@@ -192,13 +231,13 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                 LivingEntity ownerEntity = getOwner();
                 if (this.distanceToSqr(ownerEntity.position()) <= 2) {
                     ownerEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
-                        if (this instanceof PlayerArmEntity) {
-                            if (((PlayerArmEntity) this).isRight()) cap.setRightArmBlocked(false);
+                        if (this instanceof UnzippedArmEntity) {
+                            if (((UnzippedArmEntity) this).isRight()) cap.setRightArmBlocked(false);
                             else cap.setLeftArmBlocked(false);
-                        } else if (this instanceof PlayerLegEntity) {
-                            if (((PlayerLegEntity) this).isRight()) cap.setRightLegBlocked(false);
+                        } else if (this instanceof UnzippedLegEntity) {
+                            if (((UnzippedLegEntity) this).isRight()) cap.setRightLegBlocked(false);
                             else cap.setLeftLegBlocked(false);
-                        } else if (this instanceof PlayerHeadEntity) {
+                        } else if (this instanceof UnzippedHeadEntity) {
                             cap.setHead(true);
                         }
                     });
@@ -290,7 +329,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Nullable
     public LivingEntity getOwner() {
-        return owner.getEntityLiving(this.level);
+        return owner != null ? owner.getEntityLiving(this.level) : null;
     }
 
     @Override
@@ -318,30 +357,26 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-        buffer.writeUtf(getOwner().getUUID().toString());
-    }
-
-    @Override
-    public void readSpawnData(PacketBuffer additionalData) {
-        UUID ownerUUID = UUID.fromString(additionalData.readUtf());
-        RotpStickyFingersAddon.getLogger().info(MCUtil.getAllEntities(this.level));
-        for (Entity entity : MCUtil.getAllEntities(this.level)){
-            if (entity instanceof HuskEntity){
-                RotpStickyFingersAddon.getLogger().info(ownerUUID);
-                RotpStickyFingersAddon.getLogger().info(entity.getUUID());
-            }
-            if (entity instanceof LivingEntity && entity.getUUID().equals(ownerUUID)){
-                this.setOwner((LivingEntity) entity);
-                return;
-            }
+        owner.writeNetwork(buffer);
+        buffer.writeBoolean(getOwner() != null && getOwner() instanceof PlayerEntity);
+        if (getOwner() != null && getOwner() instanceof PlayerEntity){
+            buffer.writeVarIntArray(UUIDCodec.uuidToIntArray(getOwner().getUUID()));
         }
-        RotpStickyFingersAddon.getLogger().info("no one found");
     }
 
     @Override
     public IPacket<?> getAddEntityPacket() {
-        RotpStickyFingersAddon.getLogger().info("packet sent");
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public void readSpawnData(PacketBuffer additionalData) {
+        owner.readNetwork(additionalData);
+        boolean ownerIsPlayer = additionalData.readBoolean();
+        if (ownerIsPlayer){
+            setOwner(level.getPlayerByUUID(UUIDCodec.uuidFromIntArray(additionalData.readVarIntArray())));
+        }
+        RotpStickyFingersAddon.getLogger().info(getOwner());
     }
 
     public boolean isCarried() {

@@ -3,6 +3,7 @@ package com.hk47bot.rotp_stfn.capability;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -17,7 +18,7 @@ public class CapabilityHandler {
     private static final ResourceLocation STORAGE_CAP = new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "sticky_fingers_storage_data");
 
     public static void commonSetupRegister() {
-        CapabilityManager.INSTANCE.register(ZipperStorageCap.class, new ZipperStorageCapStorage(), () -> new ZipperStorageCap(null));
+        CapabilityManager.INSTANCE.register(ZipperWorldCap.class, new ZipperWorldCapStorage(), () -> new ZipperWorldCap(null));
         CapabilityManager.INSTANCE.register(EntityZipperCapability.class, new EntityZipperCapabilityStorage(), () -> new EntityZipperCapability(null));
     }
 
@@ -32,7 +33,7 @@ public class CapabilityHandler {
     @SubscribeEvent
     public static void onAttachCapabilitiesToWorld(AttachCapabilitiesEvent<World> event) {
         World world = event.getObject();
-        event.addCapability(STORAGE_CAP, new ZipperStorageCapProvider(world));
+        event.addCapability(STORAGE_CAP, new ZipperWorldCapProvider(world));
     }
 
     @SubscribeEvent
@@ -46,22 +47,14 @@ public class CapabilityHandler {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         syncAttachedData(event.getPlayer());
+        if (!event.getPlayer().level.isClientSide()){
+            event.getPlayer().level.getCapability(ZipperWorldCapProvider.CAPABILITY).ifPresent(cap -> cap.syncHumanoids((ServerPlayerEntity) event.getPlayer()));
+        }
     }
 
     @SubscribeEvent
     public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         syncAttachedData(event.getPlayer());
-    }
-
-    @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
-            event.getOriginal().getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(oldStore -> {
-                event.getPlayer().getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(newStore -> {
-                    newStore.fromNBT(oldStore.toNBT());
-                });
-            });
-        }
     }
 
     @SubscribeEvent

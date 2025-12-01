@@ -1,16 +1,24 @@
 package com.hk47bot.rotp_stfn.block;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.util.Direction;
 
 import java.util.List;
 
 public class ZipperFace {
+    @Setter
+    @Getter
     private Direction direction;
 
     // 1 - 0 гр, 2 - 90 гр, 3 - 180 гр, 4 - 270 гр
+    @Setter
+    @Getter
     private int rotation;
 
     // 1 - прямо, 2 - г, 3 - т, 4 - х
+    @Setter
+    @Getter
     private int type;
 
     private boolean right_up;
@@ -39,15 +47,6 @@ public class ZipperFace {
         this.setLeftDown(false);
     }
 
-    public Direction getDirection() {
-        return direction;
-    }
-    public int getRotation() {
-        return rotation;
-    }
-    public int getType() {
-        return type;
-    }
     public boolean isRightUp() {
         return right_up;
     }
@@ -60,16 +59,7 @@ public class ZipperFace {
     public boolean isLeftDown() {
         return left_down;
     }
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
 
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
-    }
-    public void setType(int type) {
-        this.type = type;
-    }
     public void setRightUp(boolean right_up) {
         this.right_up = right_up;
     }

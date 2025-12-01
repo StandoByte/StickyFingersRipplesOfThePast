@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
-@Mixin(value = ArmorStandArmorModel.class, remap = false)
+@Mixin(value = ArmorStandArmorModel.class)
 public class ArmorStandArmorModelMixin<T extends LivingEntity> {
     @Inject(method = "setupAnim(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     private void copyModelVisibility(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {

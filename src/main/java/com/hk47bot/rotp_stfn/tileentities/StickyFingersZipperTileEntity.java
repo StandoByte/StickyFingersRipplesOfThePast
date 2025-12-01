@@ -1,8 +1,7 @@
 package com.hk47bot.rotp_stfn.tileentities;
 
 import com.github.standobyte.jojo.client.ClientUtil;
-import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
-import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2;
+import com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock;
 import com.hk47bot.rotp_stfn.block.ZipperFace;
 import com.hk47bot.rotp_stfn.init.InitTileEntities;
 import com.hk47bot.rotp_stfn.util.ZipperUtil;
@@ -15,7 +14,6 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,8 +24,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2.INITIAL_FACING;
-import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock2.OPEN;
+import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock.INITIAL_FACING;
+import static com.hk47bot.rotp_stfn.block.StickyFingersZipperBlock.OPEN;
 
 public class StickyFingersZipperTileEntity extends TileEntity implements ITickableTileEntity {
     private final ZipperFace NORTH = new ZipperFace(Direction.NORTH);
@@ -55,7 +53,7 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
     @OnlyIn(Dist.CLIENT)
     public boolean shouldRenderFace(Direction direction) {
         BlockState state = this.getBlockState();
-        BooleanProperty thisDirectionSide = StickyFingersZipperBlock2.DIRECTION_PROPERTIES.get(direction.get3DDataValue());
+        BooleanProperty thisDirectionSide = StickyFingersZipperBlock.DIRECTION_PROPERTIES.get(direction.get3DDataValue());
         return (ClientUtil.canSeeStands() && state.getValue(thisDirectionSide));
     }
 
@@ -86,15 +84,19 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
 
             if (this.ownerUUID != null) {
                 PlayerEntity owner = this.level.getPlayerByUUID(this.ownerUUID);
-                if (owner == null || owner.distanceToSqr(this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5) > MAX_DISTANCE_SQUARED) {
+                if (owner == null || owner.isDeadOrDying()) {
+                    this.getBlockState().getBlock().destroy(this.level, this.getBlockPos(), this.getBlockState());
+                }
+                else if (owner.distanceToSqr(this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5) > MAX_DISTANCE_SQUARED) {
                     shouldClose = true;
                 }
+
             }
 
             if (shouldClose) {
                 this.level.setBlock(this.getBlockPos(), state.setValue(OPEN, false), 3);
-                BlockPos linkedPos = StickyFingersZipperBlock2.getLinkedZipperBlockPos(state, this.getBlockPos(), this.level);
-                if (this.level.getBlockState(linkedPos).getBlock() instanceof StickyFingersZipperBlock2){
+                BlockPos linkedPos = StickyFingersZipperBlock.getLinkedZipperBlockPos(state, this.getBlockPos(), this.level);
+                if (this.level.getBlockState(linkedPos).getBlock() instanceof StickyFingersZipperBlock){
                     this.level.setBlock(linkedPos, this.level.getBlockState(linkedPos).setValue(OPEN, false), 3);
                 }
                 this.autoCloseTimer = 0;
@@ -122,11 +124,11 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
 //    }
 
     private void addNeighborDirectionsOfSidesToList(List<Direction> neighborFaceDirections, Direction direction, BlockState state) {
-        BooleanProperty thisDirectionSide = StickyFingersZipperBlock2.DIRECTION_PROPERTIES.get(direction.get3DDataValue());
-        BooleanProperty oppositeDirectionSide = StickyFingersZipperBlock2.DIRECTION_PROPERTIES.get(direction.getOpposite().get3DDataValue());
-        for (BooleanProperty side : StickyFingersZipperBlock2.DIRECTION_PROPERTIES) {
+        BooleanProperty thisDirectionSide = StickyFingersZipperBlock.DIRECTION_PROPERTIES.get(direction.get3DDataValue());
+        BooleanProperty oppositeDirectionSide = StickyFingersZipperBlock.DIRECTION_PROPERTIES.get(direction.getOpposite().get3DDataValue());
+        for (BooleanProperty side : StickyFingersZipperBlock.DIRECTION_PROPERTIES) {
             if (side != thisDirectionSide && side != oppositeDirectionSide && state.getValue(side)) {
-                Direction direction1 = Direction.from3DDataValue(StickyFingersZipperBlock2.DIRECTION_PROPERTIES.indexOf(side));
+                Direction direction1 = Direction.from3DDataValue(StickyFingersZipperBlock.DIRECTION_PROPERTIES.indexOf(side));
                 if (direction1 != state.getValue(INITIAL_FACING).getOpposite()) {
                     if (!neighborFaceDirections.contains(direction1.getOpposite())) {
                         neighborFaceDirections.add(direction1.getOpposite());
@@ -141,7 +143,7 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
             for (int i = -1; i < 2; i++) {
                 BlockPos posWithOffset = pos.relative(direction, i).relative(offset);
                 BlockState nstate = world.getBlockState(posWithOffset);
-                if (nstate.getBlock() instanceof StickyFingersZipperBlock2
+                if (nstate.getBlock() instanceof StickyFingersZipperBlock
                         && nstate.getValue(INITIAL_FACING) == state.getValue(INITIAL_FACING)
                         && (i != 0 || nstate.getValue(SixWayBlock.PROPERTY_BY_DIRECTION.get(direction)) == state.getValue(SixWayBlock.PROPERTY_BY_DIRECTION.get(direction)))) {
                     if (offset != direction
@@ -160,7 +162,7 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
         BlockPos pos = this.getBlockPos();
         BlockState state = world.getBlockState(pos);
         TileEntity entity = world.getBlockEntity(pos);
-        if (entity instanceof StickyFingersZipperTileEntity && state.getBlock() instanceof StickyFingersZipperBlock2) {
+        if (entity instanceof StickyFingersZipperTileEntity && state.getBlock() instanceof StickyFingersZipperBlock) {
             List<Direction> neighborFaceDirections = new ArrayList<>();
             addNeighborDirectionsOfSidesToList(neighborFaceDirections, direction, state);
             addNeighborDirectionsOfBlocksToList(neighborFaceDirections, world, pos, direction, state);
@@ -237,23 +239,23 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
                         if ((neighborFaceDirections.contains(Direction.EAST))
                                 && (neighborFaceDirections.contains(Direction.WEST))
                                 && (neighborFaceDirections.contains(Direction.NORTH))) {
-                            result.setRotation(3);
+                            result.setRotation(1);
                         }
                         if ((neighborFaceDirections.contains(Direction.WEST))
                                 && (neighborFaceDirections.contains(Direction.SOUTH))
                                 && (neighborFaceDirections.contains(Direction.NORTH))) {
-                            if (direction == Direction.UP) result.setRotation(2);
+                            if (direction == Direction.UP) result.setRotation(4);
                             else if (direction == Direction.DOWN) result.setRotation(4);
                         }
                         if ((neighborFaceDirections.contains(Direction.EAST))
                                 && (neighborFaceDirections.contains(Direction.SOUTH))
                                 && (neighborFaceDirections.contains(Direction.WEST))) {
-                            result.setRotation(1);
+                            result.setRotation(3);
                         }
                         if ((neighborFaceDirections.contains(Direction.EAST))
                                 && (neighborFaceDirections.contains(Direction.SOUTH))
                                 && (neighborFaceDirections.contains(Direction.NORTH))) {
-                            if (direction == Direction.UP) result.setRotation(4);
+                            if (direction == Direction.UP) result.setRotation(2);
                             else if (direction == Direction.DOWN) result.setRotation(2);
                         }
                     }
@@ -296,23 +298,19 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
                     } else {
                         if ((neighborFaceDirections.contains(Direction.EAST))
                                 && (neighborFaceDirections.contains(Direction.NORTH))) {
-                            if (direction == Direction.UP) result.setRotation(3);
-                            else if (direction == Direction.DOWN) result.setRotation(2);
+                            result.setRotation(1);
                         }
                         if ((neighborFaceDirections.contains(Direction.EAST))
                                 && (neighborFaceDirections.contains(Direction.SOUTH))) {
-                            if (direction == Direction.UP) result.setRotation(4);
-                            else if (direction == Direction.DOWN) result.setRotation(1);
+                            result.setRotation(2);
                         }
                         if ((neighborFaceDirections.contains(Direction.SOUTH))
                                 && (neighborFaceDirections.contains(Direction.WEST))) {
-                            if (direction == Direction.UP) result.setRotation(1);
-                            else if (direction == Direction.DOWN) result.setRotation(4);
+                            result.setRotation(3);
                         }
                         if ((neighborFaceDirections.contains(Direction.WEST))
                                 && (neighborFaceDirections.contains(Direction.NORTH))) {
-                            if (direction == Direction.UP) result.setRotation(2);
-                            else if (direction == Direction.DOWN) result.setRotation(3);
+                            result.setRotation(4);
                         }
                     }
                     break;
@@ -376,7 +374,7 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
                 //270
                 if ((neighborFaceDirections.contains(Direction.EAST))
                         && (neighborFaceDirections.contains(Direction.UP))
-                        && !(world.getBlockState(pos.above().east()).getBlock() instanceof StickyFingersZipperBlock2)) {
+                        && !(world.getBlockState(pos.above().east()).getBlock() instanceof StickyFingersZipperBlock)) {
                     BlockPos neighborPos1 = pos.above();
                     BlockPos neighborPos2 = pos.east();
                     if (shouldAddCorner(world, neighborPos1, neighborPos2, pos.above().east(), result.getDirection())) {
@@ -429,55 +427,12 @@ public class StickyFingersZipperTileEntity extends TileEntity implements ITickab
     }
 
     public boolean shouldAddCorner(World world, BlockPos pos1, BlockPos pos2, BlockPos pos3, Direction facing) {
-        return world.getBlockState(pos1).getBlock() instanceof StickyFingersZipperBlock2
-                && world.getBlockState(pos2).getBlock() instanceof StickyFingersZipperBlock2
-                && !((world.getBlockState(pos3).getBlock() instanceof StickyFingersZipperBlock2)
-                || (world.getBlockState(pos3.relative(facing)).getBlock() instanceof StickyFingersZipperBlock2)
-                || (world.getBlockState(pos3.relative(facing.getOpposite())).getBlock() instanceof StickyFingersZipperBlock2));
+        return world.getBlockState(pos1).getBlock() instanceof StickyFingersZipperBlock
+                && world.getBlockState(pos2).getBlock() instanceof StickyFingersZipperBlock
+                && !((world.getBlockState(pos3).getBlock() instanceof StickyFingersZipperBlock)
+                || (world.getBlockState(pos3.relative(facing)).getBlock() instanceof StickyFingersZipperBlock)
+                || (world.getBlockState(pos3.relative(facing.getOpposite())).getBlock() instanceof StickyFingersZipperBlock));
 
-
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    public ResourceLocation getFaceTexture(ZipperFace face) {
-        BlockState state = this.getBlockState();
-        String type = "";
-        String rotation = "";
-        switch (face.getType()) {
-            case 0:
-                type = "diagonal";
-                break;
-            case 1:
-                type = "straight";
-                break;
-            case 2:
-                type = "corner";
-                break;
-            case 3:
-                type = "t";
-                break;
-            case 4:
-                type = "cross";
-                break;
-        }
-        switch (face.getRotation()) {
-            case 1:
-                if (face.getType() == 1) rotation = "horizontal";
-                else rotation = "1";
-                break;
-            case 2:
-                if (face.getType() == 1) rotation = "vertical";
-                else rotation = "2";
-                break;
-            case 3:
-                rotation = "3";
-                break;
-            case 4:
-                rotation = "4";
-                break;
-        }
-        return new ResourceLocation(RotpStickyFingersAddon.MOD_ID, "textures/zipper/" + type + "/" + "zipper_" + type + (!type.equals("cross") && !type.equals("diagonal") ? "_" + rotation : "") + (state.getValue(OPEN) ? "_open" : "") + ".png");
 
     }
 

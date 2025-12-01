@@ -1,0 +1,39 @@
+{
+  "entity.rotp_stfn.sticky_fingers": "Sticky Fingers",
+  "stand.rotp_stfn.sticky_fingers": "Sticky Fingers",
+
+  "block.rotp_stfn.sticky_fingers_zipper": "Молния",
+
+  "action.rotp_stfn.sticky_fingers_punch": "Удар",
+  "action.rotp_stfn.sticky_fingers_barrage": "Шквал ударов",
+  "action.rotp_stfn.sticky_fingers_heavy_punch": "Тяжёлый удар",
+
+  "action.rotp_stfn.sticky_fingers_unzip_punch": "Отстёгивающий удар",
+  "action.rotp_stfn.sticky_fingers_unzip_head": "Отстегнуть голову",
+  "action.rotp_stfn.sticky_fingers_unzip_arm": "Отстегнуть руку",
+  "action.rotp_stfn.sticky_fingers_unzip_leg": "Отстегнуть ногу",
+
+  "action.rotp_stfn.sticky_fingers_extended_punch": "Удлинённый удар",
+
+  "action.rotp_stfn.sticky_fingers_block": "Блокирование",
+  "action.rotp_stfn.sticky_fingers_hide_in_mob": "Спрятаться в мобе",
+  "action.rotp_stfn.sticky_fingers_open_storage": "Открыть хранилище",
+  "action.rotp_stfn.sticky_fingers_open_inner_storage": "Открыть внутреннее хранилище",
+  "action.rotp_stfn.sticky_fingers_remove_zipper": "Убрать молнию",
+  "action.rotp_stfn.sticky_fingers_place_zipper": "Создать молнию",
+  "action.rotp_stfn.sticky_fingers_toggle_zipper": "Открыть/закрыть молнию",
+  "action.rotp_stfn.sticky_fingers_climb_zipper": "Карабканье по молнии",
+  "action.rotp_stfn.sticky_fingers_zip_user_wounds": "Застегнуть раны",
+  "action.rotp_stfn.sticky_fingers_zip_target_wounds": "Застегнуть раны цели",
+
+  "effect.rotp_stfn.zip_wounds": "Застёгнутые раны",
+  "effect.rotp_stfn.zipper": "Расстёгнутый",
+
+  "rotp_stfn.message.cant_pickup.no_arm": "You can't pick this up without an arm to hold it!",
+  "body_part.hint.release": "Press %s to put %s down",
+  "body_part.carry.offhand": "You need to free your off-hand to carry %s",
+  "entity.rotp_stfn.player_head": "Отстёгнутая голова",
+  "entity.rotp_stfn.player_arm": "Отстёгнутая рука",
+  "entity.rotp_stfn.player_leg": "Отстёгнутая нога",
+  "entity.rotp_stfn.stfn_extended_punch": "Удлинённый удар Sticky Fingers"
+}

@@ -2,6 +2,8 @@
   "entity.rotp_stfn.sticky_fingers": "Sticky Fingers",
   "stand.rotp_stfn.sticky_fingers": "Sticky Fingers",
 
+  "block.rotp_stfn.sticky_fingers_zipper": "Zipper",
+
   "action.rotp_stfn.sticky_fingers_punch": "Punch",
   "action.rotp_stfn.sticky_fingers_barrage": "Barrage",
   "action.rotp_stfn.sticky_fingers_heavy_punch": "Heavy Punch",
@@ -14,19 +16,24 @@
   "action.rotp_stfn.sticky_fingers_extended_punch": "Extended Punch",
 
   "action.rotp_stfn.sticky_fingers_block": "Block",
-  "action.rotp_stfn.sticky_fingers_get_into_mob": "Get Into Mob",
+  "action.rotp_stfn.sticky_fingers_hide_in_mob": "Hide In Mob",
   "action.rotp_stfn.sticky_fingers_open_storage": "Open Storage",
   "action.rotp_stfn.sticky_fingers_open_inner_storage": "Open Inner Storage",
   "action.rotp_stfn.sticky_fingers_remove_zipper": "Remove Zipper",
   "action.rotp_stfn.sticky_fingers_place_zipper": "Place Zipper",
   "action.rotp_stfn.sticky_fingers_toggle_zipper": "Toggle Zipper",
+  "action.rotp_stfn.sticky_fingers_climb_zipper": "Climb Zipper",
   "action.rotp_stfn.sticky_fingers_zip_user_wounds": "Zip User Wounds",
   "action.rotp_stfn.sticky_fingers_zip_target_wounds": "Zip Target Wounds",
 
   "effect.rotp_stfn.zip_wounds": "Zip Wounds",
-  "effect.rotp_stfn.zipper": "Zipper",
+  "effect.rotp_stfn.zipper": "Unzipped",
 
   "rotp_stfn.message.cant_pickup.no_arm": "You can't pick this up without an arm to hold it!",
   "body_part.hint.release": "Press %s to put %s down",
-  "body_part.carry.offhand": "You need to free your off-hand to carry %s"
+  "body_part.carry.offhand": "You need to free your off-hand to carry %s",
+  "entity.rotp_stfn.player_head": "Unzipped Head",
+  "entity.rotp_stfn.player_arm": "Unzipped Arm",
+  "entity.rotp_stfn.player_leg": "Unzipped Leg",
+  "entity.rotp_stfn.stfn_extended_punch": "Sticky Fingers Extended Punch"
 }

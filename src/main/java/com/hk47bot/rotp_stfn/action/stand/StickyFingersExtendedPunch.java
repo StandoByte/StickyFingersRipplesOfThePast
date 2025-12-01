@@ -3,6 +3,7 @@ package com.hk47bot.rotp_stfn.action.stand;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.github.standobyte.jojo.action.stand.HierophantGreenGrapple;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import  com.hk47bot.rotp_stfn.entity.projectile.ExtendedPunchEntity;
 import com.hk47bot.rotp_stfn.entity.stand.stands.StickyFingersEntity;
@@ -42,6 +43,7 @@ public class StickyFingersExtendedPunch extends StandEntityAction {
             if (standPower.getUser().isShiftKeyDown()) {
                 rightforearm.setBindEntities(true);
             }
+            rightforearm.withStandSkin(standEntity.getStandSkin());
             standEntity.addProjectile(rightforearm);
             stickyfingers.setForeArm(false);
             stickyfingers.setShortForeArm(false);

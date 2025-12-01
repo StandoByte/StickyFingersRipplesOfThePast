@@ -1,10 +1,14 @@
 package com.hk47bot.rotp_stfn.capability;
 
 import com.github.standobyte.jojo.power.impl.stand.IStandPower;
+import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.init.InitStands;
 import com.hk47bot.rotp_stfn.network.AddonPackets;
-import com.hk47bot.rotp_stfn.network.ZipperStorageSyncPacket;
+import com.hk47bot.rotp_stfn.network.PacketToPacketPacket;
+import lombok.Setter;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -22,12 +26,16 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ZipperStorageCap {
+public class ZipperWorldCap {
     private final World world;
-    private ArrayList<BlockZipperStorage> blockStorages = new ArrayList<>();
-    private ArrayList<EntityZipperStorage> entityStorages = new ArrayList<>();
 
-    public ZipperStorageCap(World world) {
+    private boolean humanoidPacketSent = false;
+
+    private ArrayList<BlockZipperStorage> blockStorages = new ArrayList<>();
+
+    public ArrayList<EntityType> humanoidTypes = new ArrayList<>();
+
+    public ZipperWorldCap(World world) {
         this.world = world;
     }
 
@@ -37,7 +45,6 @@ public class ZipperStorageCap {
 
     private void updateStorages(){
         if (!world.isClientSide()){
-            ArrayList<EntityZipperStorage> entityStoragesToRemove = new ArrayList<>();
             ArrayList<BlockZipperStorage> blockStoragesToRemove = new ArrayList<>();
             blockStorages.forEach(blockZipperStorage -> {
                 if (world.getBlockState(blockZipperStorage.getPos()).isAir()){
@@ -45,29 +52,8 @@ public class ZipperStorageCap {
                     blockStoragesToRemove.add(blockZipperStorage);
                 }
             });
-            entityStorages.forEach(entityZipperStorage -> {
-                Entity storageEntity = ((ServerWorld) world).getEntity(entityZipperStorage.getMobUUID());
-                if (storageEntity != null
-                        && !(storageEntity instanceof PlayerEntity && IStandPower.getPlayerStandPower((PlayerEntity) storageEntity).getType() == InitStands.STAND_STICKY_FINGERS.getStandType())
-                        && !storageEntity.isAlive()){
-                    InventoryHelper.dropContents(world, ((ServerWorld) world).getEntity(entityZipperStorage.getMobUUID()), entityZipperStorage);
-                    entityStoragesToRemove.add(entityZipperStorage);
-                }
-            });
-            entityStoragesToRemove.forEach(storageToRemove -> entityStorages.remove(storageToRemove));
             blockStoragesToRemove.forEach(storageToRemove -> blockStorages.remove(storageToRemove));
         }
-    }
-
-    @Nullable
-    public EntityZipperStorage findEntityStorage(UUID entityId, ServerPlayerEntity player){
-        Optional<EntityZipperStorage> storage = entityStorages.stream().filter(entityZipperStorage -> entityZipperStorage.getMobUUID().toString().equals(entityId.toString())).findFirst();
-        if (!storage.isPresent()){
-            EntityZipperStorage newStorage = new EntityZipperStorage(((ServerWorld)player.level).getEntity(entityId).getDisplayName(), entityId);
-            entityStorages.add(newStorage);
-            return newStorage;
-        }
-        return storage.get();
     }
 
     @Nullable
@@ -86,30 +72,30 @@ public class ZipperStorageCap {
         return storage.get();
     }
 
-    public void setEntityStorages(ArrayList<EntityZipperStorage> storages){
-        this.entityStorages = storages;
+    public void syncHumanoids(ServerPlayerEntity player) {
+        if (!world.isClientSide() && !humanoidPacketSent) {
+            AddonPackets.sendToClient(new PacketToPacketPacket(), player);
+        }
+        humanoidPacketSent = true;
     }
 
-    public void syncData(PlayerEntity player) {
-        if (!player.level.isClientSide()) {
-            AddonPackets.sendToClient(new ZipperStorageSyncPacket(entityStorages), (ServerPlayerEntity) player);
-        }
+    public boolean isHumanoid(LivingEntity entity){
+        return humanoidTypes.contains(entity.getType()) || entity instanceof PlayerEntity;
     }
 
     public CompoundNBT toNBT(){
         CompoundNBT returnableNBT = new CompoundNBT();
-        ListNBT entityStoragesNBT = new ListNBT();
         ListNBT blockStoragesNBT = new ListNBT();
-        for (EntityZipperStorage entityZipperStorage : entityStorages){
-            ListNBT storageNbt = new ListNBT();
-            ListNBT compounds = new ListNBT();
-            CompoundNBT identifier = new CompoundNBT();
-            identifier.putUUID("ID", entityZipperStorage.getMobUUID());
-            identifier.putString("Name", ITextComponent.Serializer.toJson(entityZipperStorage.getDisplayName()));
-            compounds.add(identifier);
-            storageNbt.add(compounds);
-            storageNbt.add(entityZipperStorage.createTag());
-            entityStoragesNBT.add(storageNbt);
+        ListNBT humanoidTypesNBT = new ListNBT();
+        int typeIndex = 0;
+        CompoundNBT typeListSize = new CompoundNBT();
+        typeListSize.putInt("TypeListSize", humanoidTypes.size());
+        humanoidTypesNBT.add(typeListSize);
+        for (EntityType type : humanoidTypes){
+            CompoundNBT typeNbt = new CompoundNBT();
+            typeNbt.putString("Type" + typeIndex, EntityType.getKey(type).toString());
+            typeIndex++;
+            humanoidTypesNBT.add(typeNbt);
         }
         for (BlockZipperStorage blockZipperStorage : blockStorages){
             ListNBT storageNbt = new ListNBT();
@@ -122,21 +108,18 @@ public class ZipperStorageCap {
             storageNbt.add(blockZipperStorage.createTag());
             blockStoragesNBT.add(storageNbt);
         }
-        returnableNBT.put("EntityStorages", entityStoragesNBT);
+        returnableNBT.put("HumanoidTypes", humanoidTypesNBT);
         returnableNBT.put("BlockStorages", blockStoragesNBT);
         return returnableNBT;
     }
 
     public void fromNBT(CompoundNBT nbt){
-        ListNBT entityStorageListNBT = (ListNBT) nbt.get("EntityStorages");
-        for (INBT inbt : entityStorageListNBT) {
-            ListNBT storageNbt = (ListNBT)inbt;
-            for (int i = 0; i < storageNbt.size(); i+=2) {
-                CompoundNBT idNBT = (CompoundNBT)((ListNBT)storageNbt.get(i)).get(0);
-                EntityZipperStorage storage = new EntityZipperStorage(ITextComponent.Serializer.fromJson(idNBT.getString("Name")), idNBT.getUUID("ID"));
-                storage.fromTag((ListNBT) storageNbt.get(i+1));
-                entityStorages.add(storage);
-            }
+        ListNBT humanoidTypesListNBT = (ListNBT) nbt.get("HumanoidTypes");
+        int listSize = ((CompoundNBT)humanoidTypesListNBT.get(0)).getInt("TypeListSize");
+        for (int i = 0; i < listSize; i++) {
+            String typeKey = ((CompoundNBT)humanoidTypesListNBT.get(i)).getString("Type" + i);
+            Optional<EntityType<?>> type = EntityType.byString(typeKey);
+            type.ifPresent(entityType -> humanoidTypes.add(entityType));
         }
         ListNBT blockStorageListNBT = (ListNBT) nbt.get("BlockStorages");
         for (INBT inbt : blockStorageListNBT) {

@@ -33,11 +33,12 @@ public class AddonPackets {
                 .networkProtocolVersion(() -> PROTOCOL_VERSION)
                 .simpleChannel();
         packetIndex = 0;
-        registerMessage(serverChannel, new ZipperStorageSyncPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(serverChannel, new EntityZipperCapSyncPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         registerMessage(serverChannel, new EntityRemoveHeadPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-        registerMessage(clientChannel, new PacketToPacketPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_SERVER));
+        registerMessage(serverChannel, new PacketToPacketPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        registerMessage(clientChannel, new ClStopZipperClimbPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_SERVER));
         registerMessage(clientChannel, new HeadRespawnPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_SERVER));
+        registerMessage(clientChannel, new HumanoidListPacket.Handler(), Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
     private static <MSG> void registerMessage(SimpleChannel channel, IModPacketHandler<MSG> handler, Optional<NetworkDirection> networkDirection) {
         if (packetIndex > 127) {

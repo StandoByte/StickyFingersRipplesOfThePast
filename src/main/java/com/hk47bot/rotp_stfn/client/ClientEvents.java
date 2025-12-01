@@ -5,9 +5,11 @@ import com.github.standobyte.jojo.mrpresident.CocoJumboTurtleEntity;
 import com.hk47bot.rotp_stfn.RotpStickyFingersAddon;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapability;
 import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
+import com.hk47bot.rotp_stfn.capability.ZipperWorldCap;
+import com.hk47bot.rotp_stfn.capability.ZipperWorldCapProvider;
 import com.hk47bot.rotp_stfn.client.render.renderer.tileentity.StickyFingersZipperBlockRenderer;
 import com.hk47bot.rotp_stfn.entity.bodypart.BodyPartEntity;
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedHeadEntity;
 import com.hk47bot.rotp_stfn.init.InitEntities;
 import com.hk47bot.rotp_stfn.network.AddonPackets;
 import com.hk47bot.rotp_stfn.network.HeadRespawnPacket;
@@ -26,6 +28,7 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -35,14 +38,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderBlockOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -69,41 +69,165 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRenderBlockOverlay(RenderBlockOverlayEvent event) {
-        if (ZipperUtil.hasZippersAround(event.getBlockPos(), mc.level)) {
-            event.setCanceled(true);
-            renderEndSky(event);
-        }
+        PlayerEntity player = mc.player;
+        player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(zipperCap -> {
+            if (ZipperUtil.hasZippersAround(event.getBlockPos(), mc.level) || zipperCap.isInGround()) {
+                event.setCanceled(true);
+                renderEndSky(event);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void fogDensity(EntityViewRenderEvent.FogDensity event) {
+        PlayerEntity player = mc.player;
+
+        player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(zipperCap -> {
+            if ((ZipperUtil.hasZippersAround(player.blockPosition().above(), mc.level) || zipperCap.isInGround()) && !ZipperUtil.isBlockZipper(mc.level, player.blockPosition().above())) {
+                event.setDensity(0.4F);
+                event.setCanceled(true);
+            }
+        });
+    }
+
+    @SubscribeEvent
+    public static void fogColor(EntityViewRenderEvent.FogColors event) {
+        PlayerEntity player = mc.player;
+        player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(zipperCap -> {
+            if ((ZipperUtil.hasZippersAround(player.blockPosition().above(), mc.level) || zipperCap.isInGround()) && !ZipperUtil.isBlockZipper(mc.level, player.blockPosition().above())) {
+                int[] rgb = ClientUtil.rgbInt(0x9152B1);
+                event.setRed(rgb[0]/ 255.0F);
+                event.setGreen(rgb[1]/ 255.0F);
+                event.setBlue(rgb[2]/ 255.0F);
+            }
+        });
     }
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (mc.player == null || mc.level == null) return;
+        mc.player.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(zipperCap -> {
+            if (ZipperUtil.hasZippersAround(mc.player.blockPosition(), mc.level) || zipperCap.isInGround()) {
+                mc.options.setCameraType(PointOfView.FIRST_PERSON);
+            }
+        });
 
-        if (ZipperUtil.hasZippersAround(mc.player.blockPosition(), mc.level)) {
-            mc.options.setCameraType(PointOfView.FIRST_PERSON);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onRenderHand(RenderHandEvent event) {
+        Entity entity = Minecraft.getInstance().getCameraEntity();
+        if (entity instanceof UnzippedHeadEntity){
+            event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public void onHeadInteract(PlayerInteractEvent.EntityInteract event){
-        if (event.getTarget() instanceof PlayerHeadEntity){
-            PlayerHeadEntity head = (PlayerHeadEntity) event.getTarget();
+        if (event.getTarget() instanceof UnzippedHeadEntity){
+            UnzippedHeadEntity head = (UnzippedHeadEntity) event.getTarget();
             if (head.getOwner() == event.getPlayer()){
                 ClientUtil.setCameraEntityPreventShaderSwitch(mc.player);
             }
         }
     }
 
-    @SubscribeEvent
+
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPreRenderLiving(RenderLivingEvent.Pre<? extends LivingEntity, EntityModel<? extends LivingEntity>> event) {
-        EntityModel<? extends LivingEntity> model = event.getRenderer().getModel();
+        EntityModel<? extends LivingEntity> entityModel = event.getRenderer().getModel();
         LivingEntity entity = event.getEntity();
-        if (model instanceof BipedModel) {
-            BipedModel<? extends LivingEntity> bipedModel = (BipedModel<? extends LivingEntity>) model;
-            Optional<EntityZipperCapability> capability = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
-            if (capability.isPresent()){
-                if (capability.get().noLegs()){
-                    bipedModel.body.y = -6F;
+        World world = ClientUtil.getClientWorld();
+        ZipperWorldCap worldCap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
+        if (worldCap != null && worldCap.isHumanoid(entity)) {
+            Optional<EntityZipperCapability> zipperCap = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
+            if (zipperCap.isPresent()){
+                ModelRenderer body = HumanoidParser.getPartByName("body", entityModel);
+                ModelRenderer head = HumanoidParser.getPartByName("head", entityModel);
+                ModelRenderer leftArm = HumanoidParser.getPartByName("leftArm", entityModel);
+                ModelRenderer rightArm = HumanoidParser.getPartByName("rightArm", entityModel);
+                ModelRenderer leftLeg = HumanoidParser.getPartByName("leftLeg", entityModel);
+                ModelRenderer rightLeg = HumanoidParser.getPartByName("rightLeg", entityModel);
+                if (!(entityModel instanceof BipedModel)){
+                    ModelRenderer arms = HumanoidParser.getPartByName("arms", entityModel);
+                    if (arms != null){
+                        arms.visible = !zipperCap.get().noArms();
+                    }
+                    head.visible = zipperCap.get().isHasHead();
+                    leftArm.visible = !zipperCap.get().isLeftArmBlocked();
+                    rightArm.visible = !zipperCap.get().isRightArmBlocked();
+                    leftLeg.visible = !zipperCap.get().isLeftLegBlocked();
+                    rightLeg.visible = !zipperCap.get().isRightLegBlocked();
+                    if (zipperCap.get().noLegs()){
+                        body.y = 6F;
+                    }
+                }
+                else {
+                    BipedModel model = (BipedModel) entityModel;
+                    head.visible &= zipperCap.get().isHasHead();
+                    if (!head.visible){
+                        head.visible = zipperCap.get().isShouldAddHead();
+                        zipperCap.get().setShouldAddHead(false);
+                    }
+                    leftArm.visible &= !zipperCap.get().isLeftArmBlocked();
+                    if (!leftArm.visible){
+                        leftArm.visible = zipperCap.get().isShouldAddleftArm();
+                        zipperCap.get().setShouldAddleftArm(false);
+                    }
+                    rightArm.visible &= !zipperCap.get().isRightArmBlocked();
+                    if (!rightArm.visible){
+                        rightArm.visible = zipperCap.get().isShouldAddrightArm();
+                        zipperCap.get().setShouldAddrightArm(false);
+                    }
+                    leftLeg.visible &= !zipperCap.get().isLeftLegBlocked();
+                    if (!leftLeg.visible){
+                        leftLeg.visible = zipperCap.get().isShouldAddleftLeg();
+                        zipperCap.get().setShouldAddleftLeg(false);
+                    }
+                    rightLeg.visible &= !zipperCap.get().isRightLegBlocked();
+                    if (!rightLeg.visible){
+                        rightLeg.visible = zipperCap.get().isShouldAddrightLeg();
+                        zipperCap.get().setShouldAddrightLeg(false);
+                    }
+                    if (model instanceof PlayerModel){
+                        PlayerModel playerModel = (PlayerModel) model;
+                        playerModel.leftSleeve.visible &= !zipperCap.get().isLeftArmBlocked();
+                        playerModel.rightSleeve.visible &= !zipperCap.get().isRightArmBlocked();
+                        playerModel.leftPants.visible &= !zipperCap.get().isLeftLegBlocked();
+                        playerModel.rightPants.visible &= !zipperCap.get().isRightLegBlocked();
+                    }
+                    if (zipperCap.get().noLegs()){
+                        body.y = -6F;
+                    }
+                }
+            }
+        }
+    }
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onPostRenderLiving(RenderLivingEvent.Post<? extends LivingEntity, EntityModel<? extends LivingEntity>> event) {
+        EntityModel<? extends LivingEntity> entityModel = event.getRenderer().getModel();
+        LivingEntity entity = event.getEntity();
+        World world = ClientUtil.getClientWorld();
+        ZipperWorldCap worldCap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
+        if (worldCap != null && worldCap.isHumanoid(entity)) {
+            Optional<EntityZipperCapability> zipperCap = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
+            if (zipperCap.isPresent()){
+                if (!(entityModel instanceof BipedModel)){
+                    ModelRenderer head = HumanoidParser.getPartByName("head", entityModel);
+                    ModelRenderer leftArm = HumanoidParser.getPartByName("leftArm", entityModel);
+                    ModelRenderer rightArm = HumanoidParser.getPartByName("rightArm", entityModel);
+                    ModelRenderer leftLeg = HumanoidParser.getPartByName("leftLeg", entityModel);
+                    ModelRenderer rightLeg = HumanoidParser.getPartByName("rightLeg", entityModel);
+                    head.visible &= zipperCap.get().isHasHead();
+                    leftArm.visible &= !zipperCap.get().isLeftArmBlocked();
+                    rightArm.visible &= !zipperCap.get().isRightArmBlocked();
+                    leftLeg.visible &= !zipperCap.get().isLeftLegBlocked();
+                    rightLeg.visible &= !zipperCap.get().isRightLegBlocked();
+                    if (!zipperCap.get().noLegs()){
+                        ModelRenderer body = HumanoidParser.getPartByName("body", entityModel);
+                        body.y = 0F;
+                    }
                 }
             }
         }
@@ -134,14 +258,15 @@ public class ClientEvents {
         float red = (0.75f + RANDOM.nextFloat() * 0.05f) * 0.15F;
         float green = (0.35f + RANDOM.nextFloat() * 0.05f) * 0.15F;
         float blue = (0.90f + RANDOM.nextFloat() * 0.05f) * 0.15F;
+        float alpha = 0.5F;
         Matrix4f matrix4f = event.getMatrixStack().last().pose();
         RenderType enderSkyRenderType = StickyFingersZipperBlockRenderer.StickyFingersZipperRenderType.endPortalNoFog(0);
         IVertexBuilder skyBuffer = mc.renderBuffers().bufferSource().getBuffer(enderSkyRenderType);
         event.getMatrixStack().pushPose();
-        skyBuffer.vertex(matrix4f, -1.0F, -1.0F, -0.5F).color(red, green, blue, 1F).uv(4.0F, 4.0F).endVertex();
-        skyBuffer.vertex(matrix4f, 1.0F, -1.0F, -0.5F).color(red, green, blue, 1F).uv(0.0F, 4.0F).endVertex();
-        skyBuffer.vertex(matrix4f, 1.0F, 1.0F, -0.5F).color(red, green, blue, 1F).uv(0.0F, 0.0F).endVertex();
-        skyBuffer.vertex(matrix4f, -1.0F, 1.0F, -0.5F).color(red, green, blue, 1F).uv(4.0F, 0.0F).endVertex();
+        skyBuffer.vertex(matrix4f, -1.0F, -1.0F, -0.5F).color(red, green, blue, alpha).uv(4.0F, 4.0F).endVertex();
+        skyBuffer.vertex(matrix4f, 1.0F, -1.0F, -0.5F).color(red, green, blue, alpha).uv(0.0F, 4.0F).endVertex();
+        skyBuffer.vertex(matrix4f, 1.0F, 1.0F, -0.5F).color(red, green, blue, alpha).uv(0.0F, 0.0F).endVertex();
+        skyBuffer.vertex(matrix4f, -1.0F, 1.0F, -0.5F).color(red, green, blue, alpha).uv(4.0F, 0.0F).endVertex();
         event.getMatrixStack().popPose();
         for (int i = 1; i <= 16; i++) {
             red = (0.75f + RANDOM.nextFloat() * 0.05f) * 2.0F / (float)(19 - i);
@@ -151,10 +276,10 @@ public class ClientEvents {
             IVertexBuilder buffer = mc.renderBuffers().bufferSource().getBuffer(enderRenderType);
             RenderSystem.defaultBlendFunc();
             event.getMatrixStack().pushPose();
-            buffer.vertex(matrix4f, -1.0F, -1.0F, -0.5F).color(red, green, blue, 1F).uv(4.0F, 4.0F).endVertex();
-            buffer.vertex(matrix4f, 1.0F, -1.0F, -0.5F).color(red, green, blue, 1F).uv(0.0F, 4.0F).endVertex();
-            buffer.vertex(matrix4f, 1.0F, 1.0F, -0.5F).color(red, green, blue, 1F).uv(0.0F, 0.0F).endVertex();
-            buffer.vertex(matrix4f, -1.0F, 1.0F, -0.5F).color(red, green, blue, 1F).uv(4.0F, 0.0F).endVertex();
+            buffer.vertex(matrix4f, -1.0F, -1.0F, -0.5F).color(red, green, blue, alpha).uv(4.0F, 4.0F).endVertex();
+            buffer.vertex(matrix4f, 1.0F, -1.0F, -0.5F).color(red, green, blue, alpha).uv(0.0F, 4.0F).endVertex();
+            buffer.vertex(matrix4f, 1.0F, 1.0F, -0.5F).color(red, green, blue, alpha).uv(0.0F, 0.0F).endVertex();
+            buffer.vertex(matrix4f, -1.0F, 1.0F, -0.5F).color(red, green, blue, alpha).uv(4.0F, 0.0F).endVertex();
             event.getMatrixStack().popPose();
         }
         RenderSystem.disableBlend();
@@ -224,6 +349,11 @@ public class ClientEvents {
         entity.yHeadRotO = yaw;
 
         EntityRendererManager entityrenderermanager = Minecraft.getInstance().getEntityRenderDispatcher();
+
+
+        boolean renderHitboxes = entityrenderermanager.renderHitBoxes;
+        entityrenderermanager.renderHitBoxes = false;
+
         entityrenderermanager.overrideCameraOrientation(new Quaternion(0, 0, 0, 1));
         entityrenderermanager.setRenderShadow(false);
         IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
@@ -234,6 +364,8 @@ public class ClientEvents {
 
         irendertypebuffer$impl.endBatch();
         entityrenderermanager.setRenderShadow(true);
+
+        entityrenderermanager.renderHitBoxes = renderHitboxes;
 
         entity.yBodyRot = originalBodyYaw;
         entity.yRot = originalYaw;

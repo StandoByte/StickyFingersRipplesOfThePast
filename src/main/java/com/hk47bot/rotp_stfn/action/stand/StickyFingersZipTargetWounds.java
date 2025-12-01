@@ -25,7 +25,7 @@ public class StickyFingersZipTargetWounds extends StandAction {
     @Override
     protected void perform(World world, LivingEntity user, IStandPower power, ActionTarget target) {
         Entity entity = target.getEntity();
-        if (entity instanceof LivingEntity){
+        if (entity instanceof LivingEntity && entity != user){
             LivingEntity livingEntity = (LivingEntity) entity;
             livingEntity.addEffect(new EffectInstance(InitEffects.ZIP_WOUNDS.get(), 1200, 0, false, false, true));
             if (ClientUtil.canHearStands()) {

@@ -8,15 +8,20 @@
     "AbstractBlockStateMixin",
     "CDHealMixin",
     "EntityMixin",
+    "HandMixin",
     "OwnerBoundProjectileEntityMixin",
+    "PlayerEntityMixin",
     "ServerPlayNetHandlerMixin",
-    "StandUtilMixin"
+    "StandTypeMixin",
+    "StandUtilMixin",
+    "client.ClDoubleShiftPressPacketMixin"
   ],
   "client": [
     "client.ArmorStandArmorModelMixin",
     "client.BipedModelMixin",
     "client.ClientPlayerMixin",
     "client.GameRendererMixin",
+    "client.IllagerModelMixin",
     "client.ModelRendererMixin"
   ],
   "injectors": {

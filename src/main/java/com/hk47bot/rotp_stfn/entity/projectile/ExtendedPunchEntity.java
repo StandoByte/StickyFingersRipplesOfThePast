@@ -8,10 +8,12 @@ import com.hk47bot.rotp_stfn.init.InitEntities;
 import com.hk47bot.rotp_stfn.init.InitStands;
 import com.github.standobyte.jojo.entity.damaging.projectile.ownerbound.OwnerBoundProjectileEntity;
 
+import lombok.Setter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -19,7 +21,8 @@ import java.util.UUID;
 
 public class ExtendedPunchEntity extends OwnerBoundProjectileEntity {
 
-    private boolean bindEntities;
+    @Setter
+    public boolean bindEntities;
     private static final UUID MANUAL_MOVEMENT_LOCK = UUID.fromString("3f243248-974a-41f6-940e-13554f3dc2fc");
     private StandEntity stand;
     private boolean caughtAnEntity = false;
@@ -40,9 +43,9 @@ public class ExtendedPunchEntity extends OwnerBoundProjectileEntity {
     protected void afterBlockHit(BlockRayTraceResult blockRayTraceResult, boolean blockDestroyed) {
         setIsRetracting(true);
     }
-
-    public void setBindEntities(boolean bindEntities) {
-        this.bindEntities = bindEntities;
+    @Override
+    protected void afterEntityHit(EntityRayTraceResult entityRayTraceResult, boolean entityHurt) {
+        setIsRetracting(true);
     }
 
     @Override
@@ -104,7 +107,7 @@ public class ExtendedPunchEntity extends OwnerBoundProjectileEntity {
 
     @Override
     public float getBaseDamage() {
-        return 5.5F;
+        return 2.5F;
     }
 
     @Override

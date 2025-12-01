@@ -1,12 +1,12 @@
 package com.hk47bot.rotp_stfn.client.render.model.bodypart;
 
-import com.hk47bot.rotp_stfn.entity.bodypart.PlayerHeadEntity;
+import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedHeadEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
-public class PlayerHeadModel extends EntityModel<PlayerHeadEntity> {
+public class PlayerHeadModel extends EntityModel<UnzippedHeadEntity> {
     protected final ModelRenderer head;
     protected final ModelRenderer hat;
 
@@ -24,7 +24,7 @@ public class PlayerHeadModel extends EntityModel<PlayerHeadEntity> {
     }
 
     @Override
-    public void setupAnim(PlayerHeadEntity entity, float walkAnimPos, float walkAnimSpeed, float ticks, float yRotationOffset, float xRotation) {
+    public void setupAnim(UnzippedHeadEntity entity, float walkAnimPos, float walkAnimSpeed, float ticks, float yRotationOffset, float xRotation) {
         this.head.xRot = xRotation;
     }
 
