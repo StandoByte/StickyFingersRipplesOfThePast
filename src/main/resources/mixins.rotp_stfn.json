@@ -22,7 +22,8 @@
     "client.ClientPlayerMixin",
     "client.GameRendererMixin",
     "client.IllagerModelMixin",
-    "client.ModelRendererMixin"
+    "client.ModelRendererMixin",
+    "client.LivingRendererInvoker"
   ],
   "injectors": {
     "defaultRequire": 1

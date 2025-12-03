@@ -10,6 +10,7 @@ import com.hk47bot.rotp_stfn.client.HumanoidParser;
 import com.hk47bot.rotp_stfn.client.HumanoidUtil;
 import com.hk47bot.rotp_stfn.client.render.model.bodypart.PlayerHeadModel;
 import com.hk47bot.rotp_stfn.entity.bodypart.UnzippedHeadEntity;
+import com.hk47bot.rotp_stfn.mixin.client.LivingRendererInvoker;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -33,7 +34,7 @@ public class HumanoidHeadRenderer extends SimpleEntityRenderer<UnzippedHeadEntit
         ZipperWorldCap cap = world.getCapability(ZipperWorldCapProvider.CAPABILITY).orElse(null);
         if (entity.getOwner() != null && cap.isHumanoid(entity.getOwner())) {
             LivingRenderer renderer = (LivingRenderer) mc.getEntityRenderDispatcher().getRenderer(entity.getOwner());
-            renderer.scale(entity.getOwner(), matrixStack, partialTick);
+            ((LivingRendererInvoker) renderer).invokeScale(entity.getOwner(), matrixStack, partialTick);
             EntityModel entityModel = renderer.getModel();
             EntityZipperCapability zipperCap = entity.getOwner().getCapability(EntityZipperCapabilityProvider.CAPABILITY).orElse(null);
             ModelRenderer head = HumanoidParser.getPartByName("head", entityModel);
