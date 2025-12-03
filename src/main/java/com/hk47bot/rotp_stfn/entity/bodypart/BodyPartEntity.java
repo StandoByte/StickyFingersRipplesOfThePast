@@ -195,6 +195,13 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
         }
 
         if (!this.level.isClientSide()) {
+            LivingEntity ownerEntity = getOwner();
+            // the owner is completely removed from the world, remove the unzipped part
+            if (ownerEntity == null) {
+            	this.remove();
+            	return;
+            }
+            
             if (isReturning()) {
                 if (!(this.navigation instanceof FlyingPathNavigator)) {
                     this.navigation = returnPathNavigator;
@@ -228,7 +235,6 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
                 }
 
                 goToOwnerGoal.start();
-                LivingEntity ownerEntity = getOwner();
                 if (ownerEntity != null && this.distanceToSqr(ownerEntity.position()) <= 2) {
                     ownerEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
                         if (this instanceof UnzippedArmEntity) {
