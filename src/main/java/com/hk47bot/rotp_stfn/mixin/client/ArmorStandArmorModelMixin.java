@@ -5,6 +5,8 @@ import com.hk47bot.rotp_stfn.capability.EntityZipperCapabilityProvider;
 import net.minecraft.client.renderer.entity.model.ArmorStandArmorModel;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ArmorStandEntity;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,9 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Optional;
 
 @Mixin(value = ArmorStandArmorModel.class)
-public class ArmorStandArmorModelMixin<T extends LivingEntity> {
-    @Inject(method = "setupAnim(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
-    private void copyModelVisibility(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
+public class ArmorStandArmorModelMixin {
+    @Inject(method = "setupAnim(Lnet/minecraft/entity/item/ArmorStandEntity;FFFFF)V", at = @At("TAIL"))
+    private void copyModelVisibility(ArmorStandEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
         BipedModel<? extends LivingEntity> model = (BipedModel<? extends LivingEntity>) (Object) this;
         Optional<EntityZipperCapability> capability = entity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).resolve();
 
