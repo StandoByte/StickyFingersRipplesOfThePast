@@ -229,7 +229,7 @@ public class BodyPartEntity extends CreatureEntity implements IEntityAdditionalS
 
                 goToOwnerGoal.start();
                 LivingEntity ownerEntity = getOwner();
-                if (this.distanceToSqr(ownerEntity.position()) <= 2) {
+                if (ownerEntity != null && this.distanceToSqr(ownerEntity.position()) <= 2) {
                     ownerEntity.getCapability(EntityZipperCapabilityProvider.CAPABILITY).ifPresent(cap -> {
                         if (this instanceof UnzippedArmEntity) {
                             if (((UnzippedArmEntity) this).isRight()) cap.setRightArmBlocked(false);
